@@ -1,0 +1,163 @@
+@import "tailwindcss";
+@import "tailwindcss/preflight"
+@tailwind utilities;
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(44, 44, 46, 1) inset !important;
+  -webkit-text-fill-color: #ffffff !important; 
+  caret-color: #ffffff !important; 
+  transition: background-color 5000s ease-in-out 0s; 
+}
+
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none; 
+  appearance: none;  
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; 
+  appearance: textfield; 
+}
+
+/* Коди нав бо рангҳои интихобкардаи шумо */
+
+/* Барои браузерҳои Webkit (Chrome, Safari, Edge-и нав) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(9, 9, 9, 1); /* <-- РАНГИ ЗАМИНА (ториктар) */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(40, 40, 41, 1); /* <-- РАНГИ ДАСТАК (равшантар) */
+  border-radius: 10px;
+  border: 2px solid rgba(9, 9, 9, 1); /* Фазо дар атрофи дастак, бо ранги замина */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  /* Ранги дастак ҳангоми hover - ман инро каме равшантар кардам, то интерактивӣ бошад */
+  background-color: rgba(75, 75, 75, 1); 
+}
+
+/* Барои Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  /* (дастак) ↓               (замина) ↓ */
+  scrollbar-color: rgba(40, 40, 41, 1) rgba(9, 9, 9, 1);
+}
+
+.color-bg-accent {
+  background-color: var(--color-accent);
+}
+
+.color-bg-main {
+  color: rgba(17, 17, 18, 1);
+}
+.color-bg-card {
+  background-color: #1A1A1A;
+}
+
+.color-bg-mini-card {
+  background: rgba(44, 44, 46, 1);
+}
+
+.color-boder-mini-card {
+  border-color: rgba(44, 44, 46, 1);
+}
+.color-bg-nav {
+  background: #1A1A1A;
+}
+.color-text-main {
+  color: #FFFFFF;
+}
+.color-text-muted {
+  color: #A1A1A1;
+}
+.color-border-accent{
+  border-color: rgba(208, 253, 62, 1);
+}
+
+.color-accent{
+  color: rgba(208, 253, 62, 1);
+}
+
+.color-accent:hover{
+  color: rgba(208, 253, 62, 1);
+}
+
+.focus\:color-accent {
+    &:focus {
+        --tw-ring-color: rgba(208, 253, 62, 1);
+    }
+}
+.peer-checked\:color-border-accent {
+    &:is(:where(.peer):checked ~ *) {
+        border-color: rgba(208, 253, 62, 1);;
+    }
+}
+
+.peer-checked\:bg-color-accent {
+    &:is(:where(.peer):checked ~ *) {
+        background-color: rgba(208, 253, 62, 1);;
+    }
+}
+
+.color-accent-l{
+  color: rgba(208, 253, 62, 1);;
+}
+
+.color-red {
+  color: #FF3B30;
+} 
+.color-orange {
+  color: #FF6A00;
+} 
+.color-bronze{
+  color: #cd7f32;
+}
+
+.bg-hover-card:hover {
+  background-color: #2a2a2a;
+}
+
+.bg-active-card {
+  background: rgba(99, 99, 102, 1);
+}
+
+.bottom-border-color {
+  border-bottom: 1px solid rgba(220, 220, 220, 0.1);
+}
+
+.top-border-color {
+  border-top: 1px solid rgba(220, 220, 220, 0.1);
+}
+
+.bg-transparent-blur {
+  background-color: rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(1px);    
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}

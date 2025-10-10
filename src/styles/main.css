@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-bg-main: rgba(17, 17, 18, 1);
+  --color-bg-card: #1A1A1A;
+  --color-bg-nav: #1A1A1A;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #A1A1A1;
+  --color-accent: rgba(208, 253, 62, 1);;
+  --color-red: #FF3B30;
+  --color-orange: #FF6A00;
+  --color-bronze: #cd7f32;
+}
+
+
+.container {
+  max-width: 1240px;
+  min-width: 300px;
+  margin: 20px auto;
+  padding: 0;
+}
+
+
+.spacer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 70px;
+  font-weight: 600;
+  cursor: pointer;
+
+}
+
+@media (max-width: 1200px) {
+  body {
+    margin: 0;
+    padding: 20px 100px 20px 100px;
+  }
+
+  .spacer {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    padding: 20px 70px 20px 70px;
+  }
+}
+
+@media (max-width: 860px) {
+  .spacer {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px 20px;
+  }
+  .spacer {
+    font-size: 30px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  body {
+    padding: 5px 10px;
+  }
+}

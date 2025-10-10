@@ -1,0 +1,6 @@
+export const mockPersonalData = [
+  // ...маълумоти кормандон...
+  { id: 1, type: "staff", staffstatus: "На работе", /*...дигар майдонҳо...*/ },
+  { id: 2, type: "staff", staffstatus: "На карантине", /*...дигар майдонҳо...*/ },
+  // ...
+];
