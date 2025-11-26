@@ -7,11 +7,15 @@ import WorkoutCalendar from "/src/components/Trainings/WorkoutCalendar/WorkoutCa
 
 import "/src/styles/Trainings.css";
 
-export default function Trainings() {
+export default function Trainings({ mainCard, additionalCards, userName }) {
   return (
     <section className="trainings">
-      <MembershipCards />
-      <WorkoutCalendar />
+      <MembershipCards
+        mainCard={mainCard}
+        additionalCards={additionalCards}
+        userName={userName}
+      />
+      {/* <WorkoutCalendar />
       <div className="trainings-layout">
         <CaloriesCircle /> 
  
@@ -21,7 +25,7 @@ export default function Trainings() {
             return <TrainingCard key={i} text={t} />;
           })}
         </div>
-      </div>      
+      </div>       */}
     </section>
   );
 }

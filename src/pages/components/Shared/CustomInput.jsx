@@ -3,7 +3,7 @@ import React from 'react';
 const CustomInput = ({ label, placeholder, type = 'text', required = false, children, ...props }) => {
   return (
     <div className="mb-4">
-      <label className="block color-accent pl-2 text-base font-medium mb-1">
+      <label className="block color-accent pl-4 text-base font-medium mb-1">
         {label}
         {required && <span className="color-accent">*</span>}
       </label>

@@ -24,13 +24,13 @@ export default function PersonalPage() {
       <div className="py-4"> 
         <Table
             data={onWorkStaff}
-            headers={["ФИО", "Должность", "Статус"]}
+            headers={["ФИО", "Должность", "Статус работы"]}
             fields={["avatar", "position", "staffstatus"]}
         />
         <div className="h-6" />
         <Table
             data={onHolidayStaff}
-            headers={["ФИО", "Должность", "Статус"]}
+            headers={["ФИО", "Должность", "Статус работы"]}
             fields={["avatar", "position", "staffstatus"]}
         />
       </div>

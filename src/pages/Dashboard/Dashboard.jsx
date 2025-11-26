@@ -1,54 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React from "react"; // Ҳама hook-ҳо (useState, useCallback, useEffect) нест шуданд!
 import DashboardHeader from "./components/DashboardHeader";
 import DashboardCards from "./components/DashboardCard/DashboardCards";
 import SearchComponent from "./components/SearchComponent";
-import Table from "./components/Table/Table"; 
+import Table from "./components/Table/Table";
 import PaginationWithCount from "./components/PaginationWithCount/PaginationWithCount";
 import AddModalWrapper from "../components/AddModalWrapper/AddModalWrapper";
 
-import { TableData } from "/src/pages/Dashboard/data/TableData";
+// Танҳо ЯК hook ворид карда мешавад!
+import { useClientDashboard } from "./hooks/useClientDashboard"; 
 
 export default function Dashboard() {
-  const [showCard, setShowCard] = useState(false);
-  const clientsData = TableData.filter((user) => user.type === "client");
+  // 🚀 Тамоми мантиқ дар як сатр гирифта мешавад
+  const {
+    query,
+    setQuery,
+    users,
+    pagination,
+    currentPage,
+    loading,
+    error,
+    handlePageChange,
+    isModalOpen,
+    closeModal,
+    toggleModal,
+    handleSuccess
+  } = useClientDashboard();
 
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setShowCard(false);
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
-
+  // Қисми боқимонда танҳо JSX (намоиш) аст
   return (
     <div className="bg-black min-h-screen relative">
-      <DashboardHeader pageName="Клиенты" onAdd={() => setShowCard((prev) => !prev)} />
+      <DashboardHeader pageName="Клиенты" onAdd={toggleModal} />
       <DashboardCards />
-      <SearchComponent underlineTitle="Заблокированные" data={clientsData} />
-      <Table
-        data={clientsData}
-        headers={["ФИО", "Телефон", "Статус", "Абонемент", "Курсы", "Услуги"]}
-        fields={["name", "phone", "status", "abonement", "course", "services"]}
+      <div className="h-6" />
+      <SearchComponent
+        underlineTitle="Заблокированные"
+        query={query}
+        setQuery={setQuery}
       />
 
-      <PaginationWithCount
-        totalUsers={2504}
-        totalPages={30}
-        isBlockedPage={false}
-      />
+      <div className="transition-opacity duration-500">
+        {error && <p className="text-red-500 text-center my-6">{error}</p>}
 
-      {showCard && (
-        <div
-          className="fixed inset-0 bg-black/60 flex justify-center items-center z-50"
-          onClick={() => setShowCard(false)}
-        >
-          <div
-            className=" rounded-2xl shadow-lg text-white relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <AddModalWrapper type="user" onClose={() => setShowCard(false)} />
-          </div>
-        </div>
+        <Table
+          data={users} 
+          headers={["ФИО", "Телефон", "Статус", "Абонемент", "Курсы", "Услуги"]}
+          fields={["fullName", "username", "cards", "enrollServicesCount", "firstEnrollServiceName", "enroll_services"]}
+          loading={loading}
+          isPageBlocked={false}
+        />
+
+        {pagination && pagination.last_page >= 1 && (
+          <PaginationWithCount
+            totalUsers={pagination.total}
+            totalPages={pagination.last_page}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            isBlockedPage={false}
+          />
+        )}
+      </div>
+
+      {isModalOpen && (
+        <AddModalWrapper 
+          type="user" 
+          onClose={closeModal}
+          onSuccess={handleSuccess}
+        />
       )}
     </div>
   );

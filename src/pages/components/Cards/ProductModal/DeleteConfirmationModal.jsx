@@ -1,0 +1,62 @@
+import React from "react";
+import Modal from "@/components/ui/Modal";
+import Card from "@/components/ui/Card";
+import FormButton from "@/components/ui/FormButton";
+import AlertIcon from "@/components/Icons/AlertIcon";
+
+export default function DeleteConfirmationModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  itemName,
+  isSaving = false,
+  actionError,
+}) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Card className="w-[400px]">
+
+        {/* Ошибки */}
+        {actionError && (
+          <div className="text-red-400 p-2 my-2 text-center border border-red-500 rounded-lg text-sm">
+            {actionError}
+          </div>
+        )}
+
+        {/* Заголовок + иконка */}
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold mb-2">ПОДТВЕРДИТЕ УДАЛЕНИЕ</h2>
+
+          <div className="mx-auto w-12 h-12 flex items-center justify-center rounded-full mb-4">
+            <AlertIcon />
+          </div>
+
+          <p className="text-md text-neutral-400 px-8">
+                    Вы действительно хотите
+                    удалить этот продукт?
+          </p>
+        </div>
+
+        {/* Кнопки */}
+        <div className="flex justify-center space-x-20 px-8">
+          <FormButton
+            onClick={onClose}
+            className="flex-1 color-bg-mini-card bg-hover-card cursor-pointer rounded-lg text-black font-semibold"
+            disabled={isSaving}
+          >
+            Отмена
+          </FormButton>
+
+          <FormButton
+            onClick={onConfirm}
+            className="flex-1 bg-red-600 hover:bg-red-700 cursor-pointer rounded-lg text-black font-semibold"
+            disabled={isSaving}
+          >
+            {isSaving ? "Удаление..." : "Удалить"}
+          </FormButton>
+        </div>
+
+      </Card>
+    </Modal>
+  );
+}

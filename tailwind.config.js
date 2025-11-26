@@ -14,7 +14,16 @@ export default {
         'brand-accent': '#aef359',
         'brand-light': '#ffffff',
         'brand-gray': '#a0a0a0',
-      }
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 1.5s infinite',
+      },
     },
   },
   plugins: [],

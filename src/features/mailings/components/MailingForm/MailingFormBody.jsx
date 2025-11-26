@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { labelStyle, inputStyle } from "./styles"; // radioStyle-ро истифода набурдем, метавон тоза кард
 import MailingFormFooter from "./MailingFormFooter";
-import SelectWithOptions from "../SelectWithOptions/SelectWithOptions";
+import SelectWithOptions from "../../../../pages/components/ui/SelectWithOptions/SelectWithOptions";
 import RadioGroup from "../../../../pages/components/ui/RadioGroup";
 
 const promotionData = [

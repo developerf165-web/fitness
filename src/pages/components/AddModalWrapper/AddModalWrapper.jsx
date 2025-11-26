@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AddUserCard from "/src/pages/components/Cards/AddUserCard/AddUserCard";
 import AddTrainerModal from "../Cards/Modal/AddTrainerModal";
 
-const AddModalWrapper = ({ type, onClose }) => {
+const AddModalWrapper = ({ type, onClose, onSuccess }) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
@@ -17,11 +17,11 @@ const AddModalWrapper = ({ type, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="rounded-2xl shadow-lg text-white relative max-w-lg w-full"
+        className="rounded-2xl shadow-lg text-white relative max-w-md w-full"
         onClick={(e) => e.stopPropagation()}
       >
         {type === "user" ? (
-          <AddUserCard onClose={onClose} />
+          <AddUserCard onClose={onClose} onSuccess={onSuccess} />
         ) : type === "trainer" ? (
           <AddTrainerModal
             isOpen={true}

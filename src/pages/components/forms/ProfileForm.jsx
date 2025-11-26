@@ -1,89 +1,54 @@
-import React, { useState } from "react";
-import InputField from "@/components/ui/InputField";
-import RadioGroup from "@/components/ui/RadioGroup";
-import FormButton from "@/components/ui/FormButton";
+import React from "react";
+import { useProfileFormLogic } from "./useProfileFormLogic";
+import { ProfileFormView } from "./ProfileFormView"; // Фарз мекунем, ки ин компонент мавҷуд аст
 
-export default function ProfileForm({ onClose }) {
-  const initialForm = {
-    name: "Азиза",
-    surname: "Султанова",
-    phone: "+992 92 000 0000",
-    birthday: "1995-11-15", 
-    gender: "female",
-  };
+export default function ProfileForm({ userId, onClose, onUpdateSuccess, refetchProfile }) {
+    const {
+        form,
+        isLoading,
+        handleChange,
+        handleSubmit,
+        isFormValid,
+        isProcessing,
+        formError,
+        photo,
+        setPhoto,
+        initialPhotoUrl,
+    } = useProfileFormLogic({
+        userId: userId,
+        onClose,
+        onUpdateSuccess: onUpdateSuccess || (() => {}),
+        refetchProfile,
+    });
 
-  const [form, setForm] = useState(initialForm);
+    if (isLoading || form === null) {
+        return (
+            <div className="flex justify-center items-center h-40">
+                Загрузка данных профиля...
+            </div>
+        );
+    }
 
-  const handleChange = (field) => (e) =>
-    setForm({ ...form, [field]: e.target.value });
+    if (formError && Object.keys(form).length === 0) {
+        return (
+            <div className="text-red-400 p-4 text-center">
+                {formError}
+            </div>
+        );
+    }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Маълумоти навшуда:", form);
-  };
-
-  const isFormValid =
-    form.name && form.surname && form.phone && form.birthday && form.gender;
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <InputField
-        label="Имя"
-        name="firstName"
-        value={form.name}
-        onChange={handleChange("name")}
-      />
-      <InputField
-        label="Фамилия"
-        name="lastName"
-        value={form.surname}
-        onChange={handleChange("surname")}
-      />
-      <InputField
-        label="Номер телефона"
-        name="phone"
-        value={form.phone}
-        onChange={handleChange("phone")}
-      />
-      <InputField
-        label="Дата рождения"
-        name="dob"
-        type="date"
-        value={form.birthday}
-        onChange={handleChange("birthday")}
-      />
-
-      <RadioGroup
-        name="gender"
-        value={form.gender}
-        onChange={handleChange("gender")}
-        options={[
-          { label: "Мужской", value: "male" },
-          { label: "Женский", value: "female" },
-        ]}
-      />
-
-      <div className="flex justify-between pt-2">
-        <FormButton
-          type="button"
-          onClick={onClose}
-          className="color-bg-mini-card bg-hover-card cursor-pointer"
-        >
-          Отмена
-        </FormButton>
-
-        <FormButton
-          type="submit"
-          disabled={!isFormValid}
-          className={
-            isFormValid
-              ? "color-bg-accent hover:bg-lime-200 cursor-pointer text-black font-semibold"
-              : "color-bg-mini-card cursor-not-allowed"
-          }
-        >
-          Сохранить
-        </FormButton>
-      </div>
-    </form>
-  );
+    return (
+        <ProfileFormView
+            form={form}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            onClose={onClose}
+            isFormValid={isFormValid}
+            isProcessing={isProcessing}
+            formError={formError}
+            photo={photo}
+            setPhoto={setPhoto}
+            initialPhotoUrl={initialPhotoUrl}
+        />
+    );
 }

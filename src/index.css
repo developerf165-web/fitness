@@ -2,11 +2,28 @@
 @import "tailwindcss/preflight"
 @tailwind utilities;
 
+:root {
+  --bg-nav: #111;
+  --bg-mobile-menu: #1a1a1a;
+  --bg-hover-active-desktop: #252525;
+}
+
+/* src/index.css - Барои пинҳон кардани scrollbar дар WebKit (Chrome, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Барои пинҳон кардани scrollbar дар IE ва Edge */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px rgba(44, 44, 46, 1) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   -webkit-text-fill-color: #ffffff !important; 
   caret-color: #ffffff !important; 
   transition: background-color 5000s ease-in-out 0s; 
@@ -56,7 +73,7 @@ input[type=number] {
 }
 
 .color-bg-accent {
-  background-color: var(--color-accent);
+  background-color: rgba(208, 253, 62, 1);
 }
 
 .color-bg-main {
@@ -107,12 +124,12 @@ input[type=number] {
 
 .peer-checked\:bg-color-accent {
     &:is(:where(.peer):checked ~ *) {
-        background-color: rgba(208, 253, 62, 1);;
+        background-color: rgba(208, 253, 62, 1);
     }
 }
 
 .color-accent-l{
-  color: rgba(208, 253, 62, 1);;
+  color: rgba(208, 253, 62, 1);
 }
 
 .color-red {
@@ -160,4 +177,131 @@ input[type=number] {
 
 .absolute {
   position: absolute;
+}
+
+.loader {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: spin 0.6s linear infinite;
+}
+
+
+/* styles.css */
+.btn-card {
+    @apply w-35 h-12 cursor-pointer rounded-[15px] text-black font-medium bg-[rgba(208,253,62,1)]
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* ========================================================= */
+/* СТИЛҲОИ ПУРРАИ GLOBALӢ БАРОИ REACT-DATEPICKER (DARK MODE) */
+/* ========================================================= */
+
+.react-datepicker-popper-dark .react-datepicker {
+  /* Пушти заминаи асосӣ */
+  background-color: #333333 !important; 
+  border: 1px solid #555555 !important;
+  color: #ffffff !important; 
+  font-family: inherit !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Сарлавҳа (Моҳ ва Сол) */
+.react-datepicker-popper-dark .react-datepicker__header {
+  background-color: #2b2b2b !important;
+  border-bottom: 1px solid #555555 !important;
+  padding-top: 8px;
+}
+
+/* Матн дар сарлавҳа ва номи рӯзҳо */
+.react-datepicker-popper-dark .react-datepicker__current-month,
+.react-datepicker-popper-dark .react-datepicker__day-name,
+.react-datepicker-popper-dark .react-datepicker__time-name {
+  color: #ffffff !important;
+}
+
+/* Тугмаҳои гузариш (Next/Prev Month) */
+.react-datepicker-popper-dark .react-datepicker__navigation-icon::before {
+  border-color: #ffffff !important;
+}
+
+/* Рӯзҳои ғайрифаъол (ғайримоҳ) */
+.react-datepicker-popper-dark .react-datepicker__day--outside-month {
+  color: #888888 !important; 
+}
+
+/* Рӯзҳои муқаррарӣ (Normal Days) */
+.react-datepicker-popper-dark .react-datepicker__day {
+  color: #ffffff !important;
+  border-radius: 0.3rem; /* Барои якрангӣ */
+}
+
+/* Ҳолати Hover */
+.react-datepicker-popper-dark .react-datepicker__day:hover {
+  background-color: #4a4a4a !important; 
+}
+
+/* Рӯзи имрӯза (Today) */
+.react-datepicker-popper-dark .react-datepicker__day--today {
+  background-color: #4f4f4f !important;
+  color: #ffffff !important;
+}
+
+/* ******************************************************** */
+/* ИСЛОҲИ ФОКУС/АКТИВ ВА РАНГИ НОДУРУСТ (МАҚСАДИ АСОСӢ) */
+/* ******************************************************** */
+
+/* Рӯзи интихобшудаи воқеӣ (Selected Day) */
+.react-datepicker-popper-dark .react-datepicker__day--selected,
+.react-datepicker-popper-dark .react-datepicker__day--selected:hover,
+.react-datepicker-popper-dark .react-datepicker__day--active {
+    background-color: #6c757d !important; /* Ранги аксент */
+    color: #ffffff !important;
+}
+
+/* 💡 ИСЛОҲИ НАВ: БАРТАРАФ КАРДАНИ ҲОЛАТИ РАНГИ КАБУДИ ИШТИБОҲӢ (БАРОИ ҲОЛАТИ ДУЮМБОРА) */
+.react-datepicker-popper-dark .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--selected),
+.react-datepicker-popper-dark .react-datepicker__day--in-range:not(.react-datepicker__day--selected) {
+    /* Ин ҳамаи ҳолатҳои "дар доираи интихоб" ё "дар диапазон"-ро, ки интихоби воқеӣ нестанд, */
+    /* маҷбур мекунад, ки шаффоф бошанд ва ранги матнро Dark Mode нигоҳ доранд. */
+    background-color: transparent !important; 
+    color: #ffffff !important;
+}
+
+/* Боварӣ ҳосил кардан, ки ҲОВЕРИ муқаррарӣ дар ин диапазони бардурӯғ низ дуруст кор кунад */
+.react-datepicker-popper-dark .react-datepicker__day--in-selecting-range:hover,
+.react-datepicker-popper-dark .react-datepicker__day--in-range:hover {
+    background-color: #4a4a4a !important; 
+    color: #ffffff !important;
+}
+
+/* Ислоҳи фокус/active, ки баъзан ранги кабуди default-ро нигоҳ медорад */
+.react-datepicker-popper-dark .react-datepicker__day:focus {
+    background-color: #4a4a4a !important; 
+    outline: none !important; /* Чаҳорчӯбаи фокусро ғайрифаъол мекунем */
 }

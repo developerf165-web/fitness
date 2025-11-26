@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar";
 import ClientProfile from "./pages/ClientProfile/ClientProfile";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import BlockedUsers from "./pages/BlockedUsers/BlockedUsers";
@@ -9,26 +9,60 @@ import EditProfileModalPage from "./pages/components/Cards/Modal/EditProfileModa
 import ConfirmPasPage from "./pages/components/Cards/Modal/ConfirmPasPage";
 import MailingsPage from "./pages/MailingsPage/MailingsPage";
 import NewsPage from "./pages/NewsPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import Services from "./pages/Services/Services";
+import MainPage from "./pages/MainPage/MainPage"
+import { ToastProvider } from "./pages/components/Toast/ToastContext";
+import SeriesDetailPage from "./pages/MainPage/SeriesDetailPage";
+import LockerPage from "./pages/LockerPage/LockerPage";
+import FinancePage from "./pages/FinancePage/FinancePage";
+import FitnessProductsPage from "./pages/FitnessProductsPage/FitnessProductsPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import MobileAppManagementPage from "./pages/MobileAppManagementPage/MobileAppManagementPage";
+
+function AppContent() {
+  const location = useLocation();
+
+  const hideNavbar = location.pathname === "/login";
+
+  return (
+    <div className="app">
+      {!hideNavbar && <main className="container"><Navbar />
+        <Routes>
+          <Route path="/" element={<TrainerPage />} />
+          <Route path="/shkafchiki" element={<LockerPage />} />
+          <Route path="/glavnaya" element={<MainPage />} />
+          <Route path="/series/:seriesSlug" element={<SeriesDetailPage />} />
+          <Route path="/novosti" element={<NewsPage />} />
+          <Route path="/rasilki" element={<MailingsPage />} />
+          <Route path="/editprofilepage" element={<EditProfileModalPage />} />
+          <Route path="/confirmpaspage" element={<ConfirmPasPage />} />
+          <Route path="/personal" element={<PersonalPage />} />
+          <Route path="/clienti" element={<Dashboard />} /> 
+          <Route path="/zablokirovanie" element={<BlockedUsers />} />
+          <Route path="/user/:id" element={<ClientProfile />} />
+          <Route path="/uslugi" element={<Services />} />
+          <Route path="/financi" element={<FinancePage />} />
+          <Route path="/producti" element={<FitnessProductsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/upravlenie" element={<MobileAppManagementPage />} />
+        </Routes>
+      </main>}
+
+      {hideNavbar && <Routes>
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>}
+    </div>
+  );
+}
+
 
 export default function App() {
   return (
     <Router>
-      <div className="app">
-        <main className="container">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<TrainerPage />} />
-            <Route path="/novosti" element={<NewsPage />} />
-            <Route path="/rasilki" element={<MailingsPage />} />
-            <Route path="/editprofilepage" element={<EditProfileModalPage />} />
-            <Route path="/confirmpaspage" element={<ConfirmPasPage />} />
-            <Route path="/personal" element={<PersonalPage />} />
-            <Route path="/glavnaya" element={<Dashboard />} /> 
-            <Route path="/zablokirovanie" element={<BlockedUsers />} />
-            <Route path="/clienti" element={<ClientProfile />} />
-          </Routes>
-        </main>
-      </div>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </Router>
   );
 }

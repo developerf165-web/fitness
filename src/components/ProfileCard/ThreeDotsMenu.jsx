@@ -9,6 +9,8 @@ export default function ThreeDotsMenu({
   onOpenRefill,
   onOpenWithdraw,
   onOpenEditProfile,
+  onOpenUnblock,
+  userStatus,
 }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
@@ -42,6 +44,8 @@ export default function ThreeDotsMenu({
     onOpenRefill,
     onOpenWithdraw,
     onOpenEditProfile,
+    onOpenUnblock,
+    userStatus,
   });
 
   return (

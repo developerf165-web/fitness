@@ -110,7 +110,7 @@
 }
 
 
-.profile-stats div:last-child span:last-child {
+.stat-item.empty span:last-child {
   background-color: var(--color-text-muted);
 }
 

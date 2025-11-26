@@ -3,7 +3,7 @@ import { PADDING_LEFT, PADDING_RIGHT } from './constants';
 
 const XAxis = ({ dates, width }) => (
     <div
-        className="flex  justify-between items-center mt-2 text-sm text-gray-400"
+        className="flex  justify-between items-center my-2 text-sm text-gray-400"
         style={{
             marginLeft: `${PADDING_LEFT}px`,
             width: `100%`,

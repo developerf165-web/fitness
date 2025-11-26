@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+// FileUploader.jsx
+
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FileUploader = ({
@@ -10,17 +12,59 @@ const FileUploader = ({
   required = false,
   maxSizeMB = 5,
 }) => {
-  const [files, setFiles] = useState(
-    multiple ? (Array.isArray(imageSrc) ? imageSrc : []) : imageSrc ? [imageSrc] : []
-  );
+  const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
 
+  /**
+   * Функция для преобразования объекта File или URL (string) в формат, 
+   * удобный для внутреннего состояния: { file: File/null, preview: URL }
+   * Она также решает проблему, когда 'imageSrc' является объектом File.
+   */
+  const normalizedImageSrc = useMemo(() => {
+    if (!imageSrc) return null;
+
+    if (multiple) {
+      if (Array.isArray(imageSrc)) {
+        return imageSrc.map(src => {
+          // Если это объект File, создаем URL для превью
+          if (src instanceof File) {
+            return { file: src, preview: URL.createObjectURL(src) };
+          }
+          // Если это строка (URL с сервера), используем ее
+          return { file: null, preview: src };
+        });
+      }
+      return null;
+    }
+    
+    // Для одиночного файла (например, avatar)
+    if (imageSrc instanceof File) {
+      // ИСПРАВЛЕНИЕ: Преобразование File Object в URL для превью
+      return [{ file: imageSrc, preview: URL.createObjectURL(imageSrc) }];
+    }
+    // Для URL с сервера
+    return [{ file: null, preview: imageSrc }];
+    
+  }, [imageSrc, multiple]);
+
+  useEffect(() => {
+    if (normalizedImageSrc) {
+      setFiles(normalizedImageSrc);
+    } else {
+      setFiles([]);
+    }
+  }, [normalizedImageSrc]);
+
+  // Очистка URL-ов, созданных с помощью createObjectURL, при размонтировании/изменении
   useEffect(() => {
     return () => {
-      files.forEach((file) => file.preview && URL.revokeObjectURL(file.preview));
+      files.forEach((f) => f.file && f.preview && URL.revokeObjectURL(f.preview));
     };
   }, [files]);
 
+  // ===============================
+  // HANDLE FILE SELECTION
+  // ===============================
   const handleFiles = (selectedFiles) => {
     const newFiles = Array.from(selectedFiles)
       .filter(
@@ -28,13 +72,24 @@ const FileUploader = ({
           file.type.startsWith("image/") &&
           file.size <= maxSizeMB * 1024 * 1024
       )
-      .map((file) => ({ file, preview: URL.createObjectURL(file) }));
+      .map((file) => ({
+        file,
+        preview: URL.createObjectURL(file), // Создаем URL для превью
+      }));
 
     if (!newFiles.length) return;
 
+    // ВАЖНО: Если не multiple, заменяем старые файлы новыми.
     const updatedFiles = multiple ? [...files, ...newFiles] : [newFiles[0]];
     setFiles(updatedFiles);
-    onUpload(multiple ? updatedFiles.map((f) => f.file) : updatedFiles[0].file);
+
+    // Передаем родительскому компоненту только объекты File
+    if (multiple) {
+      // onUpload ожидает массив объектов File. 
+      onUpload(updatedFiles.map((f) => f.file).filter(Boolean));
+    } else {
+      onUpload(updatedFiles[0].file);
+    }
   };
 
   const handleInputChange = (e) => handleFiles(e.target.files);
@@ -45,19 +100,28 @@ const FileUploader = ({
   };
 
   const handleRemove = (index) => {
+    const fileToRemove = files[index];
+    if (fileToRemove.file) {
+      URL.revokeObjectURL(fileToRemove.preview); // Очистка URL
+    }
+    
     const updatedFiles = files.filter((_, i) => i !== index);
     setFiles(updatedFiles);
-    onUpload(multiple ? updatedFiles.map((f) => f.file) : updatedFiles[0]?.file || null);
+
+    // Обновляем состояние в родительском компоненте
+    if (multiple) {
+      onUpload(updatedFiles.map((f) => f.file).filter(Boolean));
+    } else {
+      onUpload(null);
+    }
   };
 
-  const openFileDialog = () => fileInputRef.current?.click();
-
   return (
-    <div className="w-full sm:w-1/2 p-2">
+    <div className="w-full sm:w-1/2">
       <div
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        onClick={openFileDialog}
+        onClick={() => fileInputRef.current?.click()}
         className="relative cursor-pointer color-bg-mini-card rounded-lg overflow-hidden h-40 flex items-center justify-center hover:opacity-90 transition"
       >
         <input
@@ -83,23 +147,20 @@ const FileUploader = ({
                   transition={{ duration: 0.2 }}
                 >
                   <img
-                    src={f.preview || f}
-                    alt={`preview-${idx}`}
+                    src={f.preview}
+                    alt={"preview-" + idx}
                     className="w-full h-24 object-cover rounded-md"
                   />
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRemove(idx);
                     }}
                     className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 hover:bg-black transition"
-                    title="Удалить"
                   >
                     ✖
                   </button>
-                  <span className="absolute bottom-1 right-1 text-black text-lg font-bold">
-                    ✓
-                  </span>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -115,14 +176,14 @@ const FileUploader = ({
               >
                 <path
                   fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  d="M10 5a1 1 0 011 1v3h3a 1 1 0 110 2h-3v3a 1 1 0 11-2 0v-3H6a 1 1 0 110-2h3V6a 1 1 0 011-1z"
                   clipRule="evenodd"
                 />
               </svg>
             </div>
             <p className="text-white text-sm font-medium">{title}</p>
             <p className="text-gray-400 text-xs mt-1">{description}</p>
-            <p className="text-gray-400 text-xs mt-1 italic">(Drag & Drop работает)</p>
+            <p className="text-gray-400 text-xs mt-1 italic">Drag & Drop работает</p>
           </div>
         )}
       </div>

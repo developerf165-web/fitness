@@ -6,7 +6,7 @@ const NewsForm = ({ onClose, onSubmit, initialData }) => {
   const title = isEditing ? "РЕДАКТИРОВАТЬ НОВОСТЬ" : "СОЗДАТЬ НОВОСТЬ";
 
   return (
-          <div className="color-bg-card rounded-2xl p-2 shadow-lg">
+          <div className="color-bg-card rounded-2xl p-2 max-w-[480px] shadow-lg">
           <NewsFormHeader title={title} />
           <NewsFormBody 
           onClose={onClose} 

@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Pagination({ totalPages, currentPage, onPageChange }) {
-  const maxButtons = 10; 
+  const maxButtons = 10;
   let start = 1;
   let end = Math.min(totalPages, maxButtons);
 
@@ -11,8 +11,10 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
       <button
         key={i}
         onClick={() => onPageChange(i)}
-        className={`px-2 py-1 cursor-pointer rounded ${
-          currentPage === i ? "color-bg-accent text-black" : "bg-hover-card"
+        className={`px-2 py-1 cursor-pointer rounded transition ${
+          currentPage === i
+            ? "color-bg-accent text-black font-semibold"
+            : "color-bg-card text-white bg-hover-card"
         }`}
       >
         {i}
@@ -21,15 +23,17 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
   }
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 items-center">
       {buttons}
       {totalPages > maxButtons && (
         <>
-          <span className="px-2 py-1">...</span>
+          <span className="px-2 py-1 text-white">...</span>
           <button
             onClick={() => onPageChange(totalPages)}
             className={`px-2 py-1 cursor-pointer rounded ${
-              currentPage === totalPages ? "color-bg-accent text-black" : "bg-hover-card"
+              currentPage === totalPages
+                ? "color-bg-accent text-black font-semibold"
+                : "bg-gray-700 text-white hover:bg-gray-600"
             }`}
           >
             {totalPages}
@@ -39,4 +43,3 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
     </div>
   );
 }
-

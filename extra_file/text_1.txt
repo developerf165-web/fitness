@@ -1,0 +1,202 @@
+Салом\! Албатта, ман метавонам ба шумо дар сохтани ин саҳифаи логин бо React ва Tailwind CSS кӯмак кунам. Ман ба шумо сохтори файлҳо, код барои компонент ва танзимоти лозимиро пешниҳод мекунам, то шумо метавонед онро ба осонӣ нусхабардорӣ карда, дар лоиҳаи худ истифода баред.
+
+Ин дастур барои лоиҳаи навест, ки бо `create-react-app` сохта шудааст.
+
+### Қадами 1: Танзимоти лоиҳаи React + Tailwind CSS
+
+Агар шумо аллакай лоиҳаи React бо Tailwind CSS надошта бошед, ин қадамҳоро иҷро кунед:
+
+1.  **Сохтани лоиҳаи React:**
+
+    ```bash
+    npx create-react-app my-login-app
+    cd my-login-app
+    ```
+
+2.  **Насб кардани Tailwind CSS:**
+
+    ```bash
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+    ```
+
+3.  **Танзим кардани `tailwind.config.js`:**
+    Ин файлро кушоед ва роҳҳоро ба файлҳои худ илова кунед ва ранги сабзи махсусро барои тугма ва элементҳои дигар муайян созед.
+
+    ```javascript
+    /** @type {import('tailwindcss').Config} */
+    module.exports = {
+      content: [
+        "./src/**/*.{js,jsx,ts,tsx}",
+      ],
+      theme: {
+        extend: {
+          colors: {
+            'brand-green': '#9FE870', // Ранги сабзи асосӣ аз рӯи сурат
+          }
+        },
+      },
+      plugins: [],
+    }
+    ```
+
+4.  **Илова кардани директиваҳои Tailwind ба `src/index.css`:**
+    Тамоми мундариҷаи ин файлро тоза кунед ва ин сатрҳоро илова кунед:
+
+    ```css
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+### Қадами 2: Сохтори Файлҳо (File Structure)
+
+Барои тозагӣ ва тартибот, мо компонентро дар ҷузвдони алоҳида ҷойгир мекунем. Дар дохили `src` ҷузвдони `components` ва дар дохили он `LoginPage` созед.
+
+```
+my-login-app/
+├── public/
+├── src/
+│   ├── components/
+│   │   └── LoginPage/
+│   │       ├── LoginPage.jsx        # Коди асосии компонент
+│   │       └── gym-background.jpg   # Сурати замина (background)
+│   ├── App.js
+│   └── index.css
+├── package.json
+└── tailwind.config.js
+```
+
+**Муҳим:** Сурати толори варзиширо аз интернет ёфта, бо номи `gym-background.jpg` дар ҷузвдони `src/components/LoginPage/` ҷойгир кунед. Шумо метавонед ҳар гуна сурати сиёҳу сафеди толори варзиширо истифода баред.
+
+### Қадами 3: Коди Компонент
+
+Акнун, файлҳоро бо коди зерин пур кунед. Ин код айнан ҳамон дизайнро бо истифода аз Tailwind CSS эҷод мекунад.
+
+#### **Файли `src/components/LoginPage/LoginPage.jsx`**
+
+Ин коди асосии саҳифаи логин мебошад. Онро нусхабардорӣ карда, дар файли худ ҷойгир кунед.
+
+```jsx
+import React, { useState } from 'react';
+import gymBackground from './gym-background.jpg'; // Роҳ ба сурати шумо
+
+// Иконкаи "чашм" барои нишон додани парол
+const EyeIcon = ({ ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+
+const LoginPage = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  return (
+    <div className="min-h-screen flex text-white">
+      {/* Қисми чап бо сурат */}
+      <div
+        className="hidden lg:block w-1/2 bg-cover bg-center filter grayscale"
+        style={{ backgroundImage: `url(${gymBackground})` }}
+      ></div>
+
+      {/* Қисми рост бо форма */}
+      <div className="w-full lg:w-1/2 bg-[#111111] flex items-center justify-center p-8">
+        <div className="w-full max-w-sm">
+          <h1 className="text-4xl font-bold text-brand-green mb-2">Войти</h1>
+          <p className="text-gray-400 mb-8">Пожалуйста, введите логин и пароль</p>
+
+          <form>
+            {/* Майдони рақами телефон */}
+            <div className="mb-4">
+              <div className="flex items-center bg-transparent border border-gray-700 rounded-md p-3 focus-within:border-brand-green focus-within:ring-1 focus-within:ring-brand-green">
+                <span className="text-gray-400 pr-3 border-r border-gray-700">+992</span>
+                <input
+                  type="tel"
+                  placeholder="00 000 00 00"
+                  className="bg-transparent w-full pl-3 text-white placeholder-gray-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Майдони парол */}
+            <div className="mb-4">
+               <div className="relative flex items-center bg-transparent border border-gray-700 rounded-md p-3 focus-within:border-brand-green focus-within:ring-1 focus-within:ring-brand-green">
+                <input
+                  type={passwordVisible ? 'text' : 'password'}
+                  placeholder="Пароль"
+                  className="bg-transparent w-full text-white placeholder-gray-500 focus:outline-none"
+                />
+                <button type="button" onClick={() => setPasswordVisible(!passwordVisible)} className="text-gray-400 hover:text-brand-green">
+                    <EyeIcon className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Checkbox "Запомнить пароль" */}
+            <div className="flex items-center mb-6">
+              <input 
+                id="remember-me" 
+                type="checkbox" 
+                className="w-4 h-4 bg-gray-700 border-gray-600 rounded text-brand-green focus:ring-brand-green"
+                defaultChecked
+              />
+              <label htmlFor="remember-me" className="ml-2 text-sm font-medium text-gray-300">
+                Запомнить пароль
+              </label>
+            </div>
+
+            {/* Тугмаи "Войти" */}
+            <button
+              type="submit"
+              className="w-full bg-[#333333] hover:bg-[#444444] text-white font-bold py-3 px-4 rounded-md transition duration-300"
+            >
+              Войти
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
+```
+
+#### **Файли `src/App.js`**
+
+Акнун компоненти `LoginPage`-ро дар файли асосии `App.js` истифода баред.
+
+```jsx
+import React from 'react';
+import LoginPage from './components/LoginPage/LoginPage';
+
+function App() {
+  return (
+    <div className="App">
+      <LoginPage />
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Қадами 4: Иҷрои лоиҳа
+
+Дар терминали худ фармони зеринро иҷро кунед:
+
+```bash
+npm start
+```
+
+Пас аз ин, дар браузери шумо бояд саҳифаи логин бо тарҳи комилан мувофиқ ба сурати пешниҳодшуда пайдо шавад.
+
+#### **Шарҳи мухтасари код:**
+
+  * **Сохтор:** Компонент ба ду қисм тақсим шудааст: `div`-и чап барои сурат (ки дар экранҳои хурд пинҳон мешавад - `hidden lg:block`) ва `div`-и рост барои форма.
+  * **Стильдиҳӣ:** Ҳамаи стильҳо бо истифода аз классҳои Tailwind CSS дода шудаанд (`bg-[#111111]`, `text-brand-green`, `border-gray-700` ва ғайра).
+  * **Ранги Махсус:** Ранги сабз (`#9FE870`) дар `tailwind.config.js` ҳамчун `brand-green` илова карда шуд, то дар тамоми лоиҳа истифода бурдани он осонтар шавад.
+  * **Интерактивӣ:** Барои нишон додан/пинҳон кардани парол аз `useState` истифода шудааст. Иконкаи "чашм" ҳамчун компоненти SVG дар дохили файл сохта шудааст.
+  * **Фокус:** Ҳангоми клик кардан ба майдонҳои вуруд, ранги сарҳади онҳо ба ранги сабз тағйир меёбад (`focus-within:border-brand-green`).

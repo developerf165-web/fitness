@@ -1,0 +1,331 @@
+Ман коди шуморо тағир додам, то **ScrollableModalContentWrapper** истифода нашавад ва мантиқи онро мустақиман ба дохили компоненти **AddLockerModal** дохил кардам.
+
+Инчунин, ман тамоми шарҳҳо (комментҳо)-ро хориҷ кардам ва кодро барои осонии нусхабардорӣ (copy-paste) ҷобаҷо кардам.
+
+Ин аст коди навшудаи шумо:
+
+```javascript
+// ===================================================================
+// LockerPage.jsx
+// ===================================================================
+
+import React, { useState, useMemo, useCallback } from 'react';
+import ProfileHeader from '@/components/trainer/ProfileHeader';
+import SearchComponent from '@/Dashboard/components/SearchComponent';
+import LockerCard from './LockerCard';
+import FilterMenu from './FilterMenu';
+import FilterIcon from './FilterIcon';
+import AddButton from './AddButton';
+import Modal from '../../pages/components/ui/Modal';
+import { ALL_LOCKERS, STATUS_ORDER } from './constants';
+import AddLockerModal from './AddLockerModal/AddLockerModal';
+
+export default function LockerPage() {
+    const [lockers, setLockers] = useState(ALL_LOCKERS);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        'Занято': false,
+        'Свободно': false,
+        'Не работает': false,
+    });
+
+    const toggleFilterMenu = useCallback(() => {
+        setIsFilterOpen(prev => !prev);
+    }, []);
+
+    const handleAddLocker = useCallback(() => {
+        setIsModalOpen(true);
+    }, []);
+
+    const handleSaveLocker = useCallback((new_locker_data) => {
+        setLockers(prevLockers => {
+            const isDuplicate = prevLockers.some(l => l.id === new_locker_data.id);
+            if (isDuplicate) {
+                alert(`Шкафчаи №${new_locker_data.id} аллакай вуҷуд дорад.`);
+                return prevLockers;
+            }
+            alert(`Шкафчаи №${new_locker_data.id} (${new_locker_data.status}) илова карда шуд.`);
+            return [...prevLockers, new_locker_data];
+        });
+        setIsModalOpen(false);
+    }, []);
+
+    const handleEdit = useCallback((locker) => {
+        alert(`Редактировать Шкафчаи №${locker.id}`);
+    }, []);
+
+    const handleOpen = useCallback((locker) => {
+        alert(`Кушодани Шкафчаи №${locker.id}`);
+    }, []);
+    
+    const handleLock = useCallback((locker) => {
+        alert(`Заблокировать Шкафчаи №${locker.id}`);
+    }, []);
+
+    const handleDelete = useCallback((locker) => {
+        if (window.confirm(`Шумо мутмаинед, ки Шкафчаи №${locker.id}-ро нест кардан мехоҳед?`)) {
+            setLockers(prevLockers => prevLockers.filter(l => l.id !== locker.id));
+            alert(`Шкафчаи №${locker.id} нест карда шуд.`);
+        }
+    }, []);
+
+    const filteredLockers = useMemo(() => {
+        const activeFilters = Object.keys(filters).filter(key => filters[key]);
+        const isFiltering = activeFilters.length > 0;
+        const normalizedQuery = searchQuery.toLowerCase();
+
+        return lockers
+            .filter(locker => {
+                if (isFiltering && !activeFilters.includes(locker.status)) {
+                    return false;
+                }
+                
+                const matchesId = String(locker.id).includes(normalizedQuery);
+                const matchesStatus = locker.status.toLowerCase().includes(normalizedQuery);
+                const matchesName = locker.name && locker.name.toLowerCase().includes(normalizedQuery);
+
+                return matchesId || matchesStatus || matchesName;
+            })
+            .sort((a, b) => {
+                return STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+            });
+    }, [searchQuery, filters, lockers]);
+
+
+    return (
+        <div className="min-h-screen bg-black mt-4 text-white mx-auto">
+            <ProfileHeader 
+                title="Шкафчики"
+                rightContent={<AddButton onClick={handleAddLocker} />}
+            />
+
+
+            <div className="relative">
+                <SearchComponent 
+                    query={searchQuery} 
+                    setQuery={setSearchQuery} 
+                    rightAccessory={<FilterIcon onClick={toggleFilterMenu} />}
+                />
+                
+                {isFilterOpen && (
+                    <FilterMenu 
+                        filters={filters} 
+                        setFilters={setFilters} 
+                        onClose={() => setIsFilterOpen(false)}
+                        position={{ top: '10px', right: '-10px' }}
+                    />
+                )}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-6">
+                {filteredLockers.length > 0 ? (
+                    filteredLockers.map(locker => (
+                        <LockerCard 
+                            key={locker.id} 
+                            locker={locker} 
+                            onEdit={handleEdit}
+                            onOpen={handleOpen}
+                            onLock={handleLock}
+                            onDelete={handleDelete}
+                        />
+                    ))
+                ) : (
+                    <p className="col-span-full text-center text-gray-400 mt-10">
+                        Ҳеҷ шкафчае ёфт нашуд.
+                    </p>
+                )}
+            </div>
+            
+            {isModalOpen && (
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <AddLockerModal
+                        onClose={() => setIsModalOpen(false)}
+                        onSave={handleSaveLocker}
+                    />
+                </Modal>
+            )}
+        </div>
+    );
+}
+
+// ===================================================================
+// AddLockerForm.jsx
+// ===================================================================
+
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { STATUSES } from '../constants';
+import { ChevronRight } from 'lucide-react';
+import SelectWithOptions from '../../../features/mailings/components/SelectWithOptions/SelectWithOptions';
+
+const labelStyle = "block pl-2 text-sm font-medium color-accent mb-1";
+const inputStyle = "w-full p-3 rounded-xl bg-zinc-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:color-accent border border-transparent";
+
+export default function AddLockerForm({ onSave, setLockerDataForModal }) {
+    const [lockerNumber, setLockerNumber] = useState('');
+    const [status, setStatus] = useState(STATUSES[0]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const isFormValid = lockerNumber.trim() !== '' && parseInt(lockerNumber.trim()) > 0;
+
+    const statusData = [{ 
+        items: STATUSES 
+    }];
+
+    useEffect(() => {
+        setLockerDataForModal({ id: parseInt(lockerNumber.trim()) || null, status, name: '', isFormValid });
+    }, [lockerNumber, status, isFormValid, setLockerDataForModal]);
+
+    const handleStatusSelect = useCallback((newStatus) => {
+        setStatus(newStatus);
+        setIsDropdownOpen(false);
+    }, []);
+
+    const handleSave = useCallback((e) => {
+        e.preventDefault();
+        if (isFormValid) {
+            onSave({ id: parseInt(lockerNumber.trim()), status, name: '' });
+        }
+    }, [isFormValid, lockerNumber, status, onSave]);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <form onSubmit={handleSave} className="flex-1 min-h-[350px] space-y-6">
+            <div>
+                <label className={labelStyle}>
+                    Номер шкафчика<span className="color-accent">*</span>
+                </label>
+                <input
+                    type="number"
+                    placeholder="Введите номер"
+                    className={inputStyle}
+                    value={lockerNumber}
+                    onChange={(e) => setLockerNumber(e.target.value)}
+                    required
+                    min="1"
+                />
+            </div>
+
+            <div className="relative" ref={dropdownRef}>
+                <label className={labelStyle}>
+                    Статус шкафчика<span className="color-accent">*</span>
+                </label>
+                <input
+                    type="text"
+                    readOnly
+                    placeholder="Укажите статус"
+                    className={`${inputStyle} cursor-pointer pr-10`}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    value={status}
+                />
+                <ChevronRight
+                    className={`absolute right-3 top-9 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-90' : ''}`}
+                    size={20}
+                />
+                {isDropdownOpen && (
+                    <div className="absolute top-full mt-2 w-full z-10">
+                        <SelectWithOptions
+                            data={statusData}
+                            selectedValue={status}
+                            onChange={handleStatusSelect}
+                        />
+                    </div>
+                )}
+                
+            </div>
+        </form>
+    );
+}
+
+// ===================================================================
+// AddLockerModal/AddLockerModal.jsx (Навсозӣ шудааст)
+// ===================================================================
+
+import React, { useState, useCallback } from 'react';
+import AddLockerForm from './AddLockerForm';
+import FormButton from '../../components/ui/FormButton';
+
+export default function AddLockerModal({ onClose, onSave }) {
+  const [lockerData, setLockerData] = useState({ id: null, status: '', name: '', isFormValid: false });
+
+  const setLockerDataForModal = useCallback((data) => {
+    setLockerData(data);
+  }, []);
+
+  const handleSave = () => {
+    if (lockerData.isFormValid) {
+      onSave({ id: lockerData.id, status: lockerData.status, name: lockerData.name });
+      onClose();
+    } else {
+        alert("Лутфан, ҳамаи майдонҳои ҳатмиро (Номер шкафчика) дуруст пур кунед.");
+    }
+  };
+
+  return (
+    <div className="bg-zinc-800 rounded-2xl w-full max-w-md p-6 flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="flex justify-between items-center pb-4 border-b border-zinc-700">
+        <h2 className="text-xl font-bold text-white">ДОБАВИТЬ ШКАФЧИК</h2>
+        <button onClick={onClose} className="text-gray-400 hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div className="flex-grow overflow-y-auto py-4">
+        <AddLockerForm 
+            onSave={onSave} 
+            setLockerDataForModal={setLockerDataForModal} 
+        />
+      </div>
+
+      <div className="pt-4 border-t border-zinc-700 flex justify-between space-x-3 w-full">
+        <FormButton
+          onClick={onClose}
+          className="color-bg-mini-card text-white bg-hover-card"
+        >
+          Отменить
+        </FormButton>
+        <FormButton
+          onClick={handleSave}
+          className={`color-bg-accent text-black font-semibold hover:bg-lime-400 ${!lockerData.isFormValid ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={!lockerData.isFormValid}
+        >
+          Сохранить
+        </FormButton>
+      </div>
+    </div>
+  );
+}
+```
+
+### Тағйироти асосӣ:
+
+1.  **AddLockerModal/AddLockerModal.jsx**:
+
+      * `import ScrollableModalContentWrapper` хориҷ карда шуд.
+      * Сохтори HTML-и `ScrollableModalContentWrapper` (сарлавҳа, мундариҷаи скроллшаванда ва футер) мустақиман ба дохили компоненти `AddLockerModal` гузаронида шуд.
+      * Мантиқи идоракунии маълумот аз `AddLockerForm` ба `AddLockerModal` интиқол дода шуд (тавассути `setLockerDataForModal` ва `lockerData` state), то тугмаи "Сохранить" дар футер ҳолати дурусти формаро тафтиш кунад ва функсияи `onSave`-ро иҷро намояд.
+
+2.  **AddLockerForm.jsx**:
+
+      * Функсияи `onSave` хориҷ карда шуд.
+      * `setLockerDataForModal` ҳамчун `prop` илова карда шуд, то ҳолати ҷории форма (бахусус `isFormValid`) ба `AddLockerModal` фиристода шавад.
+      * `useEffect` илова карда шуд, ки ҳангоми тағйири `lockerNumber` ё `status` маълумотро ба `AddLockerModal` мефиристад.
+
+3.  **LockerPage.jsx**:
+
+      * Ҳеҷ гуна тағироти ҷиддӣ лозим набуд, зеро `AddLockerModal` ҳамчун як ҷузъи мустақил кор карданро идома медиҳад.
+
+Оё мехоҳед, ки ман ягон қисми кодро боз ҳам беҳтар ё тағйир диҳам?

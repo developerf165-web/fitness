@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import NewsFormFooter from './NewsFormFooter';
 import RadioGroup from '../../../pages/components/ui/RadioGroup';
+import InputField from '../../../pages/components/ui/InputField';
 
 const labelStyle = "block text-sm font-medium color-accent pl-2 mb-2";
 const inputStyle = "block w-full text-gray-400 color-bg-mini-card border-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:color-accent";
@@ -12,7 +13,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
   const [description, setDescription] = useState('');
   const [publicationDate, setPublicationDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [channel, setChannel] = useState('push'); // <--- 2. Истифодаи ҳолати ягона барои канал
+  const [channel, setChannel] = useState('push'); 
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -83,7 +84,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
   ];
 
   return (
-    <div className="flex-1 px-2 w-full max-h-[70vh] overflow-y-auto custom-scrollbar">
+    <div className="flex-1 px-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
       <form id="news-form" onSubmit={handleSubmit} className="px-6 space-y-5">
         
         <div className="flex items-center space-x-4">
@@ -111,11 +112,11 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
         <div className="flex flex-col sm:flex-row sm:space-x-4">
           <div className="w-full sm:w-1/2">
             <label className={labelStyle}>Дата публикации<span className="color-accent">*</span></label>
-            <input type="date" className={`${inputStyle} ${title ? 'text-white' : 'text-gray-400'}`} value={publicationDate} onChange={(e) => setPublicationDate(e.target.value)} />
+            <InputField type="date" className={`${inputStyle} ${title ? 'text-white' : 'text-gray-400'}`} value={publicationDate} onChange={(e) => setPublicationDate(e.target.value)} />
           </div>
           <div className="w-full sm:w-1/2 mt-5 sm:mt-0">
             <label className={labelStyle}>Дата окончания<span className="color-accent">*</span></label>
-            <input type="date" className={`${inputStyle} ${title ? 'text-white' : 'text-gray-400'}`} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            <InputField type="date" className={`${inputStyle} ${title ? 'text-white' : 'text-gray-400'}`} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
           </div>
         </div>
 
