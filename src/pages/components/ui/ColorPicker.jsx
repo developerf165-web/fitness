@@ -19,7 +19,7 @@ const ColorPicker = ({ selectedColor, onSelectColor }) => {
 
   return (
     <div className="mt-4">
-      <p className="block color-accent text-base font-medium mb-3">
+      <p className="block color-accent text-base font-medium pl-3 mb-3">
         Выберите цвет
       </p>
       <div className="flex flex-wrap items-center">
@@ -35,7 +35,7 @@ const ColorPicker = ({ selectedColor, onSelectColor }) => {
             title={color.replace('bg-', '')}
           >
             {selectedColor === color && (
-              <span className="absolute bottom-0.5 right-0.5 text-black text-xl font-bold">
+              <span className="absolute top-0.5 right-0.5 color-accent text-xl font-bold">
                 ✓
               </span>
             )}
@@ -44,6 +44,7 @@ const ColorPicker = ({ selectedColor, onSelectColor }) => {
 
         {showAll ? (
           <button
+            type="button"
             onClick={() => setShowAll(false)}
             className="color-accent cursor-pointer text-sm ml-2 hover:text-[rgba(208,253,62,1)] transition-colors"
           >
@@ -51,6 +52,7 @@ const ColorPicker = ({ selectedColor, onSelectColor }) => {
           </button>
         ) : (
           <button
+            type="button"
             onClick={() => setShowAll(true)}
             className="color-accent cursor-pointer text-sm ml-2 hover:text-[rgba(208,253,62,1)] transition-colors"
           >

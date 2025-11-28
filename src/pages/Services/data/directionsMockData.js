@@ -4,25 +4,25 @@ const directionsMockData = [
     id: 1,
     title: "Кардио нагрузки",
     description: "Кардио тренировки — это аэробные физические упражнения, повышающие частоту пульса. Такие нагрузки тренируют сердечно-сосудистую систему...",
-    iconUrl: "/images/icons/cardio.png" // Ё ягон сурати дигар
+    iconUrl: "/images/image1.jpg" // Ё ягон сурати дигар
   },
   {
     id: 2,
     title: "Силовые нагрузки",
     description: "Силовые упражнения — это физические доступные действия, направленные на развитие мускулатуры за счет...",
-    iconUrl: "/images/icons/dumbell.png"
+    iconUrl: "/images/iim.png"
   },
   {
     id: 3,
     title: "Танцы",
     description: "Танцы — это вид искусства, в котором художественный образ создается посредством ритмичных пластических движений...",
-    iconUrl: "/images/icons/dance.png"
+    iconUrl: "/images/fitness.jpg"
   },
   {
     id: 4,
     title: "Йога",
     description: "Йога — это понятие в индийской культуре, в широком смысле означающее совокупность различных духовных, психических и физических практик...",
-    iconUrl: "/images/icons/yoga.png"
+    iconUrl: "/images/avatar.jpg"
   }
 ];
 

@@ -18,7 +18,7 @@ export default function ActiveSection({ items }) {
   }
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full rounded-2xl flex flex-col">
       {items.map((item) => (
         <ActiveItem 
           key={item.id} 

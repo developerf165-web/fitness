@@ -7,10 +7,10 @@ export default function ActiveItem({ item, isOpen, onToggle }) {
   const hasSubItems = item.subItems && item.subItems.length > 0;
   
   const mainRowClasses = [
-    "flex items-center justify-between p-2 rounded-2xl color-bg-card transition-all cursor-pointer group border-2",
+    "flex items-center justify-between p-2 rounded-2xl color-bg-card transition-all cursor-pointer group",
     hasSubItems ? 'bg-hover-card' : '',
     // Стиль границы зависит от состояния 'isOpen', которое приходит из ActiveSection
-    isOpen ? 'color-border-accent' : 'border-transparent hover:border-gray-700',
+    isOpen ? 'color-bg-mini-card rounded-b-none' : '',
   ].join(' ');
 
   return (
@@ -72,12 +72,12 @@ export default function ActiveItem({ item, isOpen, onToggle }) {
         <div 
           id={`sub-items-${item.id}`}
           className={`
-            transition-all duration-500 ease-in-out overflow-hidden
-            ${isOpen ? 'max-h-96 opacity-100 mt-1' : 'max-h-0 opacity-0'}
+            transition-all color-bg-card rounded-b-xl duration-500 ease-in-out overflow-hidden
+            ${isOpen ? 'max-h-96 opacity-100 mt-0' : 'max-h-0 opacity-0'}
           `}
         >
           {item.subItems.map((sub, index) => (
-            <div key={index} className="flex items-center justify-between pl-20 pr-6 py-2">
+            <div key={index} className="flex items-center justify-between pl-18 pr-6 py-2">
                 <div className="text-gray-400 text-sm w-1/3 min-w-[70px]">{sub.type}</div>
                 <div className="text-white text-sm flex-1 text-left">{sub.time}</div>
                 <div className="flex -space-x-2 justify-end w-1/3">

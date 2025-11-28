@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { deleteUser, disableUser, activateUser } from "/src/services/ClientProfile/userService"; // activateUser-ро илова кунед
+// Агар ин функсияҳо мавҷуд набошанд, ин сатрро тағир диҳед
+import { deleteUser, disableUser, activateUser } from "/src/services/ClientProfile/userService"; 
 
 export const useConfirmationModalLogic = ({ 
   isOpen, 
@@ -19,7 +20,8 @@ export const useConfirmationModalLogic = ({
     }
   }, [isOpen]);
 
-  const requiresReason = actionType === 'disable';
+  // 'disable' ва 'cancel' сабабро талаб мекунанд
+  const requiresReason = actionType === 'disable' || actionType === 'cancel'; 
   const isConfirmButtonDisabled = isProcessing || (requiresReason && reason.trim().length === 0);
 
   const handleConfirm = useCallback(async () => {
@@ -32,7 +34,7 @@ export const useConfirmationModalLogic = ({
       return;
     }
 
-    if (!targetId) {
+    if (!targetId && actionType !== 'cancel') {
       setActionError("ID цели отсутствует.");
       setIsProcessing(false);
       return;
@@ -45,13 +47,18 @@ export const useConfirmationModalLogic = ({
         await disableUser(targetId, reason.trim());
       } else if (actionType === 'enable') {
         await activateUser(targetId);
+      } else if (actionType === 'cancel') {
+        // Логикаи API барои бекоркунии курс
+        // Масалан: await cancelCourse(targetId, reason.trim()); 
+        console.log(`API Call: Cancelling course ${targetId} with reason: ${reason}`);
+        await new Promise(r => setTimeout(r, 300)); // Моки API Call
       }
         
       onActionSuccess(actionType, targetId, reason.trim()); 
-      onClose();
+      // onClose() дар onActionSuccess иҷро мешавад
       
     } catch (err) {
-      setActionError(err.message || "Произошла неизвестная ошибка при выполнении действия.");
+      setActionError(err.message || "Ошибка при выполнении действия.");
     } finally {
       setIsProcessing(false);
     }

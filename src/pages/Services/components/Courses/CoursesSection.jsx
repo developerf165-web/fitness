@@ -2,7 +2,7 @@ import React from 'react';
 import CourseCard from './CourseCard';
 import CardSkeleton from '../Cards/CardSkeleton';
 
-export default function CoursesSection({ items, isLoading, onEdit, onDelete, variant = 'launch' }) {
+export default function CoursesSection({ items, isLoading, onStart, onCancel, variant = 'launch' }) {
   
   if (isLoading) {
     return (/* skeleton code */ <div className="text-white">Loading...</div>);
@@ -18,8 +18,8 @@ export default function CoursesSection({ items, isLoading, onEdit, onDelete, var
         <CourseCard
           key={item.id}
           item={item}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onStart={onStart}
+          onCancel={onCancel}
           variant={variant} // <-- Ин муҳим аст!
         />
       ))}

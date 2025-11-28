@@ -33,6 +33,17 @@ const getConfig = (actionType, dataItems) => {
         showTextarea: false,
         dataItems: dataItems,
       };
+    case 'cancel': // <-- Махсус барои CourseCancelConfirmationModal
+      return {
+        title: "Отмена курса",
+        message: "Вы действительно хотите отменить курс?",
+        confirmButtonText: "Отменить",
+        isDestructive: true,
+        showTextarea: true,
+        textareaLabel: "Причина отмены",
+        textareaPlaceholder: "Укажите причину отмены курса",
+        dataItems: dataItems, // Маълумоти курсро аз CourseCancelConfirmationModal қабул мекунад
+      };
     default:
       return {
         title: "Подтверждение действия",

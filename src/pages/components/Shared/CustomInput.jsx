@@ -5,11 +5,11 @@ const CustomInput = ({ label, placeholder, type = 'text', required = false, chil
     <div className="mb-4">
       <label className="block color-accent pl-4 text-base font-medium mb-1">
         {label}
-        {required && <span className="color-accent">*</span>}
+        {required && <span className="color-accent"></span>}
       </label>
       {children ? (
         <div 
-          className="w-full color-bg-mini-card text-gray-400 py-3 px-4 rounded-lg flex justify-between items-center cursor-pointer hover:bg-gray-700 transition duration-200"
+          className="w-full color-bg-mini-card text-gray-400 py-3 px-4 rounded-lg flex justify-between items-center cursor-pointer bg-hover-card transition duration-200"
           {...props}
         >
           {placeholder}
@@ -21,7 +21,7 @@ const CustomInput = ({ label, placeholder, type = 'text', required = false, chil
         <input
           type={type}
           placeholder={placeholder}
-          className="w-full color-bg-mini-card text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 transition duration-200"
+          className="w-full color-bg-mini-card text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:color-accent transition duration-200"
           {...props}
         />
       )}

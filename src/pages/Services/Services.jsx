@@ -1,96 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import ServicesHeader from './components/ServicesHeader';
-import CardsSection from './components/Cards/CardsSection';
-import { fetchServices, deleteService } from './api/servicesApi'; 
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
+// src/pages/Services/Services.jsx
+
+import React from 'react';
+import useServicePageLogic from './hooks/useServicePageLogic'; // Логикаи асосӣ
+
+// Components (Воридоти худро нигоҳ доред)
 import SectionHeader from '../components/ui/SectionHeader';
-import DirectionsSection from './components/Directions/DirectionsSection';
+import CardsSection from './components/Cards/CardsSection';
 import CoursesSection from './components/Courses/CoursesSection';
 import ActiveSection from './components/Active/ActiveSection';
-import directionsMockData from './data/directionsMockData';
-import coursesMockData from './data/coursesMockData'
-import activeMockData from './data/activeMockData'
+import DirectionsSection from './components/Directions/DirectionsSection';
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
+import CourseCancelConfirmationModal from '@/components/ui/CourseCancelConfirmationModal';
+import CardioCourseModal from './components/CardioCourseModal'; 
+import ServiceFormModal from './components/ServiceFormModal';
+import CourseFormModal from './components/CourseForm/CourseFormModal';
+import DirectionFormModal from './components/DirectionFormModal';
+
+// Data
+import activeMockData from './data/activeMockData';
 
 export default function Services() {
-  const [services, setServices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {
+    // Data
+    isLoading,
+    error,
+    services,
+    courses,
+    directions,
+    
+    // State Hooks
+    serviceModals,
+    courseModals,
+    directionModals,
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [serviceToDelete, setServiceToDelete] = useState(null); 
-  const [isDeleting, setIsDeleting] = useState(false); 
-
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const dataFromApi = await fetchServices();
-        
-        const formattedData = dataFromApi.map(item => ({
-          id: item.id,
-          title: item.name,
-          imageUrl: item.img, 
-          tjs: item.price,
-          pos: 'услуга'
-        }));
-        
-        setServices(formattedData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadServices();
-  }, []);
-
-  // 3. Ин функция акнун модалро МЕКУШОЯД (ба ҷои window.confirm)
-  // Номи онро аз 'handleDelete' ба 'handleDeletePrompt' иваз кардем
-  const handleDeletePrompt = (service) => {
-    setServiceToDelete(service); // Объекти пурраи service-ро дар state мемонем
-    setIsDeleteModalOpen(true);
-  };
-
-  // 4. Ин функция модалро МЕПӮШАД
-  const handleCloseModal = () => {
-    if (isDeleting) return; // Агар раванди несткунӣ рафта истода бошад, намепӯшем
-    setIsDeleteModalOpen(false);
-    setServiceToDelete(null);
-  };
-
-  // 5. Ин функция несткуниро ТАСДИҚ МЕКУНАД (аз дохили модал даъват карда мешавад)
-  const handleConfirmDelete = async () => {
-    if (!serviceToDelete) return;
-
-    setIsDeleting(true); // Раванди несткуниро сар мекунем
-    try {
-      // API-ро мувофиқи документатсия даъват мекунем
-      await deleteService(serviceToDelete.id);
-      
-      // Аз state нест мекунем
-      setServices(currentServices => 
-        currentServices.filter(service => service.id !== serviceToDelete.id)
-      );
-      
-      handleCloseModal(); // Модалро мепӯшем
-    } catch (err) {
-      alert("Ошибка при удалении: " + err.message);
-      // Дар ҳолати хатогӣ, модалро боз мемонем, то корбар хатогиро бинад
-    } finally {
-      setIsDeleting(false); // Раванди несткуниро ба итмом мерасонем
-    }
-  };
-
-  // 6. handleEdit акнун тамоми объектро мегирад
-  const handleEdit = (service) => {
-    console.log("Редактирование элемента:", service);
-    alert(`Вызвана функция редактирования для ID ${service.id}.`);
-  };
-  
-  if (isLoading) {
-    // Инро метавонед тоза кунед, агар хоҳед, ки скелетонҳо дар ин ҷо кор кунанд
-    // return <div className="text-center py-10">⏳ Загрузка...</div>;
-  }
+    // Handlers
+    serviceHandlers,
+    courseHandlers,
+    directionHandlers,
+    handleLaunchClick,
+    handleCancelClick,
+    handleConfirmCancel,
+  } = useServicePageLogic();
 
   if (error) {
     return <div className="text-center py-10 text-red-500">Ошибка: {error}</div>;
@@ -98,76 +48,112 @@ export default function Services() {
 
   return (
     <>
-      {/* 1. БАХШИ: ГОТОВО К ЗАПУСКУ */}
+      {/* --- Sections: Рендеринг (Коди асосан тағйирнаёфта) --- */}
+      
+      {/* Готово к запуску */}
       <div className="mb-10">
-          <SectionHeader title="Готово к запуску" />
-          <CoursesSection 
-              items={coursesMockData}
-              variant="launch"
-              isLoading={false}
-              onEdit={(item) => console.log('Edit Course', item.id)}
-              onDelete={(item) => console.log('Delete Course', item.id)}
-          />
+        <SectionHeader title="Готово к запуску" />
+        <CoursesSection 
+          items={courses}
+          variant="launch"
+          isLoading={false}
+          onStart={handleLaunchClick} 
+          onCancel={handleCancelClick} // Идоракунии 'Отменить'
+        />
       </div>
 
-      {/* 2. БАХШИ: НАБОР НА КУРСЫ (Агар лозим бошад, ҳамон компонентро бо маълумоти дигар истифода мебаред) */}
+      {/* Набор на курсы */}
       <div className="mb-10">
-          <SectionHeader 
-              title="Набор на курсы" 
-              actionLabel="Добавить" 
-              onAction={() => alert('Add Course')}
-          />
-          <CoursesSection 
-              items={coursesMockData.slice(0, 2)}
-              variant="recruit"
-              isLoading={false}
-              onEdit={console.log}
-              onDelete={console.log}
-          />
+        <SectionHeader 
+          title="Набор на курсы" 
+          actionLabel="Добавить" 
+          onAction={courseModals.form.openCreate}
+        />
+        <CoursesSection 
+          items={courses.slice(0, 2)}
+          variant="recruit"
+          isLoading={false}
+          onStart={handleLaunchClick} 
+          onCancel={handleCancelClick}
+        />
       </div>
 
-      <SectionHeader 
-        title="Актуальные" 
-        customRightElement="8 курсов" // Матн дар тарафи рост
-      />
+      {/* Актуальные */}
+      <SectionHeader title="Актуальные" customRightElement="8 курсов" />
       <ActiveSection items={activeMockData} />
       <div className="mb-12"></div>
 
-
-      <SectionHeader 
-          title="Услуги" 
-          actionLabel="Создать" 
-          onAction={() => alert('Барои сохтани Направление')} 
-      />
+      {/* Услуги */}
+      <SectionHeader title="Услуги" actionLabel="Создать" onAction={serviceModals.form.openCreate} />
       <CardsSection 
         items={services}
-        onEdit={handleEdit}
-        onDelete={handleDeletePrompt} // <-- 7. Функсияи навро ба ҷои 'handleDelete' медиҳем
+        onEdit={serviceModals.form.openEdit}
+        onDelete={serviceModals.delete.openDelete}
         isLoading={isLoading}
       />
 
+      {/* Направления */}
       <div className="mt-8">
-        <SectionHeader 
-            title="Направления" 
-            actionLabel="Создать" 
-            onAction={() => alert('Барои сохтани Направление')} 
-        />
-        
+        <SectionHeader title="Направления" actionLabel="Создать" onAction={directionModals.form.openCreate} />
         <DirectionsSection 
-            items={directionsMockData} 
-            onEdit={(item) => console.log('Edit', item)}
-            onDelete={(item) => console.log('Delete', item)}
+          items={directions} 
+          onEdit={directionModals.form.openEdit}
+          onDelete={directionModals.delete.openDelete}
         />
       </div>
 
-      {/* 8. Модалро дар ин ҷо render мекунем */}
+      {/* --- МОДАЛҲО --- */}
+
+      {/* 1. Модалҳои Services */}
       <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirmDelete}
-        isDeleting={isDeleting}
-        // Номи item-ро ба модал мефиристем
-        itemName={serviceToDelete ? serviceToDelete.title : ''}
+        isOpen={serviceModals.delete.isOpen}
+        onClose={serviceModals.delete.close}
+        onConfirm={serviceHandlers.handleConfirmDelete}
+        isDeleting={serviceModals.delete.isDeleting}
+        itemName={serviceModals.delete.itemToDelete?.title}
+      />
+      <ServiceFormModal
+        isOpen={serviceModals.form.isOpen}
+        onClose={serviceModals.form.close}
+        onSubmit={serviceHandlers.handleSubmit}
+        initialData={serviceModals.form.editingItem}
+        isSubmitting={serviceModals.form.isSubmitting}
+      />
+
+      {/* 2. Модалҳои Courses */}
+      <CardioCourseModal
+        isOpen={courseModals.cardio.isOpen}
+        onClose={courseModals.cardio.close}
+        courseData={courseModals.cardio.editingItem}
+      />
+      <CourseCancelConfirmationModal
+        isOpen={courseModals.cancel.isOpen} 
+        onClose={courseModals.cancel.close}
+        courseData={courseModals.cancel.itemToDelete} 
+        onActionSuccess={handleConfirmCancel} // Логикаи бекоркунӣ
+      />
+      <CourseFormModal
+        isOpen={courseModals.form.isOpen}
+        onClose={courseModals.form.close}
+        onSubmit={courseHandlers.handleSubmit}
+        initialData={courseModals.form.editingItem}
+        isSubmitting={courseModals.form.isSubmitting}
+      />
+
+      {/* 3. Модалҳои Directions */}
+      <DeleteConfirmationModal
+        isOpen={directionModals.delete.isOpen}
+        onClose={directionModals.delete.close}
+        onConfirm={directionHandlers.handleConfirmDelete}
+        isDeleting={directionModals.delete.isDeleting}
+        itemName={directionModals.delete.itemToDelete?.title}
+      />
+      <DirectionFormModal
+        isOpen={directionModals.form.isOpen}
+        onClose={directionModals.form.close}
+        onSubmit={directionHandlers.handleSubmit}
+        initialData={directionModals.form.editingItem}
+        isSubmitting={directionModals.form.isSubmitting}
       />
     </>
   );

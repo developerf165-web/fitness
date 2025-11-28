@@ -22,7 +22,7 @@ export default function DeleteConfirmationModal({
 
               {customMessage 
                 ? customMessage 
-                : `Вы действительно хотите удалить услугу "${itemName}"?`
+                : `Вы действительно хотите удалить "${itemName}"?`
               }
 
             </p>
