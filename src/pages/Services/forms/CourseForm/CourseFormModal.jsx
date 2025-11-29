@@ -5,9 +5,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
 
-// Компонентҳои дохилӣ (дар CourseFormLayout истифода мешаванд)
-import FormFooter from './FormFooter';
-import CourseFormLayout from './CourseFormLayout'; // <-- Компоненти нав
+// Компонентҳои дохилӣ
+import { FormFooter } from './components';
+import CourseFormLayout from './CourseFormLayout';
 
 // Маълумот (Options)
 import { 
@@ -16,18 +16,14 @@ import {
     clientOptions, 
     defaultTrainerOptions, 
     freeTrainerOptions 
-} from './CourseFormData'; // <-- Файли нав
+} from './CourseFormData';
 
-// !!! МУҲИМ: Роҳи импортро санҷед (SelectWithOptions) !!!
-// (Ин дар CourseFormLayout.jsx истифода мешавад, аммо мо онро дар ин ҷо намегузорем)
-
-// --- Ёрии умумӣ ---
+// Ёрии умумӣ
 const getClientDisplayValue = (clients) => {
    if (clients.length === 0) return '';
    if (clients.length <= 2) return clients.join(', ');
    return `${clients[0]}, ${clients[1]} и еще ${clients.length - 2}`;
 };
-// --------------------
 
 export default function CourseFormModal({ 
   isOpen, 

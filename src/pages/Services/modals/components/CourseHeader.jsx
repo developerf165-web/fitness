@@ -8,7 +8,7 @@ export default function CourseHeader() {
             <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                 {/* Изображение курса */}
                 <img
-                    src="placeholder_image.jpg"
+                    src="images/fitness1.jpg"
                     alt="Кардио нагрузки"
                     className="w-full h-full object-cover"
                 />
@@ -21,29 +21,29 @@ export default function CourseHeader() {
             <div className="flex justify-between items-start mb-4">
                 <div>
                     <h1 className="text-2xl font-bold">КАРДИО НАГРУЗКИ</h1>
-                    <p className="text-sm text-gray-400">Групповой курс</p>
+                    <p className="text-sm color-accent">Групповой курс</p>
                 </div>
                 {/* Аватар тренера */}
                 <img
-                    src="placeholder_avatar.jpg"
+                    src="images/profile_image.jpg"
                     alt="Тренер"
-                    className="w-12 h-12 rounded-full border-2 border-gray-600"
+                    className="w-12 h-12 rounded-full border-2 color-border-accent object-cover"
                 />
             </div>
 
             {/* Информация о цене */}
-            <div className="space-y-1 mt-4 border-t border-gray-700 pt-4">
-                <div className="flex justify-between text-gray-300">
+            <div className="space-y-2 mt-4 border-t border-gray-700 pt-4">
+                <div className="flex justify-between">
                     <span>Цена курса:</span>
-                    <span className="font-semibold">600 смн</span>
+                    <span className="font-semibold color-accent">600 смн</span>
                 </div>
-                <div className="flex justify-between text-red-400">
+                <div className="flex justify-between">
                     <span>Скидка:</span>
-                    <span className="font-semibold">-5%</span>
+                    <span className="color-accent font-semibold">-5%</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-green-400">
+                <div className="flex justify-between">
                     <span>Цена со %:</span>
-                    <span>580 смн</span>
+                    <span className='color-accent font-semibold'>580 смн</span>
                 </div>
             </div>
         </div>

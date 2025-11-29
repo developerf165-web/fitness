@@ -3,9 +3,9 @@ import React from 'react';
 
 // Компонентҳои дохилӣ
 import DropdownField from '../../../components/ui/DropdownField';
-import Calendar from './Calendar';
-import ScheduleToggle from './ScheduleToggle';
-import TimeSelector from './TimeSelector';
+import Calendar from './components/Calendar';
+import ScheduleToggle from './components/ScheduleToggle';
+import TimeSelector from './components/TimeSelector';
 import SelectWithOptions from '../../../components/ui/SelectWithOptions/SelectWithOptions';
 
 export default function CourseFormLayout({

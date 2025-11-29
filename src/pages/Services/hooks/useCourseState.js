@@ -1,33 +1,37 @@
 // src/pages/Services/hooks/useCourseState.js
 
-import { useCourses } from './useCourses'; // Аз файли аслии шумо
-import { useModalState } from './useModalState'; // Аз файли аслии шумо
-import { useDeleteModal } from './useDeleteModal'; // Аз файли аслии шумо
+import { useCourses } from './useCourses';
+import { useModalState } from './useModalState';
+import { useDeleteModal } from './useDeleteModal';
+import { useCourseCardioModal } from './useCourseCardioModal';
+import { createCourseHandlers } from '../lib';
 
+/**
+ * State ва Handlers барои Courses
+ */
 export default function useCourseState(showToast) {
   const { courses, setCourses } = useCourses();
   const courseFormModal = useModalState();
-  const courseCancelModal = useDeleteModal(); // Модал барои бекоркунӣ
-  const cardioCourseModal = useModalState();
+  const courseDeleteModal = useDeleteModal();
+  const courseCancelModal = useDeleteModal(); // Барои бекоркунӣ
+  const courseCardioModal = useCourseCardioModal();
 
-  // Handlers-и Courses
-  const handleSubmit = async (data) => {
-    showToast(`Курс "${data.title}" успешно сохранен!`, 'success');
-    courseFormModal.close();
-    // Логикаи навсозии State: setCourses(...)
-  };
-
-  // Логикаи Cancel/Launch дар useServicePageLogic идора карда мешавад.
+  // Handlers-ро аз lib месозем
+  const courseHandlers = createCourseHandlers(
+    setCourses,
+    showToast,
+    courseFormModal,
+    courseDeleteModal
+  );
 
   return {
     courses,
     courseModals: {
       form: courseFormModal,
-      cancel: courseCancelModal, // барои CourseCancelConfirmationModal
-      cardio: cardioCourseModal, // барои CardioCourseModal
+      delete: courseDeleteModal,
+      cancel: courseCancelModal,
+      cardio: courseCardioModal,
     },
-    courseHandlers: {
-      handleSubmit,
-    },
+    courseHandlers,
   };
 }

@@ -1,8 +1,8 @@
 // fileName: DropdownField.jsx
 import React, { useRef, useCallback } from 'react';
 import { ChevronRight } from 'lucide-react';
-import useClickOutside from '../../Services/components/CourseForm/useClickOutside'; // Import-и Hook-и нав
 import SelectWithOptions from './SelectWithOptions/SelectWithOptions';
+import useClickOutside from '/src/pages/Services/forms/CourseForm/hooks/useClickOutside';
 
 export default function DropdownField({
   label,

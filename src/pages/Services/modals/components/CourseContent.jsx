@@ -19,11 +19,11 @@ export default function CourseContent({ searchQuery, setSearchQuery, participant
                         placeholder="Поиск"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 p-3 rounded-xl color-bg-mini-card text-white text-sm focus:outline-none focus:ring-1 focus:ring-[var(--accent-color)]"
+                        className="w-full pl-10 p-3 rounded-xl color-bg-mini-card text-white text-sm focus:outline-none focus:ring-1 focus:accent-color]"
                     />
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-muted)] pointer-events-none"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var()--color-text-muted] pointer-events-none"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"

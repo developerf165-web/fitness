@@ -1,24 +1,31 @@
 // src/pages/Services/Services.jsx
 
 import React from 'react';
-import useServicePageLogic from './hooks/useServicePageLogic'; // Логикаи асосӣ
+import useServicePageLogic from './hooks/useServicePageLogic';
 
-// Components (Воридоти худро нигоҳ доред)
-import SectionHeader from '../components/ui/SectionHeader';
-import CardsSection from './components/Cards/CardsSection';
-import CoursesSection from './components/Courses/CoursesSection';
-import ActiveSection from './components/Active/ActiveSection';
-import DirectionsSection from './components/Directions/DirectionsSection';
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
-import CourseCancelConfirmationModal from '@/components/ui/CourseCancelConfirmationModal';
-import CardioCourseModal from './components/CardioCourseModal'; 
-import ServiceFormModal from './components/ServiceFormModal';
-import CourseFormModal from './components/CourseForm/CourseFormModal';
-import DirectionFormModal from './components/DirectionFormModal';
+// Sections
+import {
+  ReadyToLaunchSection,
+  RecruitmentSection,
+  ActiveCoursesSection,
+  ServicesSection,
+  DirectionsSectionWrapper
+} from './sections';
+
+// Modals
+import {
+  ServicesModals,
+  CoursesModals,
+  DirectionsModals
+} from './modals';
 
 // Data
 import activeMockData from './data/activeMockData';
 
+/**
+ * Саҳифаи асосии Services
+ * Дар бар мегирад: Курсҳо, Хидматҳо, Самтҳо
+ */
 export default function Services() {
   const {
     // Data
@@ -42,118 +49,72 @@ export default function Services() {
     handleConfirmCancel,
   } = useServicePageLogic();
 
+  // Хатогӣ
   if (error) {
-    return <div className="text-center py-10 text-red-500">Ошибка: {error}</div>;
+    return (
+      <div className="text-center py-10 text-red-500">
+        Ошибка: {error}
+      </div>
+    );
   }
 
   return (
     <>
-      {/* --- Sections: Рендеринг (Коди асосан тағйирнаёфта) --- */}
+      {/* ҚИСМҲОИ САҲИФА */}
       
-      {/* Готово к запуску */}
-      <div className="mb-10">
-        <SectionHeader title="Готово к запуску" />
-        <CoursesSection 
-          items={courses}
-          variant="launch"
-          isLoading={false}
-          onStart={handleLaunchClick} 
-          onCancel={handleCancelClick} // Идоракунии 'Отменить'
-        />
-      </div>
+      {/* 1. Готово к запуску */}
+      <ReadyToLaunchSection
+        courses={courses}
+        isLoading={false}
+        onStart={handleLaunchClick}
+        onCancel={handleCancelClick}
+      />
 
-      {/* Набор на курсы */}
-      <div className="mb-10">
-        <SectionHeader 
-          title="Набор на курсы" 
-          actionLabel="Добавить" 
-          onAction={courseModals.form.openCreate}
-        />
-        <CoursesSection 
-          items={courses.slice(0, 2)}
-          variant="recruit"
-          isLoading={false}
-          onStart={handleLaunchClick} 
-          onCancel={handleCancelClick}
-        />
-      </div>
+      {/* 2. Набор на курсы */}
+      <RecruitmentSection
+        courses={courses}
+        isLoading={false}
+        onStart={handleLaunchClick}
+        onCancel={handleCancelClick}
+        onAddNew={courseModals.form.openCreate}
+      />
 
-      {/* Актуальные */}
-      <SectionHeader title="Актуальные" customRightElement="8 курсов" />
-      <ActiveSection items={activeMockData} />
-      <div className="mb-12"></div>
+      {/* 3. Актуальные */}
+      <ActiveCoursesSection items={activeMockData} />
 
-      {/* Услуги */}
-      <SectionHeader title="Услуги" actionLabel="Создать" onAction={serviceModals.form.openCreate} />
-      <CardsSection 
+      {/* 4. Услуги */}
+      <ServicesSection
         items={services}
+        isLoading={isLoading}
         onEdit={serviceModals.form.openEdit}
         onDelete={serviceModals.delete.openDelete}
-        isLoading={isLoading}
+        onAddNew={serviceModals.form.openCreate}
       />
 
-      {/* Направления */}
-      <div className="mt-8">
-        <SectionHeader title="Направления" actionLabel="Создать" onAction={directionModals.form.openCreate} />
-        <DirectionsSection 
-          items={directions} 
-          onEdit={directionModals.form.openEdit}
-          onDelete={directionModals.delete.openDelete}
-        />
-      </div>
-
-      {/* --- МОДАЛҲО --- */}
-
-      {/* 1. Модалҳои Services */}
-      <DeleteConfirmationModal
-        isOpen={serviceModals.delete.isOpen}
-        onClose={serviceModals.delete.close}
-        onConfirm={serviceHandlers.handleConfirmDelete}
-        isDeleting={serviceModals.delete.isDeleting}
-        itemName={serviceModals.delete.itemToDelete?.title}
-      />
-      <ServiceFormModal
-        isOpen={serviceModals.form.isOpen}
-        onClose={serviceModals.form.close}
-        onSubmit={serviceHandlers.handleSubmit}
-        initialData={serviceModals.form.editingItem}
-        isSubmitting={serviceModals.form.isSubmitting}
+      {/* 5. Направления */}
+      <DirectionsSectionWrapper
+        items={directions}
+        onEdit={directionModals.form.openEdit}
+        onDelete={directionModals.delete.openDelete}
+        onAddNew={directionModals.form.openCreate}
       />
 
-      {/* 2. Модалҳои Courses */}
-      <CardioCourseModal
-        isOpen={courseModals.cardio.isOpen}
-        onClose={courseModals.cardio.close}
-        courseData={courseModals.cardio.editingItem}
-      />
-      <CourseCancelConfirmationModal
-        isOpen={courseModals.cancel.isOpen} 
-        onClose={courseModals.cancel.close}
-        courseData={courseModals.cancel.itemToDelete} 
-        onActionSuccess={handleConfirmCancel} // Логикаи бекоркунӣ
-      />
-      <CourseFormModal
-        isOpen={courseModals.form.isOpen}
-        onClose={courseModals.form.close}
-        onSubmit={courseHandlers.handleSubmit}
-        initialData={courseModals.form.editingItem}
-        isSubmitting={courseModals.form.isSubmitting}
+      {/* МОДАЛҲО */}
+
+      <ServicesModals 
+        modals={serviceModals}
+        handlers={serviceHandlers}
       />
 
-      {/* 3. Модалҳои Directions */}
-      <DeleteConfirmationModal
-        isOpen={directionModals.delete.isOpen}
-        onClose={directionModals.delete.close}
-        onConfirm={directionHandlers.handleConfirmDelete}
-        isDeleting={directionModals.delete.isDeleting}
-        itemName={directionModals.delete.itemToDelete?.title}
+      <CoursesModals
+        modals={courseModals}
+        handlers={courseHandlers}
+        onConfirmCancel={handleConfirmCancel}
       />
-      <DirectionFormModal
-        isOpen={directionModals.form.isOpen}
-        onClose={directionModals.form.close}
-        onSubmit={directionHandlers.handleSubmit}
-        initialData={directionModals.form.editingItem}
-        isSubmitting={directionModals.form.isSubmitting}
+
+      <DirectionsModals
+        modals={directionModals}
+        handlers={directionHandlers}
       />
     </>
   );
