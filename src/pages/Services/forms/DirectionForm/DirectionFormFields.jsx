@@ -27,19 +27,6 @@ export default function DirectionFormFields({
         required
       />
 
-      {/* Иконка */}
-      <FileUploader
-        label="Иконка направления"
-        onUpload={onIconUpload}
-        currentFile={formData.iconUrl}
-      />
-
-      {/* Интихоби ранг */}
-      <ColorPicker
-        selectedColor={formData.color}
-        onSelectColor={onColorSelect}
-      />
-
       {/* Тавсиф */}
       <TextArea
         label="Описание"
@@ -49,6 +36,14 @@ export default function DirectionFormFields({
         placeholder="Краткое описание направления"
         rows={3}
       />
+
+      {/* Интихоби ранг */}
+      <ColorPicker
+        selectedColor={formData.color}
+        onSelectColor={onColorSelect}
+      />
+
+
     </>
   );
 }

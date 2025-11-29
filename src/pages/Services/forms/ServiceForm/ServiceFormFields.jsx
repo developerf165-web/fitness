@@ -51,15 +51,6 @@ export default function ServiceFormFields({
         onSelectColor={onColorSelect}
       />
 
-      {/* Тавсиф (optional) */}
-      <TextArea
-        label="Описание"
-        name="description"
-        value={formData.description}
-        onChange={onChange}
-        placeholder="Краткое описание услуги"
-        rows={3}
-      />
     </>
   );
 }
