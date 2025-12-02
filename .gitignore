@@ -86,6 +86,8 @@ Thumbs.db
 # Local IDE configs
 .idea/
 *.iml
+*.txt
+*.md
 
 # TypeScript cache
 *.tsbuildinfo

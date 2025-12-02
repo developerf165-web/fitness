@@ -1,15 +1,10 @@
 // AddTrainerModal.jsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper"; 
 import { useToast } from '../../Toast/ToastContext';
 import { createTrainer } from '../../../../services/Personal/trainerService';
-import TrainerForm from './TrainerForm'; // Компоненти нави форма
-import { 
-    FOCUS_OPTIONS_FOR_SELECT, 
-    getIdFromLabel, 
-    getDisplayValue, 
-    getSelectedLabelsFromIds 
-} from './TrainerOptions'; // Функсияҳо ва маълумоти нав
+import { getAllDirections, formatDirectionsForSelect } from '../../../../services/Personal/directionService';
+import TrainerForm from './TrainerForm';
 
 const INITIAL_FORM_DATA = {
     name: '',
@@ -27,6 +22,90 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    
+    // State барои направленияҳои динамикӣ
+    const [directions, setDirections] = useState([]);
+    const [isLoadingDirections, setIsLoadingDirections] = useState(true);
+
+    // Гирифтани направленияҳо аз сервер
+    useEffect(() => {
+        const fetchDirections = async () => {
+            try {
+                setIsLoadingDirections(true);
+                const data = await getAllDirections();
+                setDirections(data);
+            } catch (error) {
+                console.error('❌ Ошибка при загрузке направлений:', error);
+                
+                // Нишон додани паёми муфассал
+                const errorMessage = error.message || 'Не удалось загрузить направления';
+                showToast('error', 'Ошибка загрузки', errorMessage);
+                
+                // Агар токен набошад, корбарро ба логин равон кунем
+                if (error.status === 401) {
+                    setTimeout(() => {
+                        // window.location.href = '/login'; // Фаъол кунед агар лозим бошад
+                    }, 2000);
+                }
+            } finally {
+                setIsLoadingDirections(false);
+            }
+        };
+
+        if (isOpen) {
+            fetchDirections();
+        }
+        
+        // Тоза кардани форма вақте ки модал кушода мешавад
+        if (isOpen) {
+            setFormData(INITIAL_FORM_DATA);
+            setActiveField(null);
+        }
+    }, [isOpen, showToast]);
+
+    // Табдил додани направленияҳо ба формати SelectWithOptions
+    const FOCUS_OPTIONS_FOR_SELECT = useMemo(() => {
+        if (isLoadingDirections) {
+            return [{ title: 'Направления', items: ['Загрузка...'] }];
+        }
+        
+        const formattedDirections = formatDirectionsForSelect(directions);
+        return [
+            {
+                title: 'Направления',
+                items: formattedDirections.map(d => d.label)
+            }
+        ];
+    }, [directions, isLoadingDirections]);
+
+    // Функсияи ёрирасон: Ёфтани ID аз Label
+    const getIdFromLabel = (label) => {
+        const formatted = formatDirectionsForSelect(directions);
+        return formatted.find(d => d.label === label)?.value;
+    };
+
+    // Функсияи ёрирасон: Ёфтани Label аз ID
+    const getLabelFromId = (id) => {
+        const formatted = formatDirectionsForSelect(directions);
+        return formatted.find(d => d.value === id.toString())?.label;
+    };
+
+    // Функсияи ёрирасон: Сохтани Display Value
+    const getDisplayValue = (selectedIds) => {
+        if (!selectedIds || selectedIds.length === 0) return '';
+        
+        return selectedIds
+            .map(id => getLabelFromId(id))
+            .filter(Boolean)
+            .join(', ');
+    };
+
+    // Функсияи ёрирасон: Табдил додани ID-ҳои интихобшуда ба Label-ҳо
+    const getSelectedLabelsFromIds = (selectedIds) => {
+        return selectedIds
+            .map(id => getLabelFromId(id))
+            .filter(Boolean);
+    };
 
     // Функсияҳои идоракунӣ (Handlers)
     const handleChange = (e) => {
@@ -60,7 +139,9 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     };
 
     // Ҳисобкунаки қиматҳо
-    const displayFocus = useMemo(() => getDisplayValue(formData.focus), [formData.focus]);
+    const displayFocus = useMemo(() => {
+        return getDisplayValue(formData.focus);
+    }, [formData.focus, directions]); // eslint-disable-line react-hooks/exhaustive-deps
     
     const isFormValid =
         formData.name &&
@@ -88,24 +169,62 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
                 setActiveField(null);
             }
         } catch (error) {
-             // ... Логикаи коркарди хатогӣ (Toast logic)
+            // Коркарди хатогиҳо бо паёмҳои муфассал ба забони русӣ
+            console.error("❌ Ошибка при создании тренера:", error);
+            
             const apiError = error.response?.data;
-            let toastMessage = "Произошла сетевая ошибка. Проверьте подключение.";
+            const status = error.response?.status;
+            let toastMessage = "Ошибка сети. Проверьте подключение к интернету.";
             let toastTitle = "Ошибка!";
 
-            if (error.response?.status === 422) {
+            // 1. Хатогии аутентификатсия (401)
+            if (status === 401) {
+                toastTitle = "Ошибка аутентификации";
+                toastMessage = error.userMessage || "Токен недействителен или истек. Пожалуйста, войдите заново.";
+            } 
+            // 2. Хатогии валидатсия (422)
+            else if (status === 422) {
                 toastTitle = "Ошибка валидации";
                 const validationErrors = apiError?.errors;
+                
                 if (validationErrors) {
+                    // Гирифтани аввалин хатогии валидатсия
                     const firstErrorKey = Object.keys(validationErrors)[0];
-                    toastMessage = validationErrors[firstErrorKey][0];
+                    const firstError = validationErrors[firstErrorKey][0];
+                    
+                    // Тарҷумаи номи майдон ба забони русӣ
+                    const fieldTranslations = {
+                        'name': 'Имя',
+                        'surname': 'Фамилия',
+                        'phone': 'Телефон',
+                        'direction_id': 'Направление',
+                        'work_experience': 'Опыт работы',
+                        'avatar': 'Аватар',
+                        'color': 'Цвет'
+                    };
+                    
+                    const fieldName = fieldTranslations[firstErrorKey] || firstErrorKey;
+                    toastMessage = `${fieldName}: ${firstError}`;
                 } else {
                     toastMessage = apiError?.message || "Проверьте введенные данные.";
                 }
-            } else if (error.response?.status) {
-                 toastTitle = `Ошибка ${error.response.status}`;
-                 toastMessage = apiError?.message || "Произошла ошибка сервера.";
+            } 
+            // 3. Хатогии сервер (500-599)
+            else if (status >= 500) {
+                toastTitle = `Ошибка сервера (${status})`;
+                toastMessage = apiError?.message || "Внутренняя ошибка сервера. Попробуйте позже.";
+            } 
+            // 4. Дигар хатогиҳо (403, 404, ва ғайра)
+            else if (status) {
+                toastTitle = `Ошибка ${status}`;
+                toastMessage = apiError?.message || "Запрос не выполнен.";
             }
+            // 5. Хатогии шабака (offline, timeout)
+            else if (!error.response) {
+                toastTitle = "Ошибка сети";
+                toastMessage = "Не удалось подключиться к серверу. Проверьте интернет-соединение.";
+            }
+            
             showToast('error', toastTitle, toastMessage);
         } finally {
             setIsLoading(false);
@@ -125,6 +244,7 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
         closeActiveDropdown,
         displayFocus,
         FOCUS_OPTIONS_FOR_SELECT, // Маълумоти форматшуда барои Dropdown
+        isLoadingDirections, // Холати боргирӣ
         getSelectedLabels: getSelectedLabelsFromIds, // Функсияи ёрирасон
         handleFocusChange, // Функсияи идоракунӣ
         isFormValid,

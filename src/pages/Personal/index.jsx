@@ -14,6 +14,7 @@ export default function PersonalPage() {
     isAddModalOpen,
     openAddModal,
     closeAddModal,
+    refetchStaffData,
   } = usePersonal();
 
   return (
@@ -36,7 +37,11 @@ export default function PersonalPage() {
       </div>
 
       <Modal isOpen={isAddModalOpen} onClose={closeAddModal}>
-        <AddModalWrapper type="trainer" onClose={closeAddModal} />
+        <AddModalWrapper 
+          type="trainer" 
+          onClose={closeAddModal} 
+          onSuccess={refetchStaffData}
+        />
       </Modal>
     </div>
   );

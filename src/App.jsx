@@ -19,6 +19,7 @@ import FinancePage from "./pages/FinancePage/FinancePage";
 import FitnessProductsPage from "./pages/FitnessProductsPage/FitnessProductsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import MobileAppManagementPage from "./pages/MobileAppManagementPage/MobileAppManagementPage";
+import DevToolsPanel from "./pages/components/DevTools/DevToolsPanel";
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,7 @@ export default function App() {
     <Router>
       <ToastProvider>
         <AppContent />
+        <DevToolsPanel />
       </ToastProvider>
     </Router>
   );

@@ -26,7 +26,7 @@ const AddModalWrapper = ({ type, onClose, onSuccess }) => {
           <AddTrainerModal
             isOpen={true}
             onClose={onClose}
-            onAddTrainer={() => {}}
+            onAddTrainer={onSuccess}
           />
         ) : null}
       </div>

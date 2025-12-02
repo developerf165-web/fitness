@@ -3,10 +3,11 @@ import { TableData } from "/src/pages/Dashboard/data/TableData";
 
 export const usePersonal = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const staffData = useMemo(
     () => TableData.filter((user) => user.type === "staff"), 
-    [] 
+    [refreshTrigger] // Dependency барои навсозӣ
   );
 
   const onWorkStaff = useMemo(
@@ -21,6 +22,11 @@ export const usePersonal = () => {
   
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
+  
+  // Функсияи навсозӣ - баъд аз эҷоди муваффақ
+  const refetchStaffData = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return {
     staffData,
@@ -29,5 +35,6 @@ export const usePersonal = () => {
     isAddModalOpen,
     openAddModal,
     closeAddModal,
+    refetchStaffData, // Функсияи нав
   };
 };

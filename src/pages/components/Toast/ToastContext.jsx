@@ -26,6 +26,7 @@ const ToastContainer = () => {
       className="fixed top-7 right-5 z-[100] transition-opacity duration-500"
     >
       <ToastNotification
+        type={toast.type}
         title={toast.title}
         message={toast.message}
         // --- ҚАДАМИ 3: Тугмаи "X"-ро фаъол мекунем ---
@@ -41,8 +42,7 @@ export const ToastProvider = ({ children }) => {
   const TOAST_DURATION = 4000;
 
   const showToast = useCallback((type, title, message) => {
-    if (type !== 'success') return; 
-
+    // Қабул кардани ҳамаи навъҳои тоаст: success, error, warning, info
     setToast({ 
       id: Date.now(),
       type, 
