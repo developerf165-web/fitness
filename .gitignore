@@ -88,6 +88,8 @@ Thumbs.db
 *.iml
 *.txt
 *.md
+!README.md
+
 
 # TypeScript cache
 *.tsbuildinfo
