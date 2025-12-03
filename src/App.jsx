@@ -19,6 +19,7 @@ import FinancePage from "./pages/FinancePage/FinancePage";
 import FitnessProductsPage from "./pages/FitnessProductsPage/FitnessProductsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import MobileAppManagementPage from "./pages/MobileAppManagementPage/MobileAppManagementPage";
+import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import DevToolsPanel from "./pages/components/DevTools/DevToolsPanel";
 
 function AppContent() {
@@ -47,6 +48,7 @@ function AppContent() {
           <Route path="/producti" element={<FitnessProductsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/upravlenie" element={<MobileAppManagementPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Routes>
       </main>}
 

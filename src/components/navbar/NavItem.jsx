@@ -12,18 +12,18 @@ const NavItem = ({ to, label, onClick }) => {
         `
           text-sm transition-all duration-200 px-3 py-1.5 rounded-lg whitespace-nowrap
           
-          text-[var(--color-text-muted)]
+          text-(--color-text-muted)
           
-          lg:hover:text-[var(--color-accent)] 
-          lg:hover:bg-[var(--bg-hover-active-desktop)]
+          lg:hover:text-(--color-accent)
+          lg:hover:bg-(--bg-hover-active-desktop)
           
           ${isActive 
-            ? `color-accent bg-[var(--bg-hover-active-desktop)]` 
+            ? `color-accent bg-(--bg-hover-active-desktop)` 
             : ''
           }
 
           w-full text-left p-3 lg:w-auto lg:text-center lg:p-1.5 
-          ${!isActive && `hover:bg-[var(--bg-mobile-menu)]`}
+          ${!isActive && `hover:bg-(--bg-mobile-menu)`}
         `
       }
     >
