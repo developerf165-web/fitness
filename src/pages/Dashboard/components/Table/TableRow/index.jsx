@@ -9,14 +9,20 @@ import EnrollServicesCountCell from "./EnrollServicesCountCell";
 import EnrollServicesCell from "./EnrollServicesCell";
 import DefaultCell from "./DefaultCell";
 
-export default function TableRow({ user, fields, isPageBlocked }) {
+export default function TableRow({ user, fields, isPageBlocked, onRowClick }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    if (user && user.id) {
-      navigate(`/user/${user.serverId}`);
+    if (onRowClick) {
+      // Use custom handler if provided
+      onRowClick(user);
     } else {
-      console.error("User ID is missing, cannot navigate.");
+      // Default: navigate to user detail page
+      if (user && user.id) {
+        navigate(`/user/${user.serverId}`);
+      } else {
+        console.error("User ID is missing, cannot navigate.");
+      }
     }
   };
 

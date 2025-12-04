@@ -16,7 +16,7 @@ export default function MiniServiceSlider({ title, services, items, onServiceCli
     // Handler барои клик
     const handleClick = (service) => {
         if (actualOnClick) {
-            actualOnClick({ ...service, name: service.title });
+            actualOnClick({ ...service, name: service.title || service.name });
         }
     };
 

@@ -40,14 +40,14 @@ export default function MiniProductSlider({ title, products, items, onProductCli
                             <div
                                 key={product.id}
                                 onClick={() => actualOnClick && actualOnClick(product)}
-                                className="flex-shrink-0 w-32 bg-[#1C1C1C] rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform relative h-40"
+                                className="flex-shrink-0 w-32 bg-[#1C1C1C] rounded-lg overflow-hidden cursor-pointer group relative h-40"
                             >
                                 {/* Сурат - пураи карт */}
                                 <div className="absolute inset-0 w-full h-full">
                                     <img
                                         src={product.imageUrl}
                                         alt={product.name}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                                     />
                                     {/* Gradient overlay аз поён то боло */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -70,11 +70,11 @@ export default function MiniProductSlider({ title, products, items, onProductCli
                                     {/* Нарх - баробар */}
                                     <div className="flex items-baseline gap-1.5">
                                         <span className="text-xs font-bold text-white">
-                                            {product.price} TJS
+                                            {Number(product.price).toFixed(2)} TJS
                                         </span>
                                         {product.oldPrice && (
                                             <span className="text-[10px] text-gray-400 line-through">
-                                                {product.oldPrice}
+                                                {Number(product.oldPrice).toFixed(2)}
                                             </span>
                                         )}
                                     </div>

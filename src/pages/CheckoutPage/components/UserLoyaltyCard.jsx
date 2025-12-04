@@ -10,9 +10,9 @@ export default function UserLoyaltyCard({
         points: '20 баллов'
     },
     priceData = {
-        price: '333 c',
-        bonus: '20',
-        total: '313 c'
+        price: '0 c.',
+        bonus: '0 c.',
+        total: '0 c.'
     }
 }) {
     return (

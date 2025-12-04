@@ -2,27 +2,28 @@ import TableHeader from "./TableHeader";
 import TableRow from "./TableRow/index";
 import TableRowSkeleton from "./TableRowSkeleton";
 
-export default function Table({ data, headers, fields, loading, isPageBlocked }) {
+export default function Table({ data, headers, fields, loading, isPageBlocked, onRowClick, minHeight = true }) {
   return (
-    <div className=" min-h-[500px]">
+    <div className={minHeight ? "min-h-[500px]" : ""}>
       <div className="rounded-4xl overflow-hidden p-6 shadow-lg color-bg-nav border-box my-4 text-white">
         <table className="w-full border-collapse">
           <TableHeader headers={headers} />
           <tbody>
             {loading
               ? Array(10)
-                  .fill(null)
-                  .map((_, i) => <TableRowSkeleton key={i} fields={fields} />)
+                .fill(null)
+                .map((_, i) => <TableRowSkeleton key={i} fields={fields} />)
               : data.length > 0
-              ? data.map((user) => (
+                ? data.map((user) => (
                   <TableRow
-                    key={user.id} 
+                    key={user.id}
                     user={user}
                     fields={fields}
                     isPageBlocked={isPageBlocked}
+                    onRowClick={onRowClick}
                   />
                 ))
-              : (
+                : (
                   <tr>
                     <td
                       colSpan={fields.length}

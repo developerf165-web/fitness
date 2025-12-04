@@ -7,14 +7,15 @@ import DropdownField from '../../ui/DropdownField';
 import FormButton from "@/components/ui/FormButton";
 
 // Ҳамаи мантиқ ва state ба воситаи props мегузаранд
-const TrainerForm = ({ 
-    formData, 
-    handleChange, 
-    handleFileChange, 
-    handleColorChange, 
-    activeField, 
-    setActiveField, 
-    closeActiveDropdown, 
+const TrainerForm = ({
+    mode = 'add',
+    formData,
+    handleChange,
+    handleFileChange,
+    handleColorChange,
+    activeField,
+    setActiveField,
+    closeActiveDropdown,
     displayFocus,
     FOCUS_OPTIONS_FOR_SELECT,
     getSelectedLabels,
@@ -24,7 +25,7 @@ const TrainerForm = ({
     handleSubmit,
     onClose
 }) => {
-    
+
     const dropdownProps = {
         isActive: activeField === 'focus',
         onToggle: () => setActiveField(activeField === 'focus' ? null : 'focus'),
@@ -35,7 +36,7 @@ const TrainerForm = ({
     };
 
     const formContent = (
-        <form id="add-trainer-form" className="space-y-4 relative pb-32"> 
+        <form id="add-trainer-form" className="space-y-4 relative pb-32">
             {/* Input fields */}
             <CustomInput label="Имя*" placeholder="Введите имя" name="name" value={formData.name} onChange={handleChange} required />
             <CustomInput label="Фамилия*" placeholder="Введите фамилию" name="lastName" value={formData.lastName} onChange={handleChange} required />
@@ -68,17 +69,19 @@ const TrainerForm = ({
         </form>
     );
 
+    const buttonText = mode === 'edit' ? 'Сохранить' : 'Добавить';
+
     const formFooter = (
         <>
             <FormButton onClick={onClose} className="color-bg-mini-card bg-hover-card cursor-pointer" disabled={isLoading}>
                 Отмена
             </FormButton>
             <FormButton
-                onClick={handleSubmit} 
+                onClick={handleSubmit}
                 disabled={!isFormValid || isLoading}
                 className={isFormValid && !isLoading ? "color-bg-accent hover:bg-lime-200 cursor-pointer text-black font-semibold" : "color-bg-mini-card cursor-not-allowed opacity-70"}
             >
-                {isLoading ? "Загрузка..." : "Добавить"}
+                {isLoading ? "Загрузка..." : buttonText}
             </FormButton>
         </>
     );

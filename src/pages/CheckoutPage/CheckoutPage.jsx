@@ -4,6 +4,7 @@ import UserLoyaltyCard from './components/UserLoyaltyCard';
 import RightSidebar from './components/RightSidebar';
 import SearchComponent from '../Dashboard/components/SearchComponent';
 import CheckoutCart from './components/CheckoutCart';
+import PaymentModal from './components/PaymentModal';
 import { mockSliderProducts, mockServices, mockCourses } from './data/checkoutMockData';
 import { useToast } from '../components/Toast/ToastContext';
 
@@ -69,13 +70,36 @@ export default function CheckoutPage() {
         setCartItems(prev => prev.filter(item => item.id !== id));
     };
 
-    // Handler барои пардохт
-    const handleCheckout = (amount) => {
+    // Ҳисоб кардани нархи умумӣ
+    const calculateTotal = () => {
+        return cartItems.reduce((sum, item) => {
+            const subtotal = item.price * item.qty;
+            const discountAmount = (subtotal * item.discount) / 100;
+            return sum + (subtotal - discountAmount);
+        }, 0);
+    };
+
+    const totalAmount = calculateTotal();
+    const bonusPercentage = 5; // Bronze tier bonus (5%)
+    const bonusAmount = (totalAmount * bonusPercentage) / 100;
+    const finalTotal = totalAmount - bonusAmount;
+
+    // State барои модали пардохт
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+    // Handler барои кушодани модал
+    const handleCheckoutClick = () => {
         if (cartItems.length === 0) {
-            showToast('Корзина пуста', 'error');
+            showToast('error', 'Ошибка', 'Ваша корзина пуста');
             return;
         }
-        showToast(`Оплата успешно завершена! Сумма: ${amount} TJS`, 'success');
+        setIsPaymentModalOpen(true);
+    };
+
+    // Handler барои тасдиқи пардохт
+    const handleConfirmPayment = (amount) => {
+        setIsPaymentModalOpen(false);
+        showToast('success', 'Оплата успешно пройдена', 'Оплата успешно пройдена');
         setCartItems([]);
     };
 
@@ -96,14 +120,28 @@ export default function CheckoutPage() {
 
                 {/* ҚИСМИ ЧАП - Форма */}
                 <div className="flex flex-col gap-6 h-full">
-                    <UserLoyaltyCard />
+                    <UserLoyaltyCard
+                        userData={{
+                            avatar: '/images/avatar.jpg',
+                            name: 'АЗИЗА СУЛТАНОВА',
+                            phone: '+992 92 000 0000',
+                            balance: '500.00 TJS',
+                            tier: 'Bronze',
+                            points: bonusAmount.toFixed(2)
+                        }}
+                        priceData={{
+                            price: `${totalAmount.toFixed(2)} c.`,
+                            bonus: `${bonusAmount.toFixed(2)} c.`,
+                            total: `${finalTotal.toFixed(2)} c.`
+                        }}
+                    />
 
                     <div className="flex-1">
                         <CheckoutCart
                             items={cartItems}
                             updateQuantity={updateQuantity}
                             removeItem={removeItem}
-                            onCheckout={handleCheckout}
+                            onCheckout={handleCheckoutClick}
                         />
                     </div>
                 </div>
@@ -119,6 +157,17 @@ export default function CheckoutPage() {
                 </div>
 
             </div>
+
+            {/* Модали пардохт */}
+            <PaymentModal
+                isOpen={isPaymentModalOpen}
+                onClose={() => setIsPaymentModalOpen(false)}
+                onConfirm={handleConfirmPayment}
+                totalAmount={totalAmount}
+                userBalance={500} // Mock balance
+                userBonuses={20}  // Mock bonuses
+                discount={0}      // Mock discount
+            />
         </div>
     );
 }

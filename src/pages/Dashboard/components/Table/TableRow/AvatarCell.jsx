@@ -4,12 +4,13 @@ export default function AvatarCell({ user, value }) {
   return (
     // Тағйирот: w-[40%] -> w-[250px]
     // Ҳоло сутун ҳамагӣ 250px ҷой мегирад (хурдтар ва зеботар)
-    <td className="p-3 w-[350px]"> 
+    <td className="p-3 w-[350px]">
       <div className="flex items-center gap-3">
         <img
           src={value}
           alt={user.name}
-          className="w-8 h-8 rounded-full object-cover"
+          className="w-8 h-8 rounded-full object-cover border-2"
+          style={{ borderColor: user.color || 'transparent' }}
         />
         {/* truncate ва max-w-[200px] номро дар дохили ҳамин 250px ғунҷонида мемонад */}
         <span className="truncate max-w-[200px] block font-medium">

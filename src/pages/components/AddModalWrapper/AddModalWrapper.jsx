@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AddUserCard from "/src/pages/components/Cards/AddUserCard/AddUserCard";
-import AddTrainerModal from "../Cards/Modal/AddTrainerModal";
+import TrainerModal from "../Cards/Modal/TrainerModal";
 
 const AddModalWrapper = ({ type, onClose, onSuccess }) => {
   useEffect(() => {
@@ -23,7 +23,8 @@ const AddModalWrapper = ({ type, onClose, onSuccess }) => {
         {type === "user" ? (
           <AddUserCard onClose={onClose} onSuccess={onSuccess} />
         ) : type === "trainer" ? (
-          <AddTrainerModal
+          <TrainerModal
+            mode="add"
             isOpen={true}
             onClose={onClose}
             onAddTrainer={onSuccess}

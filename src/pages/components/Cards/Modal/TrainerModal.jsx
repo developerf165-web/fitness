@@ -1,8 +1,8 @@
-// AddTrainerModal.jsx
+// TrainerModal.jsx
 import React, { useState, useMemo, useEffect } from 'react';
-import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper"; 
+import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper";
 import { useToast } from '../../Toast/ToastContext';
-import { createTrainer } from '../../../../services/Personal/trainerService';
+import { createTrainer, updateTrainer } from '../../../../services/Personal/trainerService';
 import { getAllDirections, formatDirectionsForSelect } from '../../../../services/Personal/directionService';
 import TrainerForm from './TrainerForm';
 
@@ -11,18 +11,18 @@ const INITIAL_FORM_DATA = {
     lastName: '',
     phone: '',
     focus: [], // Массив барои ID-ҳо
-    experience: '', 
-    photo: null, 
+    experience: '',
+    photo: null,
     background: [],
     color: 'bg-red-600',
 };
 
-const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
+const TrainerModal = ({ mode = 'add', initialData = null, isOpen, onClose, onAddTrainer }) => {
     const { showToast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-    
+
     // State барои направленияҳои динамикӣ
     const [directions, setDirections] = useState([]);
     const [isLoadingDirections, setIsLoadingDirections] = useState(true);
@@ -36,11 +36,11 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
                 setDirections(data);
             } catch (error) {
                 console.error('❌ Ошибка при загрузке направлений:', error);
-                
+
                 // Нишон додани паёми муфассал
                 const errorMessage = error.message || 'Не удалось загрузить направления';
                 showToast('error', 'Ошибка загрузки', errorMessage);
-                
+
                 // Агар токен набошад, корбарро ба логин равон кунем
                 if (error.status === 401) {
                     setTimeout(() => {
@@ -55,20 +55,35 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
         if (isOpen) {
             fetchDirections();
         }
-        
-        // Тоза кардани форма вақте ки модал кушода мешавад
+
+        // Пур кардани форма вақте ки модал кушода мешавад
         if (isOpen) {
-            setFormData(INITIAL_FORM_DATA);
+            if (mode === 'edit' && initialData) {
+                // Edit mode: пур кардани форма бо маълумоти мавҷуда
+                setFormData({
+                    name: initialData.name || '',
+                    lastName: initialData.lastName || initialData.surname || '',
+                    phone: initialData.phone || '',
+                    focus: initialData.focus || initialData.direction_id || [],
+                    experience: initialData.experience || initialData.work_experience || '',
+                    photo: initialData.photo || initialData.avatar || null,
+                    background: initialData.background || initialData.cover_img || [],
+                    color: initialData.color || 'bg-red-600',
+                });
+            } else {
+                // Add mode: тоза кардани форма
+                setFormData(INITIAL_FORM_DATA);
+            }
             setActiveField(null);
         }
-    }, [isOpen, showToast]);
+    }, [isOpen, mode, initialData, showToast]);
 
     // Табдил додани направленияҳо ба формати SelectWithOptions
     const FOCUS_OPTIONS_FOR_SELECT = useMemo(() => {
         if (isLoadingDirections) {
             return [{ title: 'Направления', items: ['Загрузка...'] }];
         }
-        
+
         const formattedDirections = formatDirectionsForSelect(directions);
         return [
             {
@@ -93,7 +108,7 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     // Функсияи ёрирасон: Сохтани Display Value
     const getDisplayValue = (selectedIds) => {
         if (!selectedIds || selectedIds.length === 0) return '';
-        
+
         return selectedIds
             .map(id => getLabelFromId(id))
             .filter(Boolean)
@@ -120,13 +135,13 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     const handleColorChange = (color) => {
         setFormData(prev => ({ ...prev, color }));
     };
-    
+
     const closeActiveDropdown = () => setActiveField(null);
 
     // 🚩 Логикаи ислоҳшудаи интихоб
     const handleFocusChange = (selectedLabel) => {
         // Табдил додани Label (аз SelectWithOptions) ба ID (барои state)
-        const selectedId = getIdFromLabel(selectedLabel); 
+        const selectedId = getIdFromLabel(selectedLabel);
         if (!selectedId) return;
 
         setFormData(prev => {
@@ -142,13 +157,13 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     const displayFocus = useMemo(() => {
         return getDisplayValue(formData.focus);
     }, [formData.focus, directions]); // eslint-disable-line react-hooks/exhaustive-deps
-    
+
     const isFormValid =
         formData.name &&
         formData.lastName &&
         formData.phone &&
-        formData.focus.length > 0 && 
-        formData.photo && 
+        formData.focus.length > 0 &&
+        formData.photo &&
         formData.color;
 
     const handleSubmit = async (e) => {
@@ -160,18 +175,27 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
 
         setIsLoading(true);
         try {
-            const response = await createTrainer(formData);
+            let response;
+            if (mode === 'edit' && initialData?.id) {
+                response = await updateTrainer(initialData.id, formData);
+            } else {
+                response = await createTrainer(formData);
+            }
+
             if (response.status === 200 || response.status === 201) {
-                showToast('success', 'Успешно!', 'Тренер успешно добавлен в систему.');
+                const successMessage = mode === 'edit'
+                    ? 'Тренер успешно обновлен!'
+                    : 'Тренер успешно добавлен в систему.';
+                showToast('success', 'Успешно!', successMessage);
                 if (onAddTrainer) onAddTrainer(response.data);
                 onClose();
-                setFormData(INITIAL_FORM_DATA); // Тоза кардани форма
+                setFormData(INITIAL_FORM_DATA);
                 setActiveField(null);
             }
         } catch (error) {
-            // Коркарди хатогиҳо бо паёмҳои муфассал ба забони русӣ
-            console.error("❌ Ошибка при создании тренера:", error);
-            
+            const errorAction = mode === 'edit' ? 'обновлении' : 'создании';
+            console.error(`❌ Ошибка при ${errorAction} тренера:`, error);
+
             const apiError = error.response?.data;
             const status = error.response?.status;
             let toastMessage = "Ошибка сети. Проверьте подключение к интернету.";
@@ -181,17 +205,17 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
             if (status === 401) {
                 toastTitle = "Ошибка аутентификации";
                 toastMessage = error.userMessage || "Токен недействителен или истек. Пожалуйста, войдите заново.";
-            } 
+            }
             // 2. Хатогии валидатсия (422)
             else if (status === 422) {
                 toastTitle = "Ошибка валидации";
                 const validationErrors = apiError?.errors;
-                
+
                 if (validationErrors) {
                     // Гирифтани аввалин хатогии валидатсия
                     const firstErrorKey = Object.keys(validationErrors)[0];
                     const firstError = validationErrors[firstErrorKey][0];
-                    
+
                     // Тарҷумаи номи майдон ба забони русӣ
                     const fieldTranslations = {
                         'name': 'Имя',
@@ -202,18 +226,18 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
                         'avatar': 'Аватар',
                         'color': 'Цвет'
                     };
-                    
+
                     const fieldName = fieldTranslations[firstErrorKey] || firstErrorKey;
                     toastMessage = `${fieldName}: ${firstError}`;
                 } else {
                     toastMessage = apiError?.message || "Проверьте введенные данные.";
                 }
-            } 
+            }
             // 3. Хатогии сервер (500-599)
             else if (status >= 500) {
                 toastTitle = `Ошибка сервера (${status})`;
                 toastMessage = apiError?.message || "Внутренняя ошибка сервера. Попробуйте позже.";
-            } 
+            }
             // 4. Дигар хатогиҳо (403, 404, ва ғайра)
             else if (status) {
                 toastTitle = `Ошибка ${status}`;
@@ -224,7 +248,7 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
                 toastTitle = "Ошибка сети";
                 toastMessage = "Не удалось подключиться к серверу. Проверьте интернет-соединение.";
             }
-            
+
             showToast('error', toastTitle, toastMessage);
         } finally {
             setIsLoading(false);
@@ -235,6 +259,7 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
 
     // Истифодаи TrainerForm
     const { formContent, formFooter } = TrainerForm({
+        mode,
         formData,
         handleChange,
         handleFileChange,
@@ -243,10 +268,10 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
         setActiveField,
         closeActiveDropdown,
         displayFocus,
-        FOCUS_OPTIONS_FOR_SELECT, // Маълумоти форматшуда барои Dropdown
-        isLoadingDirections, // Холати боргирӣ
-        getSelectedLabels: getSelectedLabelsFromIds, // Функсияи ёрирасон
-        handleFocusChange, // Функсияи идоракунӣ
+        FOCUS_OPTIONS_FOR_SELECT,
+        isLoadingDirections,
+        getSelectedLabels: getSelectedLabelsFromIds,
+        handleFocusChange,
         isFormValid,
         isLoading,
         handleSubmit,
@@ -254,9 +279,11 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     });
 
 
+    const modalTitle = mode === 'edit' ? 'ИЗМЕНИТЬ ТРЕНЕРА' : 'ДОБАВИТЬ ТРЕНЕРА';
+
     return (
         <ScrollableModalContentWrapper
-            title="ДОБАВИТЬ ТРЕНЕРА"
+            title={modalTitle}
             content={formContent}
             footer={formFooter}
             onClose={onClose}
@@ -264,4 +291,4 @@ const AddTrainerModal = ({ isOpen, onClose, onAddTrainer }) => {
     );
 };
 
-export default AddTrainerModal;
+export default TrainerModal;

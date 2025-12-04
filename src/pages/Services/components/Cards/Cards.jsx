@@ -56,9 +56,9 @@ export default function Cards({ item, onEdit, onDelete, isMini = false }) {
       <div className={`absolute bottom-0 left-0 right-0 z-20 flex items-stretch pb-1 ${isMini ? 'p-3' : 'p-5'}`}>
         <span className="block w-0.5 h-4 color-bg-accent"></span>
         <div className="pl-2">
-          <h3 className={`mb-1 font-medium ${isMini ? 'line-clamp-1' : ''}`}>{item.title}</h3>
+          <h3 className={`mb-1 font-medium ${isMini ? 'line-clamp-1' : ''}`}>{item.title || item.name}</h3>
           <p className={`text-sm mb-0 color-accent ${isMini ? 'text-xs' : ''}`}>
-            {item.tjs} TJS <span className="text-gray-400">/ {item.pos}</span>
+            {Number(item.tjs || item.price).toFixed(2)} TJS {item.pos && <span className="text-gray-400">/ {item.pos}</span>}
           </p>
         </div>
       </div>

@@ -23,7 +23,7 @@ const ReviewCard = ({ review }) => {
         </div>
       </div>
       
-      <p className="text-sm text-gray-300 flex-grow mb-3">
+      <p className="text-sm text-gray-300 grow mb-3">
         {review.text}
       </p>
       

@@ -15,12 +15,12 @@ export default function CheckoutCart({ items, updateQuantity, removeItem, onChec
     const totalAmount = items.reduce((sum, item) => sum + calculateItemTotal(item), 0);
 
     return (
-        <div className="flex flex-col h-full color-bg-card rounded-2xl overflow-hidden">
+        <div className="flex flex-col color-bg-card rounded-2xl overflow-hidden">
             {/* Header */}
             <CartHeader />
 
             {/* Body (Scrollable) */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-2 max-h-[600px]">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-2 min-h-[645px] max-h-[650px]">
                 {items.map((item, index) => (
                     <CartItem
                         key={item.id}

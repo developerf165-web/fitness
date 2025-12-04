@@ -32,6 +32,7 @@ function AppContent() {
       {!hideNavbar && <main className="container"><Navbar />
         <Routes>
           <Route path="/" element={<TrainerPage />} />
+          <Route path="/trainer/:id" element={<TrainerPage />} />
           <Route path="/shkafchiki" element={<LockerPage />} />
           <Route path="/glavnaya" element={<MainPage />} />
           <Route path="/series/:seriesSlug" element={<SeriesDetailPage />} />
@@ -40,7 +41,7 @@ function AppContent() {
           <Route path="/editprofilepage" element={<EditProfileModalPage />} />
           <Route path="/confirmpaspage" element={<ConfirmPasPage />} />
           <Route path="/personal" element={<PersonalPage />} />
-          <Route path="/clienti" element={<Dashboard />} /> 
+          <Route path="/clienti" element={<Dashboard />} />
           <Route path="/zablokirovanie" element={<BlockedUsers />} />
           <Route path="/user/:id" element={<ClientProfile />} />
           <Route path="/uslugi" element={<Services />} />
