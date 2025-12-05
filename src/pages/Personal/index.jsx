@@ -47,6 +47,7 @@ export default function PersonalPage() {
           loading={loading}
           onRowClick={handleRowClick}
           minHeight={false}
+          isQuarantine={true}
         />
       </div>
 

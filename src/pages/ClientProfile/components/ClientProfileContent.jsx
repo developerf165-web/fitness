@@ -1,10 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FiChevronLeft } from "react-icons/fi";
 import ProfileCard from "/src/components/ProfileCard/ProfileCard";
 import StatsGrid from "/src/components/StatsGrid";
 import Trainings from "/src/components/Trainings/Trainings";
 import TransactionPage from "/src/components/Transaction/TransactionPage";
+import BackButton from "/src/components/ui/BackButton";
 
 
 export default function ClientProfileContent({
@@ -20,16 +19,12 @@ export default function ClientProfileContent({
   handleOpenEditProfile,
   setIsUnblockModalOpen,
 }) {
-  const navigate = useNavigate();
-  const userId = mainCard ? mainCard.id : null; 
+  const userId = mainCard ? mainCard.id : null;
 
   return (
     <>
-      <div
-        className="text-white cursor-pointer inline-block mb-3 mt-4 pl-0"
-        onClick={() => navigate(-1)}
-      >
-        <FiChevronLeft size={40} className="hover:text-[#A1A1A1] transition" />
+      <div className="mb-3 mt-4 pl-0">
+        <BackButton className="hover:text-[#A1A1A1]" />
       </div>
 
 

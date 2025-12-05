@@ -29,7 +29,7 @@ export const mockCartItems = [
     }
 ];
 
-// Mock data барои слайдери продуктҳо
+
 export const mockSliderProducts = [
     {
         id: 101,

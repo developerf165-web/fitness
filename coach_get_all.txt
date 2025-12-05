@@ -1,0 +1,137 @@
+GET
+/api/coach/get/all
+getAll
+
+
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'http://84.54.31.36:8081/api/coach/get/all' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer 2|70Pd4Pj54rrUQEt3TiZDOn2AFDGw5BCsUzIM8XW77d782d4a'
+Request URL
+http://84.54.31.36:8081/api/coach/get/all
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "status": true,
+  "message": "Coaches loaded successfully",
+  "data": [
+    {
+      "id": 1,
+      "name": "Mubinjon",
+      "surname": "Hojiboev",
+      "phone": "992929777000",
+      "work_experience": "4.00",
+      "avatar": "img.img.jpg",
+      "color": "#000000",
+      "status": 1,
+      "grade": 4,
+      "password": null,
+      "courses_completed": 4,
+      "created_at": "2025-12-02T12:14:40.000000Z",
+      "updated_at": "2025-12-02T12:14:40.000000Z",
+      "directions": [],
+      "covers": []
+    },
+    {
+      "id": 2,
+      "name": "орпа",
+      "surname": "лорпап",
+      "phone": "86556",
+      "work_experience": "3.00",
+      "avatar": "img/coach/avatars/KQJzGImSFTxTqLSh5sWUgc5aTXz9pJa6EsuPlDqB.jpg",
+      "color": "#f87171",
+      "status": 0,
+      "grade": null,
+      "password": null,
+      "courses_completed": 0,
+      "created_at": "2025-12-04T11:00:02.000000Z",
+      "updated_at": "2025-12-04T11:00:02.000000Z",
+      "directions": [
+        {
+          "id": 1,
+          "title": "кардио нагрузка",
+          "description": "нагрузка ",
+          "created_at": "2025-12-02T12:14:40.000000Z",
+          "updated_at": "2025-12-02T12:14:40.000000Z",
+          "pivot": {
+            "coach_id": 2,
+            "direction_id": 1
+          }
+        }
+      ],
+      "covers": []
+    },
+    {
+      "id": 3,
+      "name": "орпа",
+      "surname": "лорпап",
+      "phone": "86556",
+      "work_experience": "3.00",
+      "avatar": "img/coach/avatars/EsFtb5y8nSJMN8leVYSqMSuUSMn36yUG9rOnun7Y.jpg",
+      "color": "#f87171",
+      "status": 0,
+      "grade": null,
+      "password": null,
+      "courses_completed": 0,
+      "created_at": "2025-12-04T11:00:21.000000Z",
+      "updated_at": "2025-12-04T11:00:21.000000Z",
+      "directions": [
+        {
+          "id": 1,
+          "title": "кардио нагрузка",
+          "description": "нагрузка ",
+          "created_at": "2025-12-02T12:14:40.000000Z",
+          "updated_at": "2025-12-02T12:14:40.000000Z",
+          "pivot": {
+            "coach_id": 3,
+            "direction_id": 1
+          }
+        }
+      ],
+      "covers": [
+        {
+          "id": 1,
+          "coach_id": 3,
+          "path": "img/coach/covers/kaYmELfy6qlg1PHokrySVsQOsRfvfNYcBCrmBdMk.jpg",
+          "created_at": "2025-12-04T11:00:21.000000Z",
+          "updated_at": "2025-12-04T11:00:21.000000Z"
+        },
+        {
+          "id": 2,
+          "coach_id": 3,
+          "path": "img/coach/covers/fTO6VuQS6iEPvkVlc5IPYJn1l9y5HCpk0f2AoaaH.jpg",
+          "created_at": "2025-12-04T11:00:21.000000Z",
+          "updated_at": "2025-12-04T11:00:21.000000Z"
+        }
+      ]
+    }
+  ]
+}
+Response headers
+ access-control-allow-origin: * 
+ cache-control: no-cache,private 
+ connection: Keep-Alive 
+ content-type: application/json 
+ date: Thu,04 Dec 2025 11:02:06 GMT 
+ keep-alive: timeout=5,max=100 
+ server: Apache/2.4.58 (Ubuntu) 
+ transfer-encoding: chunked 
+ vary: Authorization 
+Responses
+Code	Description	Links
+200	
+Response 200
+
+No links

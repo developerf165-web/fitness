@@ -14,7 +14,7 @@ const INITIAL_FORM_DATA = {
     experience: '',
     photo: null,
     background: [],
-    color: 'bg-red-600',
+    color: '#dc2626', // Default: red-600 in hex
 };
 
 const TrainerModal = ({ mode = 'add', initialData = null, isOpen, onClose, onAddTrainer }) => {
@@ -68,7 +68,7 @@ const TrainerModal = ({ mode = 'add', initialData = null, isOpen, onClose, onAdd
                     experience: initialData.experience || initialData.work_experience || '',
                     photo: initialData.photo || initialData.avatar || null,
                     background: initialData.background || initialData.cover_img || [],
-                    color: initialData.color || 'bg-red-600',
+                    color: initialData.color || '#dc2626',
                 });
             } else {
                 // Add mode: тоза кардани форма

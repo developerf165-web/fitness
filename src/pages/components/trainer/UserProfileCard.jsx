@@ -119,10 +119,10 @@ const UserProfileCard = ({ trainerData, onUpdate }) => {
         </div>
 
         <div className="absolute top-60 left-15 z-20">
-          <div className="
-            w-30 h-30 rounded-full overflow-hidden 
-            outline-6 outline-(--color-accent)
-          ">
+          <div
+            className="w-30 h-30 rounded-full overflow-hidden border-4"
+            style={{ borderColor: trainerData?.color || '#84cc16' }}
+          >
             <img
               src={displayAvatar}
               alt="Акси асосии профили"

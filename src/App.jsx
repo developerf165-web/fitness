@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import ClientProfile from "./pages/ClientProfile/ClientProfile";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -31,7 +31,7 @@ function AppContent() {
     <div className="app">
       {!hideNavbar && <main className="container"><Navbar />
         <Routes>
-          <Route path="/" element={<TrainerPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/trainer/:id" element={<TrainerPage />} />
           <Route path="/shkafchiki" element={<LockerPage />} />
           <Route path="/glavnaya" element={<MainPage />} />

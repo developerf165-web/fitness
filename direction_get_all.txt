@@ -1,0 +1,53 @@
+GET
+/api/direction/get/all
+get direction
+
+
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'http://84.54.31.36:8081/api/direction/get/all' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer 7|XqFsmbbAcUtGpzBJ5Wj7nuDVnF8zflGlWhjz2ZPzac8d8e62'
+Request URL
+http://84.54.31.36:8081/api/direction/get/all
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "status": "true",
+  "directions": [
+    {
+      "id": 1,
+      "title": "кардио нагрузка",
+      "description": "нагрузка ",
+      "created_at": "2025-11-25T11:11:30.000000Z",
+      "updated_at": "2025-11-25T11:11:30.000000Z"
+    }
+  ]
+}
+Response headers
+ access-control-allow-origin: * 
+ cache-control: no-cache,private 
+ connection: Keep-Alive 
+ content-type: application/json 
+ date: Sun,30 Nov 2025 05:04:37 GMT 
+ keep-alive: timeout=5,max=100 
+ server: Apache/2.4.58 (Ubuntu) 
+ transfer-encoding: chunked 
+ vary: Authorization 
+Responses
+Code	Description	Links
+200	
+Response 200
+
+No links

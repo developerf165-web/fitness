@@ -11,7 +11,7 @@ import { FaUser } from 'react-icons/fa';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  
+
   // 🎯 Истифодаи custom hook барои слайдер
   const { scrollRef, showLeftScroll, showRightScroll, scrollMenu, checkScroll } = useHorizontalScroll({
     scrollAmount: 200
@@ -22,19 +22,19 @@ export default function Navbar() {
 
   const goToProfile = () => navigate('/profile');
   const isActive = location.pathname === '/profile';
-  
-  const toggleMenu = () => setMenuOpen(prev => !prev); 
-  const closeMenu = () => setMenuOpen(false); 
+
+  const toggleMenu = () => setMenuOpen(prev => !prev);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header 
+    <header
       className={`
         bg-(--bg-nav) w-full p-2 min-[500px]:p-3
         flex justify-between items-center relative 
         shadow-xl shadow-black/50 z-50 rounded-2xl
       `}
     >
-      
+
       {/* 1. Логотип */}
       <div className="flex items-center z-50 shrink-0">
         <h1 className={`font-extrabold text-2xl leading-none text-(--color-accent) cursor-pointer`}>
@@ -43,64 +43,64 @@ export default function Navbar() {
       </div>
 
       {/* 2. Контейнери асосии Desktop Menu (Бо тирчаҳо) */}
-      <div 
+      <div
         className="
           hidden min-[500px]:flex items-center mx-3 flex-1 justify-center relative 
           min-w-0
         "
       >
-          
-          {/* Тугмаи Чап */}
-          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-50">
-             <ScrollButton 
-               direction="left" 
-               onClick={() => scrollMenu('left')} 
-               isVisible={showLeftScroll}
-               className="hidden min-[500px]:flex"
-             />
-          </div>
-          
-          {/* Контейнери менюи ғеҷондашаванда */}
-          <nav 
-            ref={scrollRef}
-            id="nav-menu-desktop"
-            className={`
+
+        {/* Тугмаи Чап */}
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-50">
+          <ScrollButton
+            direction="left"
+            onClick={() => scrollMenu('left')}
+            isVisible={showLeftScroll}
+            className="hidden min-[500px]:flex"
+          />
+        </div>
+
+        {/* Контейнери менюи ғеҷондашаванда */}
+        <nav
+          ref={scrollRef}
+          id="nav-menu-desktop"
+          className={`
               flex flex-row gap-2 items-center mx-10
               min-[500px]:flex-nowrap               
               min-[500px]:overflow-x-auto           
               min-[500px]:overflow-y-hidden         
               scrollbar-hide
             `}
-            onScroll={checkScroll} 
-          >
-            {navItems.map((item) => (
-              <NavItem 
-                key={item.to}
-                to={item.to}
-                label={item.label}
-                onClick={closeMenu}
-              />
-            ))}
-          </nav>
-          
-          {/* Тугмаи Рост */}
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-50">
-            <ScrollButton 
-              direction="right" 
-              onClick={() => scrollMenu('right')} 
-              isVisible={showRightScroll}
-              className="hidden min-[500px]:flex"
+          onScroll={checkScroll}
+        >
+          {navItems.map((item) => (
+            <NavItem
+              key={item.to}
+              to={item.to}
+              label={item.label}
+              onClick={closeMenu}
             />
-          </div>
+          ))}
+        </nav>
+
+        {/* Тугмаи Рост */}
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-50">
+          <ScrollButton
+            direction="right"
+            onClick={() => scrollMenu('right')}
+            isVisible={showRightScroll}
+            className="hidden min-[500px]:flex"
+          />
+        </div>
 
       </div>
 
       {/* 3. Қисми Рост: Аккаунт ва Бургер */}
       <div className="flex items-center gap-4 z-50 shrink-0">
-        
+
         <div className="hidden min-[500px]:flex items-center">
-          <button 
-            onClick={goToProfile} 
+          <button
+            onClick={goToProfile}
             title="Профил"
             className={`cursor-pointer p-1 rounded-full transition 
               ${isActive ? 'border-2 border-(--color-accent)' : 'border-2 border-white hover:text-(--color-accent) hover:border-(--color-accent)'}
@@ -118,21 +118,21 @@ export default function Navbar() {
             </div>
           </button>
         </div>
-      
-        <button 
+
+        <button
           className={`
             cursor-pointer p-1.5 rounded transition-colors duration-200
             hover:bg-white/10 min-[500px]:hidden
           `}
-          onClick={toggleMenu} 
+          onClick={toggleMenu}
           aria-label="Toggle navigation menu"
         >
           <MenuIcon isOpen={menuOpen} />
         </button>
       </div>
-      
+
       {/* 4. Менюи Мобилӣ */}
-      <nav 
+      <nav
         id="nav-menu-mobile"
         className={`
           fixed top-16 left-0 right-0 w-full min-h-[calc(100vh-64px)]
@@ -146,7 +146,7 @@ export default function Navbar() {
         onClick={closeMenu}
       >
         {navItems.map((item) => (
-          <NavItem 
+          <NavItem
             key={`mobile-${item.to}`}
             to={item.to}
             label={item.label}

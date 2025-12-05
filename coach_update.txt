@@ -1,0 +1,57 @@
+POST
+/api/coach/update/{id}
+update coach
+
+
+Parameters
+Cancel
+Reset
+Name	Description
+id *
+integer
+(path)
+id
+Request body
+
+multipart/form-data
+avatar
+file
+Файл не выбран
+Send empty value
+name
+string
+string
+Send empty value
+surname
+string
+string
+Send empty value
+phone
+string
+string
+Send empty value
+direction_id
+array<string>
+string
+-
+Add string item
+Send empty value
+password
+string
+string
+Send empty value
+Execute
+Responses
+Code	Description	Links
+200	
+Response 200
+
+No links
+404	
+Response 404
+
+No links
+422	
+Response 422
+
+No links

@@ -2,12 +2,12 @@ import TableHeader from "./TableHeader";
 import TableRow from "./TableRow/index";
 import TableRowSkeleton from "./TableRowSkeleton";
 
-export default function Table({ data, headers, fields, loading, isPageBlocked, onRowClick, minHeight = true }) {
+export default function Table({ data, headers, fields, loading, isPageBlocked, onRowClick, minHeight = true, isQuarantine = false }) {
   return (
     <div className={minHeight ? "min-h-[500px]" : ""}>
       <div className="rounded-4xl overflow-hidden p-6 shadow-lg color-bg-nav border-box my-4 text-white">
         <table className="w-full border-collapse">
-          <TableHeader headers={headers} />
+          <TableHeader headers={headers} isQuarantine={isQuarantine} />
           <tbody>
             {loading
               ? Array(10)

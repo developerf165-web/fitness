@@ -11,4 +11,5 @@ export const navItems = [
   { to: "/financi", label: "Финансы" },
   { to: "/shkafchiki", label: "Шкафчики" },
   { to: "/producti", label: "Продукты" },
+  { to: "/checkout", label: "Касса" },
 ];
