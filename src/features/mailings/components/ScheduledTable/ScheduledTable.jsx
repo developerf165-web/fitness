@@ -1,6 +1,6 @@
 import { ArrowUpDown, MoreVertical, Edit, Trash2 } from 'lucide-react'; // Иконкаҳои навро илова кардем
 import ChannelIcon from './ChannelIcon';
-import DropdownMenu from '../../../../pages/components/ui/DropdownMenu';
+import DropdownMenu from '/src/components/ui/DropdownMenu';
 
 
 const ScheduledTable = ({ title, data }) => {
@@ -49,7 +49,7 @@ const ScheduledTable = ({ title, data }) => {
                 <tr key={item.id} className="border-b border-gray-800 bg-hover-card">
                   <td className="p-4">{item.name}</td>
                   <td className="p-4 flex justify-center items-center">{item.date}</td>
-                  <td className="p-4"><div className="flex justify-center items-center -space-x-3">{item.channels.map((channel, index) => <ChannelIcon key={index} type={channel} zIndex={item.channels.length - index}/>)}</div></td>
+                  <td className="p-4"><div className="flex justify-center items-center -space-x-3">{item.channels.map((channel, index) => <ChannelIcon key={index} type={channel} zIndex={item.channels.length - index} />)}</div></td>
                   <td className="p-4">{item.benefit}</td>
                   <td className="p-4 flex justify-center items-center">{item.recipients}</td>
                   <td className="p-4 w-1">{item.status}</td>

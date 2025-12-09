@@ -1,6 +1,6 @@
 import React from 'react';
 import ProfilePicture from './ProfilePicture';
-import Button from '@/components/ui/Button';
+import Button from '/src/components/ui/Button';
 
 /**
  * @param {object} props

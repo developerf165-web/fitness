@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
-import InputField from '@/components/ui/InputField';
-import TextArea from '@/components/ui/TextArea'; // Истифодаи textarea-и нав
-import Button from '@/components/ui/Button';
+import InputField from '/src/components/ui/InputField';
+import TextArea from '/src/components/ui/TextArea'; // Истифодаи textarea-и нав
+import Button from '/src/components/ui/Button';
 
 export default function AddEditInfoModal({ isOpen, onClose, initialData = null }) {
   // Агар initialData бошад, режим 'edit' аст, вагарна 'add'

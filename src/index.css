@@ -15,8 +15,10 @@
 
 /* Барои пинҳон кардани scrollbar дар IE ва Edge */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 input:-webkit-autofill,
@@ -24,22 +26,22 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
-  -webkit-text-fill-color: #ffffff !important; 
-  caret-color: #ffffff !important; 
-  transition: background-color 5000s ease-in-out 0s; 
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none; 
-  appearance: none;  
+  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 input[type=number] {
-  -moz-appearance: textfield; 
-  appearance: textfield; 
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Коди нав бо рангҳои интихобкардаи шумо */
@@ -50,19 +52,22 @@ input[type=number] {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(9, 9, 9, 1); /* <-- РАНГИ ЗАМИНА (ториктар) */
+  background: rgba(9, 9, 9, 1);
+  /* <-- РАНГИ ЗАМИНА (ториктар) */
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(40, 40, 41, 1); /* <-- РАНГИ ДАСТАК (равшантар) */
+  background-color: rgba(40, 40, 41, 1);
+  /* <-- РАНГИ ДАСТАК (равшантар) */
   border-radius: 10px;
-  border: 2px solid rgba(9, 9, 9, 1); /* Фазо дар атрофи дастак, бо ранги замина */
+  border: 2px solid rgba(9, 9, 9, 1);
+  /* Фазо дар атрофи дастак, бо ранги замина */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   /* Ранги дастак ҳангоми hover - ман инро каме равшантар кардам, то интерактивӣ бошад */
-  background-color: rgba(75, 75, 75, 1); 
+  background-color: rgba(75, 75, 75, 1);
 }
 
 /* Барои Firefox */
@@ -79,6 +84,7 @@ input[type=number] {
 .color-bg-main {
   color: rgba(17, 17, 18, 1);
 }
+
 .color-bg-card {
   background-color: #1A1A1A;
 }
@@ -90,60 +96,87 @@ input[type=number] {
 .color-boder-mini-card {
   border-color: rgba(44, 44, 46, 1);
 }
+
 .color-bg-nav {
   background: #1A1A1A;
 }
+
 .color-text-main {
   color: #FFFFFF;
 }
+
 .color-text-muted {
   color: #A1A1A1;
 }
-.color-border-accent{
+
+.color-border-accent {
   border-color: rgba(208, 253, 62, 1);
 }
 
-.color-accent{
+.color-accent {
   color: rgba(208, 253, 62, 1);
 }
 
-.color-accent:hover{
+.color-accent:hover {
   color: rgba(208, 253, 62, 1);
 }
 
 .focus\:color-accent {
-    &:focus {
-        --tw-ring-color: rgba(208, 253, 62, 1);
-    }
+  &:focus {
+    --tw-ring-color: rgba(208, 253, 62, 1);
+  }
 }
+
 .peer-checked\:color-border-accent {
-    &:is(:where(.peer):checked ~ *) {
-        border-color: rgba(208, 253, 62, 1);;
-    }
+  &:is(:where(.peer):checked ~ *) {
+    border-color: rgba(208, 253, 62, 1);
+    ;
+  }
 }
 
 .peer-checked\:bg-color-accent {
-    &:is(:where(.peer):checked ~ *) {
-        background-color: rgba(208, 253, 62, 1);
-    }
+  &:is(:where(.peer):checked ~ *) {
+    background-color: rgba(208, 253, 62, 1);
+  }
 }
 
-.color-accent-l{
+.color-accent-l {
   color: rgba(208, 253, 62, 1);
 }
 
 .color-red {
   color: #FF3B30;
-} 
+}
+
 .color-orange {
   color: #FF6A00;
-} 
-.color-bronze{
+}
+
+.color-bronze {
   color: #cd7f32;
 }
 
 .bg-hover-card:hover {
   background-color: #2a2a2a;
+}
+
+/* Стили умумӣ барои дугмаҳои менюи 3 нуқта */
+.menu-dots-button {
+  padding: 0.5rem;
+  /* p-2 */
+  border-radius: 9999px;
+  /* rounded-full */
+  color: rgb(156 163 175);
+  /* text-gray-400 */
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.menu-dots-button:hover {
+  color: rgb(255 255 255);
+  /* hover:text-white */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* hover:bg-white/10 */
 }
 
 .bg-active-card {
@@ -159,16 +192,17 @@ input[type=number] {
 }
 
 .bg-transparent-blur {
-  background-color: rgba(0, 0, 0, 0.5); 
-  backdrop-filter: blur(1px);    
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1px);
 }
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .hide-scrollbar {
   -ms-overflow-style: none;
-  scrollbar-width: none; 
+  scrollbar-width: none;
 }
 
 .relative {
@@ -191,7 +225,8 @@ input[type=number] {
 
 /* styles.css */
 .btn-card {
-    @apply w-35 h-12 cursor-pointer rounded-[15px] text-black font-medium bg-[rgba(208,253,62,1)]
+  @apply w-35 h-12 cursor-pointer rounded-[15px] text-black font-medium;
+  background-color: rgba(208, 253, 62, 1);
 }
 
 
@@ -202,20 +237,37 @@ input[type=number] {
 }
 
 
+/* ========================================================= */
+/* STANDARDIZED ANIMATIONS & EFFECTS */
+/* ========================================================= */
+
+/* 1. Skeleton Shimmer Animation */
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
   }
 }
 
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(44, 44, 46, 1);
+  /* color-bg-mini-card base */
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.4s ease-in-out;
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%);
+  animation: shimmer 1.5s infinite;
 }
 
 /* ========================================================= */
@@ -224,9 +276,9 @@ input[type=number] {
 
 .react-datepicker-popper-dark .react-datepicker {
   /* Пушти заминаи асосӣ */
-  background-color: #333333 !important; 
+  background-color: #333333 !important;
   border: 1px solid #555555 !important;
-  color: #ffffff !important; 
+  color: #ffffff !important;
   font-family: inherit !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
 }
@@ -252,18 +304,19 @@ input[type=number] {
 
 /* Рӯзҳои ғайрифаъол (ғайримоҳ) */
 .react-datepicker-popper-dark .react-datepicker__day--outside-month {
-  color: #888888 !important; 
+  color: #888888 !important;
 }
 
 /* Рӯзҳои муқаррарӣ (Normal Days) */
 .react-datepicker-popper-dark .react-datepicker__day {
   color: #ffffff !important;
-  border-radius: 0.3rem; /* Барои якрангӣ */
+  border-radius: 0.3rem;
+  /* Барои якрангӣ */
 }
 
 /* Ҳолати Hover */
 .react-datepicker-popper-dark .react-datepicker__day:hover {
-  background-color: #4a4a4a !important; 
+  background-color: #4a4a4a !important;
 }
 
 /* Рӯзи имрӯза (Today) */
@@ -280,28 +333,30 @@ input[type=number] {
 .react-datepicker-popper-dark .react-datepicker__day--selected,
 .react-datepicker-popper-dark .react-datepicker__day--selected:hover,
 .react-datepicker-popper-dark .react-datepicker__day--active {
-    background-color: #6c757d !important; /* Ранги аксент */
-    color: #ffffff !important;
+  background-color: #6c757d !important;
+  /* Ранги аксент */
+  color: #ffffff !important;
 }
 
 /* 💡 ИСЛОҲИ НАВ: БАРТАРАФ КАРДАНИ ҲОЛАТИ РАНГИ КАБУДИ ИШТИБОҲӢ (БАРОИ ҲОЛАТИ ДУЮМБОРА) */
 .react-datepicker-popper-dark .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--selected),
 .react-datepicker-popper-dark .react-datepicker__day--in-range:not(.react-datepicker__day--selected) {
-    /* Ин ҳамаи ҳолатҳои "дар доираи интихоб" ё "дар диапазон"-ро, ки интихоби воқеӣ нестанд, */
-    /* маҷбур мекунад, ки шаффоф бошанд ва ранги матнро Dark Mode нигоҳ доранд. */
-    background-color: transparent !important; 
-    color: #ffffff !important;
+  /* Ин ҳамаи ҳолатҳои "дар доираи интихоб" ё "дар диапазон"-ро, ки интихоби воқеӣ нестанд, */
+  /* маҷбур мекунад, ки шаффоф бошанд ва ранги матнро Dark Mode нигоҳ доранд. */
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
 /* Боварӣ ҳосил кардан, ки ҲОВЕРИ муқаррарӣ дар ин диапазони бардурӯғ низ дуруст кор кунад */
 .react-datepicker-popper-dark .react-datepicker__day--in-selecting-range:hover,
 .react-datepicker-popper-dark .react-datepicker__day--in-range:hover {
-    background-color: #4a4a4a !important; 
-    color: #ffffff !important;
+  background-color: #4a4a4a !important;
+  color: #ffffff !important;
 }
 
 /* Ислоҳи фокус/active, ки баъзан ранги кабуди default-ро нигоҳ медорад */
 .react-datepicker-popper-dark .react-datepicker__day:focus {
-    background-color: #4a4a4a !important; 
-    outline: none !important; /* Чаҳорчӯбаи фокусро ғайрифаъол мекунем */
+  background-color: #4a4a4a !important;
+  outline: none !important;
+  /* Чаҳорчӯбаи фокусро ғайрифаъол мекунем */
 }

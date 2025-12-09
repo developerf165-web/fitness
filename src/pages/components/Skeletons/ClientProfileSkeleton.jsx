@@ -1,5 +1,5 @@
 import React from "react";
-import ShimmerBlock from "../ui/ShimmerBlock"; // Роҳро мувофиқи лоиҳаи худ иваз кунед
+import ShimmerBlock from "/src/components/ui/ShimmerBlock";
 
 export default function ClientProfileSkeleton() {
   return (
@@ -49,7 +49,7 @@ export default function ClientProfileSkeleton() {
       <section className="trainings">
         {/* Сарлавҳаи "Карты" */}
         <ShimmerBlock className="h-8 w-32 mt-[70px] mb-[15px]" />
-        
+
         {/* Скелети MembershipCards */}
         <div className="cards-container">
           <ShimmerBlock className="h-[200px] w-full rounded-2xl" />

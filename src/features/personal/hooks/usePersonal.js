@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { getAllCoaches } from '../../../services/Personal/coachService';
+import { getAllCoaches } from '@services/Personal/coachService';
 
 export const usePersonal = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

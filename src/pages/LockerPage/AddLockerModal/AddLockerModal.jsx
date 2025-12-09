@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import AddLockerForm from './AddLockerForm';
-import FormButton from '../../components/ui/FormButton';
+import FormButton from '/src/components/ui/FormButton';
 
 export default function AddLockerModal({ onClose, onSave }) {
   const [lockerData, setLockerData] = useState({ id: null, status: '', name: '', isFormValid: false });

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import RadioGroup from '../../pages/components/ui/RadioGroup';
+import RadioGroup from '/src/components/ui/RadioGroup';
 import { STATUSES } from './constants';
 import { ChevronRight } from 'lucide-react';
 import SelectWithOptions from '../../features/mailings/components/SelectWithOptions/SelectWithOptions';
@@ -18,9 +18,9 @@ export default function AddLockerForm({ onClose, onSave }) {
     const isFormValid = lockerNumber.trim() !== '' && parseInt(lockerNumber.trim()) > 0;
 
     // 2. Танзими маълумот ба формати SelectWithOptions
-    const statusData = [{ 
-        title: 'Интихоби Статус', 
-        items: STATUSES 
+    const statusData = [{
+        title: 'Интихоби Статус',
+        items: STATUSES
     }];
 
     // 3. Функсияи идоракунӣ барои SelectWithOptions
@@ -53,9 +53,9 @@ export default function AddLockerForm({ onClose, onSave }) {
     return (
         <div className="w-full pb-6 bg-zinc-900 rounded-2xl p-6 h-full flex flex-col shadow-2xl">
             <h2 className="text-2xl font-bold text-white mb-6 border-b border-zinc-700 pb-3">ДОБАВИТЬ ШКАФЧИК</h2>
-            
+
             <form onSubmit={handleSave} className="flex-1 space-y-6 overflow-y-auto custom-scrollbar">
-                
+
                 <div>
                     <label className={labelStyle}>
                         Номер шкафчика<span className="text-lime-400">*</span>
@@ -100,7 +100,7 @@ export default function AddLockerForm({ onClose, onSave }) {
                     )}
                 </div>
                 {/* Анҷоми қисмати SelectWithOptions */}
-                
+
             </form>
 
             <div className="pt-6 flex justify-end space-x-3 border-t border-zinc-700 mt-6">
@@ -114,9 +114,8 @@ export default function AddLockerForm({ onClose, onSave }) {
                 <button
                     onClick={handleSave}
                     type="submit"
-                    className={`py-2 px-6 rounded-xl text-black font-semibold transition ${
-                        isFormValid ? 'bg-lime-500 hover:bg-lime-400' : 'bg-gray-500 cursor-not-allowed'
-                    }`}
+                    className={`py-2 px-6 rounded-xl text-black font-semibold transition ${isFormValid ? 'bg-lime-500 hover:bg-lime-400' : 'bg-gray-500 cursor-not-allowed'
+                        }`}
                     disabled={!isFormValid}
                 >
                     Сохранить

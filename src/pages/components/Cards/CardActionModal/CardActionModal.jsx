@@ -1,16 +1,16 @@
-import React, { useState, useMemo } from "react";
-import Modal from "@/components/ui/Modal";
-import Card from "@/components/ui/Card";
-import InputField from "@/components/ui/InputField";
-import TextArea from "@/components/ui/TextArea";
-import SelectField from "@/components/ui/SelectField";
-import FormButton from "@/components/ui/FormButton";
+import React, { useState, useMemo, useEffect } from "react";
+import Modal from "/src/components/ui/Modal";
+import Card from "/src/components/ui/Card";
+import InputField from "/src/components/ui/InputField";
+import TextArea from "/src/components/ui/TextArea";
+import SelectField from "/src/components/ui/SelectField";
+import FormButton from "/src/components/ui/FormButton";
 
 const cardOptions = [
   { value: "basic", label: "Базовая Карта" },
   { value: "bronze", label: "Бронзовая Карта" },
   { value: "silver", label: "Серебряная Карта" },
-  { value: "gold", label: "Золотая Карта" }, 
+  { value: "gold", label: "Золотая Карта" },
 ];
 
 /**
@@ -26,7 +26,7 @@ export default function CardActionModal({
   isOpen,
   onClose,
   onConfirm,
-  actionType = "downgrade", 
+  actionType = "downgrade",
   availableCards = cardOptions,
 }) {
   const [reason, setReason] = useState("");

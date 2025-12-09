@@ -35,9 +35,9 @@ export default function DashboardCards() {
         <DashboardCard
           key={index}
           title={card.title}
-          value={card.amount}   
-          change={card.percent} 
-          description="от предыдущего периода" 
+          value={card.amount}
+          change={card.percent}
+          description="от предыдущего периода"
         />
       ))}
     </div>

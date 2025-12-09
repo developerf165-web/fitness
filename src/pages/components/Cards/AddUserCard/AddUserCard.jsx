@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper"; 
-import AvatarUpload from "@/components/ui/AvatarUpload";
-import InputField from "@/components/ui/InputField";
-import RadioGroup from "@/components/ui/RadioGroup";
-import FormButton from "@/components/ui/FormButton";
-import FormSection from "@/components/ui/FormSection";
-import { createUser } from "../../../../services/Dashboard/apiAddUser";
+import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper";
+import AvatarUpload from "/src/components/ui/AvatarUpload";
+import InputField from "/src/components/ui/InputField";
+import RadioGroup from "/src/components/ui/RadioGroup";
+import FormButton from "/src/components/ui/FormButton";
+import FormSection from "/src/components/ui/FormSection";
+import { createUser } from "@services/Dashboard/apiAddUser";
 import { buildUserFormData } from "/src/utils/formDataHelper";
 import { useToast } from "@/components/Toast/ToastContext";
 
 // onSuccess-ро ҳамчун prop қабул мекунем
-export default function AddUserCard({ onClose, onSuccess }) { 
+export default function AddUserCard({ onClose, onSuccess }) {
   const initialForm = {
     name: "",
     surname: "",
@@ -36,7 +36,7 @@ export default function AddUserCard({ onClose, onSuccess }) {
       setLoading(true);
       const formData = buildUserFormData(form, photo);
       const data = await createUser(formData);
-      
+
       const toastMessage = {
         type: 'success',
         title: "Пользователь добавлен",
@@ -45,7 +45,7 @@ export default function AddUserCard({ onClose, onSuccess }) {
 
       // ✅ 1. onSuccess-ро даъват мекунем, ки дар Dashboard маълумотро нав мекунад
       if (onSuccess) {
-        onSuccess(toastMessage); 
+        onSuccess(toastMessage);
       } else {
         // Агар onSuccess набошад, танҳо тоаст-ро нишон медиҳем
         showToast(toastMessage.type, toastMessage.title, toastMessage.message);

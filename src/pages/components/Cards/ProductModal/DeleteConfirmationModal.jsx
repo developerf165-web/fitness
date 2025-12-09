@@ -1,7 +1,7 @@
 import React from "react";
-import Modal from "@/components/ui/Modal";
-import Card from "@/components/ui/Card";
-import FormButton from "@/components/ui/FormButton";
+import Modal from "/src/components/ui/Modal";
+import Card from "/src/components/ui/Card";
+import FormButton from "/src/components/ui/FormButton";
 import AlertIcon from "@/components/Icons/AlertIcon";
 
 export default function DeleteConfirmationModal({

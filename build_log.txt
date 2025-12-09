@@ -1,0 +1,25 @@
+﻿
+> portfolio_react@0.0.0 build
+> vite build
+
+[36mvite v7.1.5 [32mbuilding for production...[36m[39m
+transforming...
+[32mтЬУ[39m 3126 modules transformed.
+node.exe : [31mтЬЧ[39m Build failed in 14.94s
+строка:1 знак:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([31mтЬЧ[39m Build failed in 14.94s:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[31merror during build:
+[31mCould not resolve "../../../../hooks/useClickOutside" from "src/pages/components/ui/DropdownField.jsx"[31m
+file: [36mC:/Users/Neka/Desktop/╨Э╨╛╨▓╨░╤П ╨┐╨░╨┐╨║╨░/portfolio_react/src/pages/components/ui/DropdownField.jsx[31m
+    at getRollupError (file:///C:/Users/Neka/Desktop/%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%B0%D0%BF%D0%BA%D0%B0/portfo
+lio_react/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Neka/Desktop/%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%B0%D0%BF%D0%BA%D0%B0/portfolio_react
+/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at ModuleLoader.handleInvalidResolvedId (file:///C:/Users/Neka/Desktop/%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%B0%D0
+%BF%D0%BA%D0%B0/portfolio_react/node_modules/rollup/dist/es/shared/node-entry.js:21539:24)
+    at file:///C:/Users/Neka/Desktop/%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%B0%D0%BF%D0%BA%D0%B0/portfolio_react/node_m
+odules/rollup/dist/es/shared/node-entry.js:21499:26[39m

@@ -1,15 +1,15 @@
 // src/pages/Services/modals/DirectionsModals.jsx
 
 import React from 'react';
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
-import { DirectionFormModal } from '../forms';
+import DeleteConfirmationModal from '/src/components/ui/DeleteConfirmationModal';
+import DirectionFormModal from './DirectionForm/DirectionFormModal';
 
 /**
  * Ҳамаи модалҳо барои Directions
  */
-export default function DirectionsModals({ 
-  modals, 
-  handlers 
+export default function DirectionsModals({
+  modals,
+  handlers
 }) {
   return (
     <>
@@ -21,7 +21,7 @@ export default function DirectionsModals({
         isDeleting={modals.delete.isDeleting}
         itemName={modals.delete.itemToDelete?.title}
       />
-      
+
       {/* Модали таҳрир/сохтан */}
       <DirectionFormModal
         isOpen={modals.form.isOpen}

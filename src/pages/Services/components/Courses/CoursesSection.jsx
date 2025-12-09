@@ -1,9 +1,9 @@
 import React from 'react';
 import CourseCard from './CourseCard';
-import CardSkeleton from '../Cards/CardSkeleton';
+import CardSkeleton from '@components/Cards/CardSkeleton';
 
 export default function CoursesSection({ items, isLoading, onStart, onCancel, variant = 'launch' }) {
-  
+
   if (isLoading) {
     return (/* skeleton code */ <div className="text-white">Loading...</div>);
   }

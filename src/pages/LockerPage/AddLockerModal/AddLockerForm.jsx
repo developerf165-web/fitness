@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { STATUSES } from '../constants';
 import { ChevronRight } from 'lucide-react';
-import SelectWithOptions from '../../components/ui/SelectWithOptions/SelectWithOptions';
+import SelectWithOptions from '/src/components/ui/SelectWithOptions/SelectWithOptions';
 
 const labelStyle = "block pl-2 text-sm font-medium color-accent mb-1";
 const inputStyle = "w-full p-3 rounded-xl color-bg-mini-card text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:color-accent border border-transparent";

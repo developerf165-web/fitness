@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchServices } from '../api/servicesApi';
 
 /**
@@ -9,30 +9,45 @@ export function useServices() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const dataFromApi = await fetchServices();
-        
-        const formattedData = dataFromApi.map(item => ({
-          id: item.id,
-          title: item.name,
-          imageUrl: item.img, 
-          tjs: item.price,
-          pos: 'услуга',
-          description: item.description || ''
-        }));
-        
-        setServices(formattedData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadServices = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const dataFromApi = await fetchServices();
 
-    loadServices();
+      const formattedData = dataFromApi.map(item => ({
+        id: item.id,
+        title: item.name,
+        imageUrl: item.img,
+        tjs: item.price,
+        pos: 'услуга',
+        description: item.description || '',
+        // Add other fields if needed for full state
+        discount: item.discount,
+        visit_count: item.visit_count,
+        status: item.status
+      }));
+
+      // Remove duplicates by ID (keeping the last one or first one? reduce keeps first usually with this logic)
+      const uniqueData = formattedData.reduce((acc, current) => {
+        const x = acc.find(item => item.id === current.id);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      }, []);
+
+      setServices(uniqueData);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { services, setServices, isLoading, error };
+  useEffect(() => {
+    loadServices();
+  }, [loadServices]);
+
+  return { services, setServices, isLoading, error, refetch: loadServices };
 }

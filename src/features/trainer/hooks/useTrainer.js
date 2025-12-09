@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getCoachById } from '../../../services/Personal/coachService';
+import { getCoachById } from '@services/Personal/coachService';
 
 /**
  * Custom hook барои идоракунии маълумоти тренер

@@ -29,3 +29,49 @@ export const getCoachById = async (id) => {
         throw error;
     }
 };
+
+/**
+ * Create a new coach
+ * @param {Object} coachData - Coach data to create
+ * @returns {Promise<Object>} Created coach object
+ */
+export const createTrainer = async (coachData) => {
+    try {
+        const response = await authApi.post('/coach/create', coachData);
+        return response.data;
+    } catch (error) {
+        console.error('❌ Error creating coach:', error);
+        throw error;
+    }
+};
+
+/**
+ * Update a coach
+ * @param {number|string} id - Coach ID
+ * @param {Object} coachData - Coach data to update
+ * @returns {Promise<Object>} Updated coach object
+ */
+export const updateTrainer = async (id, coachData) => {
+    try {
+        const response = await authApi.put(`/coach/update/${id}`, coachData);
+        return response.data;
+    } catch (error) {
+        console.error(`❌ Error updating coach ${id}:`, error);
+        throw error;
+    }
+};
+
+/**
+ * Delete a coach
+ * @param {number|string} id - Coach ID
+ * @returns {Promise<Object>} Response data
+ */
+export const deleteTrainer = async (id) => {
+    try {
+        const response = await authApi.delete(`/coach/delete/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`❌ Error deleting coach ${id}:`, error);
+        throw error;
+    }
+};

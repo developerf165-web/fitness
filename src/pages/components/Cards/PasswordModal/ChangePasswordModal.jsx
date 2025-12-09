@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Modal from "@/components/ui/Modal";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import InputField from "@/components/ui/InputField";
+import Modal from "/src/components/ui/Modal";
+import Card from "/src/components/ui/Card";
+import Button from "/src/components/ui/Button";
+import InputField from "/src/components/ui/InputField";
 
 export default function ChangePasswordModal({ isOpen, onClose, onSave, isSaving }) {
   const [oldPassword, setOldPassword] = useState("");

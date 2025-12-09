@@ -1,5 +1,5 @@
 import React from "react";
-import DropdownMenu from "@/components/ui/DropdownMenu";
+import DropdownMenu from "/src/components/ui/DropdownMenu";
 import { FiMoreVertical } from "react-icons/fi";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 

@@ -1,7 +1,7 @@
 // src/pages/Services/modals/CardioCourseModal/components/ModalFooter.jsx
 
 import React from 'react';
-import Button from '@/components/ui/Button';
+import Button from '/src/components/ui/Button';
 
 export default function ModalFooter({ onCancel, onSave, cancelText, saveText, isLoading = false }) {
   return (

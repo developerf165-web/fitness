@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import Button from '../components/ui/Button';
+import Button from '/src/components/ui/Button';
+import SectionHeader from '/src/components/ui/SectionHeader';
+import AddButton from '/src/components/ui/AddButton';
+import Modal from '/src/components/ui/Modal';
+import ProfileHeader from '../components/trainer/ProfileHeader';
 import ClubInfoCard from './components/MobileAppManagement/ClubInfoCard';
 import SplashScreenCard from './components/MobileAppManagement/SplashScreenCard';
-import Modal from '@/components/ui/Modal';
 import AddEditInfoModal from './modals/AddEditInfoModal';
-import ProfileHeader from '../components/trainer/ProfileHeader';
-import AddButton from '@/components/ui/AddButton';
 
 export default function MobileAppManagementPage() {
   const [isAddInfoModalOpen, setIsAddInfoModalOpen] = useState(false);

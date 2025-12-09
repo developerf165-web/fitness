@@ -4,8 +4,8 @@ import SearchComponent from '@/Dashboard/components/SearchComponent';
 import LockerCard from './LockerCard';
 import FilterMenu from './FilterMenu';
 import FilterIcon from './FilterIcon';
-import AddButton from '../components/ui/AddButton';
-import Modal from '../../pages/components/ui/Modal';
+import AddButton from '/src/components/ui/AddButton';
+import Modal from '/src/components/ui/Modal';
 import { ALL_LOCKERS, STATUS_ORDER } from './constants';
 import AddLockerModal from './AddLockerModal/AddLockerModal';
 
@@ -48,7 +48,7 @@ export default function LockerPage() {
     const handleOpen = useCallback((locker) => {
         alert(`Кушодани Шкафчаи №${locker.id}`);
     }, []);
-    
+
     const handleLock = useCallback((locker) => {
         alert(`Заблокировать Шкафчаи №${locker.id}`);
     }, []);
@@ -70,7 +70,7 @@ export default function LockerPage() {
                 if (isFiltering && !activeFilters.includes(locker.status)) {
                     return false;
                 }
-                
+
                 const matchesId = String(locker.id).includes(normalizedQuery);
                 const matchesStatus = locker.status.toLowerCase().includes(normalizedQuery);
                 const matchesName = locker.name && locker.name.toLowerCase().includes(normalizedQuery);
@@ -85,23 +85,23 @@ export default function LockerPage() {
 
     return (
         <div className="min-h-screen bg-black mt-4 text-white mx-auto">
-            <ProfileHeader 
+            <ProfileHeader
                 title="Шкафчики"
                 rightContent={<AddButton onClick={handleAddLocker} />}
             />
 
 
             <div className="relative">
-                <SearchComponent 
-                    query={searchQuery} 
-                    setQuery={setSearchQuery} 
+                <SearchComponent
+                    query={searchQuery}
+                    setQuery={setSearchQuery}
                     rightAccessory={<FilterIcon onClick={toggleFilterMenu} />}
                 />
-                
+
                 {isFilterOpen && (
-                    <FilterMenu 
-                        filters={filters} 
-                        setFilters={setFilters} 
+                    <FilterMenu
+                        filters={filters}
+                        setFilters={setFilters}
                         onClose={() => setIsFilterOpen(false)}
                         position={{ top: '10px', right: '-10px' }}
                     />
@@ -111,9 +111,9 @@ export default function LockerPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-6">
                 {filteredLockers.length > 0 ? (
                     filteredLockers.map(locker => (
-                        <LockerCard 
-                            key={locker.id} 
-                            locker={locker} 
+                        <LockerCard
+                            key={locker.id}
+                            locker={locker}
                             onEdit={handleEdit}
                             onOpen={handleOpen}
                             onLock={handleLock}
@@ -126,7 +126,7 @@ export default function LockerPage() {
                     </p>
                 )}
             </div>
-            
+
             {isModalOpen && (
                 <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                     <AddLockerModal

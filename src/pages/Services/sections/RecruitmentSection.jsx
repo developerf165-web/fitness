@@ -1,7 +1,7 @@
 // src/pages/Services/sections/RecruitmentSection.jsx
 
 import React from 'react';
-import SectionHeader from '../../components/ui/SectionHeader';
+import SectionHeader from '/src/components/ui/SectionHeader';
 import CoursesSection from '../components/Courses/CoursesSection';
 
 /**

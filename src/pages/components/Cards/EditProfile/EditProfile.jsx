@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "@/components/ui/Modal";
+import Modal from "/src/components/ui/Modal";
 import ProfileForm from "@/components/forms/ProfileForm";
 
 export default function EditProfile({ isOpen, onClose, onProfileUpdated, userId, refetchProfile }) {

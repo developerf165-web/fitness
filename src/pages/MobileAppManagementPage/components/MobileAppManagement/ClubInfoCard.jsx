@@ -3,8 +3,8 @@ import React from "react";
 import ClubHeader from "./ClubHeader";
 import ContactSections from "./ContactSections";
 
-import Modal from "@/components/ui/Modal";
-import DeleteConfirmationModal from "@/components/ui/DeleteConfirmationModal";
+import Modal from "/src/components/ui/Modal";
+import DeleteConfirmationModal from "/src/components/ui/DeleteConfirmationModal";
 import AddEditInfoModal from "../../modals/AddEditInfoModal";
 import AddEditContactModal from "../../modals/AddEditContactModal";
 

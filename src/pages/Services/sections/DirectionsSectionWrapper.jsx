@@ -1,7 +1,7 @@
 // src/pages/Services/sections/DirectionsSection.jsx
 
 import React from 'react';
-import SectionHeader from '../../components/ui/SectionHeader';
+import SectionHeader from '/src/components/ui/SectionHeader';
 import DirectionsSection from '../components/Directions/DirectionsSection';
 
 /**

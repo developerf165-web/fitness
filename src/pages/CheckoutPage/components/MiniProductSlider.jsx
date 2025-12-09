@@ -47,7 +47,7 @@ export default function MiniProductSlider({ title, products, items, onProductCli
                                     <img
                                         src={product.imageUrl}
                                         alt={product.name}
-                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                        className="w-full h-full object-cover image-hover-zoom"
                                     />
                                     {/* Gradient overlay аз поён то боло */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>

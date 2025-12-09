@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
-import Modal from "@/components/ui/Modal";
-import Card from "@/components/ui/Card";
-import InputField from "@/components/ui/InputField";
-import TextArea from "@/components/ui/TextArea";
-import SelectField from "@/components/ui/SelectField";
-import FormButton from "@/components/ui/FormButton";
+import Modal from "/src/components/ui/Modal";
+import Card from "/src/components/ui/Card";
+import InputField from "/src/components/ui/InputField";
+import TextArea from "/src/components/ui/TextArea";
+import SelectField from "/src/components/ui/SelectField";
+import FormButton from "/src/components/ui/FormButton";
 
 const cardOptions = [
   { value: "basic", label: "Базовая Карта" },

@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types'; 
-import Cards from './Cards';
-import CardSkeleton from './CardSkeleton'; // <-- 1. Скелетонро import мекунем
+import PropTypes from 'prop-types';
+import ItemCard from '../../../../components/Cards/ItemCard';
+import CardSkeleton from '../../../../components/Cards/CardSkeleton'; // <-- 1. Скелетонро import мекунем
 
 const CardsSection = React.memo(({
   items,
@@ -25,7 +25,7 @@ const CardsSection = React.memo(({
         </div>
       );
     }
-    
+
     // 4. Агар 'isLoading' false бошад ва itemҳо набошанд
     if (!hasItems) {
       return (
@@ -39,7 +39,7 @@ const CardsSection = React.memo(({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {items.map(item => (
-          <Cards
+          <ItemCard
             key={item.id}
             item={item}
             onEdit={onEdit}
@@ -59,8 +59,8 @@ const CardsSection = React.memo(({
 
 CardsSection.propTypes = {
   items: PropTypes.array.isRequired,
-  onEdit: PropTypes.func.isRequired,  
-  onDelete: PropTypes.func.isRequired, 
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired, // <-- 6. 'isLoading'-ро ба propTypes илова мекунем
   skeletonCount: PropTypes.number,
   emptyMessage: PropTypes.string,

@@ -2,8 +2,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper";
 import { useToast } from '../../Toast/ToastContext';
-import { createTrainer, updateTrainer } from '../../../../services/Personal/trainerService';
-import { getAllDirections, formatDirectionsForSelect } from '../../../../services/Personal/directionService';
+import { createTrainer, updateTrainer } from '@services/Personal/coachService';
+import { getAllDirections, formatDirectionsForSelect } from '@services/Personal/directionService';
 import TrainerForm from './TrainerForm';
 
 const INITIAL_FORM_DATA = {

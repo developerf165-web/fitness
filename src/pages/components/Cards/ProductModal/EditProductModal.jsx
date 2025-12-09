@@ -1,20 +1,20 @@
 // src/components/Cards/EditProductModal/EditProductModal.jsx
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import Modal from '../../ui/Modal';
-import ScrollableModalContentWrapper from '../../Shared/ScrollableModalContentWrapper';
-import InputField from '../../ui/InputField';
-import Button from '../../ui/Button';
-import SelectWithOptions from '../../ui/SelectWithOptions';
-import FileUploader from '../../ui/FileUploader';
+import Modal from '/src/components/ui/Modal';
+import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
+import InputField from '/src/components/ui/InputField';
+import Button from '/src/components/ui/Button';
+import SelectWithOptions from '/src/components/ui/SelectWithOptions/SelectWithOptions';
+import FileUploader from '/src/components/ui/FileUploader';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 
-export default function EditProductModal({ 
-  isOpen, 
-  onClose, 
-  onSave, 
+export default function EditProductModal({
+  isOpen,
+  onClose,
+  onSave,
   isSaving = false,
-  product, 
+  product,
   categories = []
 }) {
 
@@ -123,9 +123,8 @@ export default function EditProductModal({
           />
 
           <ChevronRightIcon
-            className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-transform duration-200 ${
-              isCategoryDropdownOpen ? 'rotate-90' : 'rotate-0'
-            }`}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-transform duration-200 ${isCategoryDropdownOpen ? 'rotate-90' : 'rotate-0'
+              }`}
           />
 
           {isCategoryDropdownOpen && (
@@ -193,9 +192,9 @@ export default function EditProductModal({
       <Button onClick={onClose} variant="default" disabled={isSaving}>
         Отмена
       </Button>
-      <Button 
-        onClick={handleSave} 
-        variant="primary" 
+      <Button
+        onClick={handleSave}
+        variant="primary"
         disabled={isSaving}
       >
         {isSaving ? "Сохранение..." : "Сохранить"}

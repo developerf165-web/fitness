@@ -1,6 +1,6 @@
 import React from "react";
 import { HiOutlineDotsVertical, HiPencil, HiTrash } from "react-icons/hi";
-import DropdownMenu from "../../components/ui/DropdownMenu.jsx";
+import DropdownMenu from "/src/components/ui/DropdownMenu.jsx";
 
 const ProductCard = ({ product, onEdit, onDelete }) => {
   const handleEdit = () => {

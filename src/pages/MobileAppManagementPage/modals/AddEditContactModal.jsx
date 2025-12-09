@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
-import InputField from '@/components/ui/InputField';
-import Button from '@/components/ui/Button';
+import InputField from '/src/components/ui/InputField';
+import Button from '/src/components/ui/Button';
 
 export default function AddEditContactModal({ isOpen, onClose, config, initialData }) {
   const [value, setValue] = useState('');

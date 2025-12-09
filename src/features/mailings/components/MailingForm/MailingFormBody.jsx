@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { labelStyle, inputStyle } from "./styles"; // radioStyle-ро истифода набурдем, метавон тоза кард
 import MailingFormFooter from "./MailingFormFooter";
-import SelectWithOptions from "../../../../pages/components/ui/SelectWithOptions/SelectWithOptions";
-import RadioGroup from "../../../../pages/components/ui/RadioGroup";
+import SelectWithOptions from "/src/components/ui/SelectWithOptions/SelectWithOptions";
+import RadioGroup from "/src/components/ui/RadioGroup";
 
 const promotionData = [
   {
@@ -32,7 +32,7 @@ const MailingFormBody = ({ type, onClose }) => {
   const [channel, setChannel] = useState("push");
   const maxLength = 200;
   const remaining = maxLength - description.length;
-  const isNearLimit = remaining <= 200; 
+  const isNearLimit = remaining <= 200;
 
   useEffect(() => {
     const areBaseFieldsValid =
@@ -121,9 +121,8 @@ const MailingFormBody = ({ type, onClose }) => {
           </button>
 
           <p
-            className={`text-xs text-right mt-1 transition-colors duration-300 ${
-              remaining <= 20 ? "text-red-400" : "text-gray-500"
-            }`}
+            className={`text-xs text-right mt-1 transition-colors duration-300 ${remaining <= 20 ? "text-red-400" : "text-gray-500"
+              }`}
           >
             {isNearLimit
               ? `Осталось ${remaining} символов`

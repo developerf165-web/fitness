@@ -1,5 +1,5 @@
 import React from 'react';
-import BackButton from '../../../components/ui/BackButton';
+import BackButton from '@components/ui/BackButton';
 
 export default function CheckoutHeader() {
     return (

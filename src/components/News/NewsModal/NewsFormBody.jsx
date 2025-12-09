@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import NewsFormFooter from './NewsFormFooter';
-import RadioGroup from '../../../pages/components/ui/RadioGroup';
-import InputField from '../../../pages/components/ui/InputField';
+import RadioGroup from '/src/components/ui/RadioGroup';
+import InputField from '/src/components/ui/InputField';
 
 const labelStyle = "block text-sm font-medium color-accent pl-2 mb-2";
 const inputStyle = "block w-full text-gray-400 color-bg-mini-card border-transparent rounded-lg p-3 focus:outline-none focus:ring-2 focus:color-accent";
@@ -13,7 +13,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
   const [description, setDescription] = useState('');
   const [publicationDate, setPublicationDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [channel, setChannel] = useState('push'); 
+  const [channel, setChannel] = useState('push');
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -29,7 +29,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
       if (initialData.sendSms) {
         setChannel('sms');
       } else {
-        setChannel('push'); 
+        setChannel('push');
       }
       setImageUrl(initialData.imageUrl || '');
       setImage(null);
@@ -38,7 +38,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
       setDescription('');
       setPublicationDate('');
       setEndDate('');
-      setChannel('push'); 
+      setChannel('push');
       setImageUrl('');
       setImage(null);
     }
@@ -46,9 +46,9 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
 
   useEffect(() => {
     const isValid = title.trim() !== '' &&
-                      description.trim() !== '' &&
-                      publicationDate.trim() !== '' &&
-                      endDate.trim() !== '';
+      description.trim() !== '' &&
+      publicationDate.trim() !== '' &&
+      endDate.trim() !== '';
     setIsFormValid(isValid);
   }, [title, description, publicationDate, endDate]);
 
@@ -59,11 +59,11 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
       setImageUrl(URL.createObjectURL(file));
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isFormValid) return; 
-    
+    if (!isFormValid) return;
+
     const dataToSend = {
       title,
       description,
@@ -74,7 +74,7 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
       image,
       imageUrl
     };
-    
+
     onSubmit(dataToSend);
   };
 
@@ -86,13 +86,13 @@ const NewsFormBody = ({ onClose, onSubmit, initialData }) => {
   return (
     <div className="flex-1 px-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
       <form id="news-form" onSubmit={handleSubmit} className="px-6 space-y-5">
-        
+
         <div className="flex items-center space-x-4">
           {imageUrl && <img src={imageUrl} alt="Preview" className="w-44 h-28 rounded-lg object-cover" />}
           <label className="flex flex-col shrink-0 justify-center items-center w-44 h-28 color-bg-mini-card border-gray-500 rounded-xl cursor-pointer bg-hover-card">
-          <span className="flex items-center justify-center w-6 h-6 text-2xl rounded-full color-bg-accent text-black">
-            +
-          </span>
+            <span className="flex items-center justify-center w-6 h-6 text-2xl rounded-full color-bg-accent text-black">
+              +
+            </span>
             <span className="text-xs text-center text-gray-400 px-2">Добавить фото</span>
             <span className="text-xs text-center text-gray-400 px-2">Минимальный размер 340x180 px</span>
             <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />

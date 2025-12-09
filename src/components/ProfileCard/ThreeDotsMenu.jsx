@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import getMenuItems from "/src/pages/components/Icons/menuData.jsx";
-import MenuButton from "../../pages/components/ui/MenuButton.jsx"; // Импорти компоненти нав
+import MenuButton from "/src/components/ui/MenuButton";
 
 export default function ThreeDotsMenu({
   onOpenDelete,
@@ -77,13 +77,13 @@ export default function ThreeDotsMenu({
             className="absolute right-0 -mt-2 w-[190px] bg-[var(--color-bg-main)] rounded-xl py-1.5 z-[100] overflow-hidden shadow-lg"
           >
             {items.map((item, i) => (
-              <MenuButton 
-                key={i} 
-                item={item} 
+              <MenuButton
+                key={i}
+                item={item}
                 onClick={() => {
-                  setOpen(false); 
-                  item.action(); 
-                }} 
+                  setOpen(false);
+                  item.action();
+                }}
               />
             ))}
           </motion.div>

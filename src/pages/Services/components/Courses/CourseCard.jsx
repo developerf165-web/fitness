@@ -6,7 +6,7 @@ import CardDetails from './CardDetails';
 export default function CourseCard({ item, onStart, onCancel, variant = 'launch' }) {
   const isLaunch = variant === 'launch';
   const isRecruit = variant === 'recruit';
-  
+
   let menuItems = [];
 
   if (isLaunch) {
@@ -53,16 +53,19 @@ export default function CourseCard({ item, onStart, onCancel, variant = 'launch'
     ];
   }
 
-  const wrapperBorderClass = isLaunch 
-    ? "border-2 border-[#d9fb4d]" 
+  const wrapperBorderClass = isLaunch
+    ? "border-2 border-[#d9fb4d]"
     : "border border-transparent";
 
   return (
-    <div className="relative flex flex-col transition-all duration-300 group cursor-pointer z-10">
-      <CardImage
-        item={item}
-        wrapperBorderClass={wrapperBorderClass}
-      />
+    <div className="relative flex flex-col group cursor-pointer z-10 card-hover-effect">
+      <div className="overflow-hidden rounded-t-2xl">
+        <CardImage
+          item={item}
+          wrapperBorderClass={wrapperBorderClass}
+          className="image-hover-zoom"
+        />
+      </div>
       <CardDetails
         item={item}
         menuItems={menuItems}

@@ -1,10 +1,10 @@
 import React from "react";
 import ScrollableModalContentWrapper from "@/components/Shared/ScrollableModalContentWrapper";
-import InputField from "@/components/ui/InputField";
-import RadioGroup from "@/components/ui/RadioGroup";
-import FormButton from "@/components/ui/FormButton";
-import FormSection from "@/components/ui/FormSection";
-import AvatarUpload from "@/components/ui/AvatarUpload"; // <-- Илова шуд
+import InputField from "/src/components/ui/InputField";
+import RadioGroup from "/src/components/ui/RadioGroup";
+import FormButton from "/src/components/ui/FormButton";
+import FormSection from "/src/components/ui/FormSection";
+import AvatarUpload from "/src/components/ui/AvatarUpload"; // <-- Илова шуд
 
 /**
  * @typedef {object} ProfileFormViewProps

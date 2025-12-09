@@ -1,7 +1,7 @@
 import React from 'react';
 import ScrollButton from '../../../components/common/ScrollButton';
 import useHorizontalScroll from '../../../hooks/useHorizontalScroll';
-import Cards from '../../Services/components/Cards/Cards';
+import Cards from '@components/Cards/ItemCard';
 
 export default function MiniServiceSlider({ title, services, items, onServiceClick, onItemClick }) {
     // 🎯 Истифодаи custom hook бо вобастагӣ ба services

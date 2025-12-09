@@ -31,7 +31,7 @@ const coursesMockData = [
     statusColor: "bg-purple-400"
   },
   {
-    id: 103,
+    id: 104,
     title: "Йога старт",
     price: "35",
     coverUrl: "/images/fitness1.jpg",

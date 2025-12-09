@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../components/ui/Modal';
+import Modal from '/src/components/ui/Modal';
 import NewsSection from '../../components/News/NewsSection';
 import NewsForm from '../../components/News/NewsModal/NewsForm';
 import { useNews } from '../../features/news/hooks/useNews';
@@ -13,7 +13,7 @@ function NewsPage() {
     handleOpenCreateModal,
     handleCloseModal,
     handleSubmitNews,
-    handleNewsAction, 
+    handleNewsAction,
   } = useNews();
 
   return (
@@ -24,12 +24,12 @@ function NewsPage() {
         items={actualNews}
         showCreateCard={true}
         onCreate={handleOpenCreateModal}
-        onAction={handleNewsAction} 
+        onAction={handleNewsAction}
       />
       <NewsSection
         title="Архив"
         items={archivedNews}
-        onAction={handleNewsAction} 
+        onAction={handleNewsAction}
       />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

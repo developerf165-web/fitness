@@ -1,15 +1,16 @@
 // src/pages/Services/modals/ServicesModals.jsx
 
 import React from 'react';
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
-import { ServiceFormModal } from '../forms';
+import DeleteConfirmationModal from '/src/components/ui/DeleteConfirmationModal';
+import ServiceFormModal from './ServiceForm/ServiceFormModal';
 
 /**
  * Ҳамаи модалҳо барои Services
  */
-export default function ServicesModals({ 
-  modals, 
-  handlers 
+export default function ServicesModals({
+  modals,
+  handlers,
+  showToast // Илова
 }) {
   return (
     <>
@@ -21,7 +22,7 @@ export default function ServicesModals({
         isDeleting={modals.delete.isDeleting}
         itemName={modals.delete.itemToDelete?.title}
       />
-      
+
       {/* Модали таҳрир/сохтан */}
       <ServiceFormModal
         isOpen={modals.form.isOpen}
@@ -29,6 +30,7 @@ export default function ServicesModals({
         onSubmit={handlers.handleSubmit}
         initialData={modals.form.editingItem}
         isSubmitting={modals.form.isSubmitting}
+        showToast={showToast}
       />
     </>
   );

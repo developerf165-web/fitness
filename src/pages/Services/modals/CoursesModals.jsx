@@ -1,17 +1,17 @@
 // src/pages/Services/modals/CoursesModals.jsx
 
 import React from 'react';
-import CourseCancelConfirmationModal from '@/components/ui/CourseCancelConfirmationModal';
+import CourseCancelConfirmationModal from '/src/components/ui/CourseCancelConfirmationModal';
 import CardioCourseModal from './CardioCourseModal';
-import { CourseFormModal } from '../forms';
+import CourseFormModal from './CourseForm/CourseFormModal';
 
 /**
  * Ҳамаи модалҳо барои Courses
  */
-export default function CoursesModals({ 
-  modals, 
+export default function CoursesModals({
+  modals,
   handlers,
-  onConfirmCancel 
+  onConfirmCancel
 }) {
   return (
     <>
@@ -21,15 +21,15 @@ export default function CoursesModals({
         onClose={modals.cardio.close}
         courseData={modals.cardio.editingItem}
       />
-      
+
       {/* Модали тасдиқи бекоркунӣ */}
       <CourseCancelConfirmationModal
-        isOpen={modals.cancel.isOpen} 
+        isOpen={modals.cancel.isOpen}
         onClose={modals.cancel.close}
-        courseData={modals.cancel.itemToDelete} 
+        courseData={modals.cancel.itemToDelete}
         onActionSuccess={onConfirmCancel}
       />
-      
+
       {/* Модали таҳрир/сохтан */}
       <CourseFormModal
         isOpen={modals.form.isOpen}

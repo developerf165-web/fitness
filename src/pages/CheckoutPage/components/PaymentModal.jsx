@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@/components/ui/Modal';
+import Modal from '@components/ui/Modal';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
-import InputField from '@/components/ui/InputField';
-import Button from '@/components/ui/Button';
+import InputField from '@components/ui/InputField';
+import Button from '@components/ui/Button';
 
 export default function PaymentModal({
     isOpen,

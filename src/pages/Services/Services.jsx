@@ -26,6 +26,13 @@ import activeMockData from './data/activeMockData';
  * Саҳифаи асосии Services
  * Дар бар мегирад: Курсҳо, Хидматҳо, Самтҳо
  */
+const IS_LOGGING_ENABLED = import.meta.env.VITE_API_LOGGING_ENABLED === 'true';
+
+if (IS_LOGGING_ENABLED) {
+  console.log('🚀 [SERVICES PAGE] Logging Enabled: TRUE');
+  console.log('Environment:', import.meta.env);
+}
+
 export default function Services() {
   const {
     // Data
@@ -34,7 +41,7 @@ export default function Services() {
     services,
     courses,
     directions,
-    
+
     // State Hooks
     serviceModals,
     courseModals,
@@ -47,6 +54,9 @@ export default function Services() {
     handleLaunchClick,
     handleCancelClick,
     handleConfirmCancel,
+
+    // Toast
+    showToast, // Илова
   } = useServicePageLogic();
 
   // Хатогӣ
@@ -61,7 +71,7 @@ export default function Services() {
   return (
     <>
       {/* ҚИСМҲОИ САҲИФА */}
-      
+
       {/* 1. Готово к запуску */}
       <ReadyToLaunchSection
         courses={courses}
@@ -101,9 +111,10 @@ export default function Services() {
 
       {/* МОДАЛҲО */}
 
-      <ServicesModals 
+      <ServicesModals
         modals={serviceModals}
         handlers={serviceHandlers}
+        showToast={showToast}
       />
 
       <CoursesModals

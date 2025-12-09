@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, Home } from 'lucide-react';
-import DropdownMenu from '@/components/ui/DropdownMenu';
-import Modal from '@/components/ui/Modal';
+import DropdownMenu from '/src/components/ui/DropdownMenu';
+import Modal from '/src/components/ui/Modal';
 import TrainerModal from '../Cards/Modal/TrainerModal';
 
 import headerBg from '/images/fitness1.jpg';

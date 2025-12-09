@@ -5,7 +5,7 @@ import DashboardHeader from '../Dashboard/components/DashboardHeader';
 import SearchComponent from '../Dashboard/components/SearchComponent';
 import Table from '../Dashboard/components/Table/Table';
 import AddModalWrapper from "../components/AddModalWrapper/AddModalWrapper";
-import Modal from '../components/ui/Modal';
+import Modal from '/src/components/ui/Modal';
 
 export default function PersonalPage() {
   const navigate = useNavigate();

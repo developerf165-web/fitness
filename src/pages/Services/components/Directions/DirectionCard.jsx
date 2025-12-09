@@ -1,12 +1,12 @@
 import React from 'react';
 import { MoreVertical, Edit, Trash2 } from 'lucide-react';
-import DropdownMenu from '/src/pages/components/ui/DropdownMenu';
+import DropdownMenu from '@components/ui/DropdownMenu';
 
 export default function DirectionCard({ item, onEdit, onDelete }) {
   const menuItems = [
     {
       label: 'Редактировать',
-      action: () => onEdit(item),
+      action: () => onEdit(item.id),
       icon: <Edit size={16} className="mr-2" />
     },
     {
@@ -30,7 +30,7 @@ export default function DirectionCard({ item, onEdit, onDelete }) {
 
         <div className="relative ml-3">
           <DropdownMenu items={menuItems}>
-            <button className="p-1.5 rounded-full text-gray-400 hover:text-white cursor-pointer hover:bg-white/10 transition-colors">
+            <button className="menu-dots-button">
               <MoreVertical size={18} />
             </button>
           </DropdownMenu>

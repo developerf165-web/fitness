@@ -1,7 +1,7 @@
 // src/pages/Services/modals/CardioCourseModal.jsx
 
 import React, { useState } from 'react';
-import Modal from '@/components/ui/Modal';
+import Modal from '/src/components/ui/Modal';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
 import CourseHeader from './components/CourseHeader';
 import CourseContent from './components/CourseContent';

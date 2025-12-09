@@ -1,6 +1,6 @@
 import React from 'react';
 import { MoreVertical, Edit, Archive, Trash2 } from 'lucide-react';
-import DropdownMenu from '../../pages/components/ui/DropdownMenu';
+import DropdownMenu from '/src/components/ui/DropdownMenu';
 
 function NewsCard({ item, onEdit, onArchive, onDelete }) {
 
@@ -14,13 +14,13 @@ function NewsCard({ item, onEdit, onArchive, onDelete }) {
     {
       label: 'Архивировать',
       action: () => onArchive(item.id),
-      icon: <Archive size={16} className="mr-2" /> 
+      icon: <Archive size={16} className="mr-2" />
     },
     {
       label: 'Удалить',
       action: () => onDelete(item.id),
       icon: <Trash2 size={16} className="mr-2" />,
-      className: 'danger' 
+      className: 'danger'
     },
   ];
 

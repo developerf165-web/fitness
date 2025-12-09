@@ -11,22 +11,22 @@ export function useClientDashboard() {
   const debouncedQuery = useDebounce(query, 500);
 
   // isBlocked = false (Истифодабарандагони фаъол)
-  const { 
-    users, 
-    pagination, 
-    currentPage, 
-    loading, 
-    error, 
-    handlePageChange, 
-    refetchUsers 
+  const {
+    users,
+    pagination,
+    currentPage,
+    loading,
+    error,
+    handlePageChange,
+    refetchUsers
   } = useUsersData(debouncedQuery, false);
 
   const isListLoading = useDelayedLoading(loading);
 
-  const { 
-    isOpen: isModalOpen, 
-    closeModal, 
-    toggleModal 
+  const {
+    isOpen: isModalOpen,
+    closeModal,
+    toggleModal
   } = useModalWithEscape(false);
 
   const { showToast } = useToast();

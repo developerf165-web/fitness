@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from '@/components/ui/Card'; // Истифодаи Card.jsx-и шумо
-import Button from '@/components/ui/Button'; // Истифодаи Button.jsx-и шумо
+import Card from '/src/components/ui/Card'; // Истифодаи Card.jsx-и шумо
+import Button from '/src/components/ui/Button'; // Истифодаи Button.jsx-и шумо
 
 
 

@@ -1,10 +1,10 @@
 // TrainerForm.jsx
 import React from 'react';
 import CustomInput from '../../Shared/CustomInput';
-import FileUploader from '../../ui/FileUploader';
-import ColorPicker from '../../ui/ColorPicker';
-import DropdownField from '../../ui/DropdownField';
-import FormButton from "@/components/ui/FormButton";
+import FileUploader from '/src/components/ui/FileUploader';
+import ColorPicker from '/src/components/ui/ColorPicker';
+import DropdownField from '/src/components/ui/DropdownField';
+import FormButton from "/src/components/ui/FormButton";
 
 // Ҳамаи мантиқ ва state ба воситаи props мегузаранд
 const TrainerForm = ({

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import DropdownMenu from '../components/ui/DropdownMenu'; 
+import DropdownMenu from '/src/components/ui/DropdownMenu';
 import getMailingsMenuItems from '/src/features/mailings/data/mailingsMenuData';
 import ScheduledTable from '/src/features/mailings/components/ScheduledTable/ScheduledTable';
 import { scheduledData, deliveredData } from '/src/features/mailings/data/mailingsData';
 import MailingForm from '/src/features/mailings/components/MailingForm/MailingForm';
-import Modal from '../components/ui/Modal';
+import Modal from '/src/components/ui/Modal';
 import SearchComponent from '/src/pages/Dashboard/components/SearchComponent';
 
 const MailingsPage = () => {
@@ -53,11 +53,11 @@ const MailingsPage = () => {
       </div>
 
       <Modal isOpen={!!modalType} onClose={() => setModalType(null)}>
-          {modalType && (
-            <div className="w-full max-w-2xl rounded-lg p-6 h-[90vh] max-h-[700px] flex flex-col">
-              <MailingForm type={modalType} onClose={() => setModalType(null)} />
-            </div>
-          )}
+        {modalType && (
+          <div className="w-full max-w-2xl rounded-lg p-6 h-[90vh] max-h-[700px] flex flex-col">
+            <MailingForm type={modalType} onClose={() => setModalType(null)} />
+          </div>
+        )}
       </Modal>
     </div>
   );

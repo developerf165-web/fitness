@@ -1,5 +1,5 @@
 import React from 'react';
-import BackButton from '../../../components/ui/BackButton';
+import BackButton from '/src/components/ui/BackButton';
 
 const ShareIcon = () => (
     <svg width="25" height="21" viewBox="0 0 25 21" fill="none" xmlns="http://www.w3.org/2000/svg">

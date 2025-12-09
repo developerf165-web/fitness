@@ -18,9 +18,9 @@ export default function TransactionPage({
       try {
         setIsLoading(true);
         setError(null);
-        
+
         const data = await fetchUserTransactions(userId, page);
-        
+
         setTransactionsData(data);
       } catch (err) {
         setError(err.message);
@@ -65,7 +65,7 @@ export default function TransactionPage({
     // 'min-h-[calc(100vh-150px)]' - Баландии минималӣ (экрани пурра минуси header)
     // Шумо метавонед 150px-ро ба баландии аниқи header-и худ иваз кунед.
     <div className="color-bg-main flex flex-col min-h-[calc(100vh-150px)]">
-      
+
       {/* === ИСЛОҲИ 2: === */}
       {/* 'flex-grow' - Ин блок ҳамаи ҷои холиро пур мекунад ва пагинатсияро ба поён тела медиҳад */}
       {/* 'items-start' - Ин пешигирии ҷаҳиши картаҳои ҳамсояро (дар оянда) мегирад */}

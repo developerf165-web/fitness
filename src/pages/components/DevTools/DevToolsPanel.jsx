@@ -1,6 +1,6 @@
 // DevToolsPanel.jsx - Панели барои экспорт кардани логҳо
 import React, { useState, useEffect } from 'react';
-import { apiLogger } from '../../../services/apiLogger';
+import { apiLogger } from '@services/apiLogger';
 
 const DevToolsPanel = () => {
   const [logsCount, setLogsCount] = useState(0);
@@ -9,7 +9,7 @@ const DevToolsPanel = () => {
   useEffect(() => {
     // Проверка, оё логгирование фаъол аст
     setIsEnabled(apiLogger.isEnabled);
-    
+
     // Ҳар 2 сония шумораи логҳоро навсозӣ мекунем
     const interval = setInterval(() => {
       setLogsCount(apiLogger.getAllLogs().length);
@@ -41,7 +41,7 @@ const DevToolsPanel = () => {
     console.log('=== API LOGS (ОХИРИН АВВАЛ) ===');
     console.log(`Ҳамагӣ: ${apiLogger.getAllLogs().length} логҳо`);
     console.log('');
-    
+
     // Нишон додани логҳо бо нумерҳои манфӣ
     const logs = apiLogger.getAllLogs();
     logs.forEach((log, index) => {
@@ -51,15 +51,15 @@ const DevToolsPanel = () => {
       console.log(`  Навъ: ${log.type}`);
       console.log(`  Метод: ${log.method}`);
       console.log(`  URL: ${log.url}`);
-      
+
       if (log.data) {
         console.log(`  Маълумот:`, log.data);
       }
-      
+
       if (log.error) {
         console.log(`  Хатогӣ:`, log.error);
       }
-      
+
       console.log('');
     });
   };
