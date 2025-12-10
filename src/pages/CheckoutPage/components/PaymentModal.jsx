@@ -11,18 +11,24 @@ export default function PaymentModal({
     totalAmount,
     userBalance = 500,
     userBonuses = 20,
-    discount = 0
+    discount = 0,
+    userCards = [] // New prop for cards
 }) {
     const [cashAmount, setCashAmount] = useState('');
     const [bonusAmount, setBonusAmount] = useState('');
+    const [selectedCardId, setSelectedCardId] = useState(null);
 
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen) {
             setCashAmount(totalAmount.toString());
             setBonusAmount('');
+            // Select first card by default if exists
+            if (userCards && userCards.length > 0) {
+                setSelectedCardId(userCards[0].id);
+            }
         }
-    }, [isOpen, totalAmount]);
+    }, [isOpen, totalAmount, userCards]);
 
     const handleCashChange = (e) => {
         setCashAmount(e.target.value);
@@ -59,6 +65,26 @@ export default function PaymentModal({
 
             {/* Inputs */}
             <div className="space-y-4">
+                {/* Card Selection */}
+                {userCards.length > 0 ? (
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Выберите карту</label>
+                        <select
+                            value={selectedCardId || ''}
+                            onChange={(e) => setSelectedCardId(Number(e.target.value))}
+                            className="w-full bg-[#1A1A1A] text-white border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-[var(--color-accent)] transition-colors"
+                        >
+                            {userCards.map(card => (
+                                <option key={card.id} value={card.id}>
+                                    {card.name || 'Карта'} ({card.card_number || '****'}) - {card.balance} TJS
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                ) : (
+                    <div className="text-red-500 text-sm">У пользователя нет карт. Оплата невозможна.</div>
+                )}
+
                 <InputField
                     label="Оплата наличными"
                     placeholder="Наличные"
@@ -103,22 +129,23 @@ export default function PaymentModal({
     );
 
     const footer = (
-        <div className="flex justify-between w-full gap-4">
+        <div className="flex items-center justify-between w-full gap-4">
             <Button
+                type="button"
                 variant="default"
-                className="flex-1 color-bg-mini-card color-text-main hover:bg-[#3A3A3C]"
                 onClick={onClose}
             >
                 Отмена
             </Button>
             <Button
+                type="button"
                 variant="primary"
-                className="flex-1 color-bg-accent text-black font-bold hover:opacity-90"
-                onClick={() => onConfirm(finalTotal)}
+                disabled={!selectedCardId} // Disable if no card selected
+                onClick={() => onConfirm(finalTotal, selectedCardId)}
             >
                 Оплатить
             </Button>
-        </div>
+        </div >
     );
 
     return (

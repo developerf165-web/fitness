@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function FormFooter({ onClose, onSubmit, isSubmitting, submitText = "Сохранить" }) {
+export default function FormFooter({ onClose, onSubmit, isSubmitting, isFormValid = true, submitText = "Сохранить" }) {
   return (
     <div className="grid grid-cols-3 gap-3 w-full">
       <button
@@ -23,8 +23,12 @@ export default function FormFooter({ onClose, onSubmit, isSubmitting, submitText
       <button
         type="button"
         onClick={onSubmit}
-        disabled={isSubmitting}
-        className="py-3.5 rounded-2xl color-bg-accent text-black text-sm cursor-pointer font-bold hover:bg-[#b3e600] transition-colors"
+        disabled={isSubmitting || !isFormValid}
+        className={
+          isFormValid && !isSubmitting
+            ? "py-3.5 rounded-2xl color-bg-accent text-black text-sm cursor-pointer font-bold hover:bg-[#b3e600] transition-colors"
+            : "py-3.5 rounded-2xl color-bg-mini-card text-gray-400 text-sm cursor-not-allowed font-bold transition-colors"
+        }
       >
         {isSubmitting ? '...' : submitText}
       </button>

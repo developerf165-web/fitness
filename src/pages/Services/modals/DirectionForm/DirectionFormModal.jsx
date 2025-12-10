@@ -5,25 +5,31 @@ import Modal from '/src/components/ui/Modal';
 import Button from '/src/components/ui/Button';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
 import DirectionFormFields from './DirectionFormFields';
-import { useDirectionForm } from './useDirectionForm';
+import useDirectionForm from './useDirectionForm';
 
 /**
  * Модали формаи Direction
  */
-export default function DirectionFormModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
+export default function DirectionFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
   initialData = null,
-  isSubmitting = false
+  isSubmitting = false,
+  showToast
 }) {
   const {
     formData,
     handleChange,
-    handleColorSelect,
     handleIconUpload,
     validate,
-  } = useDirectionForm(initialData, isOpen);
+    isFormValid,
+  } = useDirectionForm({
+    initialData,
+    isOpen,
+    onSuccess: onSubmit,
+    showToast
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,7 +50,6 @@ export default function DirectionFormModal({
         formData={formData}
         onChange={handleChange}
         onIconUpload={handleIconUpload}
-        onColorSelect={handleColorSelect}
       />
     </form>
   );
@@ -59,12 +64,12 @@ export default function DirectionFormModal({
       >
         Отмена
       </Button>
-      
+
       <Button
         type="submit"
         form="direction-form"
         variant="primary"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !isFormValid}
       >
         {isSubmitting ? 'Сохранение...' : (initialData ? 'Сохранить' : 'Создать')}
       </Button>

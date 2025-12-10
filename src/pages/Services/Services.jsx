@@ -41,6 +41,8 @@ export default function Services() {
     services,
     courses,
     directions,
+    directionsLoading,
+    directionsError,
 
     // State Hooks
     serviceModals,
@@ -58,15 +60,6 @@ export default function Services() {
     // Toast
     showToast, // Илова
   } = useServicePageLogic();
-
-  // Хатогӣ
-  if (error) {
-    return (
-      <div className="text-center py-10 text-red-500">
-        Ошибка: {error}
-      </div>
-    );
-  }
 
   return (
     <>
@@ -96,6 +89,7 @@ export default function Services() {
       <ServicesSection
         items={services}
         isLoading={isLoading}
+        error={error}
         onEdit={serviceModals.form.openEdit}
         onDelete={serviceModals.delete.openDelete}
         onAddNew={serviceModals.form.openCreate}
@@ -104,6 +98,8 @@ export default function Services() {
       {/* 5. Направления */}
       <DirectionsSectionWrapper
         items={directions}
+        isLoading={directionsLoading}
+        error={directionsError}
         onEdit={directionModals.form.openEdit}
         onDelete={directionModals.delete.openDelete}
         onAddNew={directionModals.form.openCreate}

@@ -1,5 +1,21 @@
 import { useCallback } from 'react';
 
+// Helper to translate common errors to Russian
+const translateError = (error) => {
+    const errorMessage = error?.message || String(error);
+
+    // Network errors
+    if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+        return 'Ошибка сети. Проверьте подключение к интернету.';
+    }
+    if (errorMessage.includes('Network request failed')) {
+        return 'Ошибка сети. Проверьте подключение к интернету.';
+    }
+
+    // Return original message if already in Russian or unknown
+    return errorMessage;
+};
+
 /**
  * Generic hook for handling CRUD operations.
  * 
@@ -54,7 +70,8 @@ export default function useCrudLogic({
             if (showToast) showToast('success', 'Успешно', 'Элемент успешно удален');
         } catch (err) {
             console.error(`[${logging.namespace}] Delete Error:`, err);
-            if (showToast) showToast('error', 'Ошибка', `Ошибка при удалении: ${err.message}`);
+            const errorMsg = translateError(err);
+            if (showToast) showToast('error', 'Ошибка', `Ошибка при удалении: ${errorMsg}`);
         } finally {
             if (deleteModal.setIsDeleting) deleteModal.setIsDeleting(false);
         }
@@ -91,7 +108,8 @@ export default function useCrudLogic({
             }
         } catch (err) {
             console.error(`[${logging.namespace}] Create Error:`, err);
-            if (showToast) showToast('error', 'Ошибка', `Ошибка при создании: ${err.message}`);
+            const errorMsg = translateError(err);
+            if (showToast) showToast('error', 'Ошибка', `Ошибка при создании: ${errorMsg}`);
         } finally {
             if (formModal && formModal.setIsSubmitting) formModal.setIsSubmitting(false);
         }
@@ -117,10 +135,10 @@ export default function useCrudLogic({
 
             const transformedItem = transformResponse(updatedItem);
 
-            // Guard against bad data (NaN) before local update
-            // Check if essential fields are valid (not undefined/NaN for critical numbers)
+            // Guard against bad data before local update
+            // Check if we have a valid item with an ID
             const isValidUpdate = transformedItem &&
-                (transformedItem.price !== undefined && !isNaN(transformedItem.price));
+                (transformedItem.id !== undefined && transformedItem.id !== null);
 
             if (isValidUpdate) {
                 setItems(prev => prev.map(item =>
@@ -137,7 +155,8 @@ export default function useCrudLogic({
             }
         } catch (err) {
             console.error(`[${logging.namespace}] Update Error:`, err);
-            if (showToast) showToast('error', 'Ошибка', `Ошибка при обновлении: ${err.message}`);
+            const errorMsg = translateError(err);
+            if (showToast) showToast('error', 'Ошибка', `Ошибка при обновлении: ${errorMsg}`);
         } finally {
             if (formModal && formModal.setIsSubmitting) formModal.setIsSubmitting(false);
         }

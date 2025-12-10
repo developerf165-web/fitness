@@ -8,21 +8,25 @@ import DirectionsSection from '../components/Directions/DirectionsSection';
  * Қисми "Направления"
  * Рӯйхати самтҳо
  */
-export default function DirectionsSectionWrapper({ 
+export default function DirectionsSectionWrapper({
   items,
-  onEdit, 
+  isLoading,
+  error,
+  onEdit,
   onDelete,
-  onAddNew 
+  onAddNew
 }) {
   return (
     <div className="mt-8">
-      <SectionHeader 
-        title="Направления" 
-        actionLabel="Создать" 
-        onAction={onAddNew} 
+      <SectionHeader
+        title="Направления"
+        actionLabel="Создать"
+        onAction={onAddNew}
       />
-      <DirectionsSection 
-        items={items} 
+      <DirectionsSection
+        items={items}
+        isLoading={isLoading}
+        error={error}
         onEdit={onEdit}
         onDelete={onDelete}
       />

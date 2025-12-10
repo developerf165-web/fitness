@@ -9,15 +9,14 @@ const Button = ({
   disabled = false,
   ...rest  // Ҳамаи дигар props ба button мегузаранд (form, id, name ва ғайра)
 }) => {
-  const baseClasses = "p-3 text-black cursor-pointer rounded-xl font-medium transition-colors flex items-center justify-center";
+  const baseClasses = "px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
   const variants = {
-    default: "color-bg-mini-card bg-hover-card",
-    primary: "font-bold text-black color-bg-accent hover:bg-lime-500",
+    default: "color-bg-mini-card color-text-main hover:bg-[#3A3A3C]",
+    primary: "color-bg-accent text-black font-bold hover:opacity-90",
   };
 
-  // Агар className дода шавад, онро истифода барем
-  // Агар не, variant-ро истифода барем (backward compatible)
-  const finalClassName = className || `${baseClasses} ${variants[variant]}`;
+  // Ҳамеша baseClasses + variant + className илова мекунем
+  const finalClassName = `${baseClasses} ${variants[variant] || ''} ${className}`.trim();
 
   return (
     <button

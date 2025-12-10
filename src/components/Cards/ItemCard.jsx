@@ -77,7 +77,17 @@ export default function Cards({ item, onEdit, onDelete, isMini = false }) {
         <div className="pl-2">
           <h3 className={`mb-1 font-medium ${isMini ? 'line-clamp-1' : ''}`}>{item.title || item.name}</h3>
           <p className={`text-sm mb-0 color-accent ${isMini ? 'text-xs' : ''}`}>
-            {Number(item.tjs || item.price).toFixed(2)} TJS <span className="text-gray-400">/ {visitCount || 1} посещение</span>
+            {visitCount > 0 ? (
+              <>
+                {Number(item.price_visit || item.price * visitCount).toFixed(2)} TJS
+                <span className="text-gray-400"> / {visitCount} посещений</span>
+              </>
+            ) : (
+              <>
+                {Number(item.tjs || item.price).toFixed(2)} TJS
+                <span className="text-gray-400"> / посещение</span>
+              </>
+            )}
           </p>
         </div>
       </div>

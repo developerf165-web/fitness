@@ -11,7 +11,13 @@ export default function useServicePageLogic() {
   // --- (1) Истифодаи Hooks-ҳои фаръӣ барои State/Handlers ---
   const { services, isLoading, error, serviceModals, serviceHandlers } = useServiceState(showToast);
   const { courses, courseModals, courseHandlers } = useCourseState(showToast);
-  const { directions, directionModals, directionHandlers } = useDirectionState(showToast);
+  const {
+    directions,
+    isLoading: directionsLoading,
+    error: directionsError,
+    directionModals,
+    directionHandlers
+  } = useDirectionState(showToast);
 
   // --- (2) Логикаи махсуси Courses (Запуск/Отмена) ---
 
@@ -46,6 +52,8 @@ export default function useServicePageLogic() {
     services,
     courses,
     directions,
+    directionsLoading,
+    directionsError,
 
     // State Hooks
     serviceModals,

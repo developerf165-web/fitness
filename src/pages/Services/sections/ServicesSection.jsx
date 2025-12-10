@@ -11,6 +11,7 @@ import CardsSection from '../components/Cards/CardsSection';
 export default function ServicesSection({
   items,
   isLoading,
+  error,
   onEdit,
   onDelete,
   onAddNew
@@ -27,6 +28,7 @@ export default function ServicesSection({
         onEdit={onEdit}
         onDelete={onDelete}
         isLoading={isLoading}
+        error={error}
       />
     </>
   );

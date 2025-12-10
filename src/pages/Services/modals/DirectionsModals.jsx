@@ -9,7 +9,8 @@ import DirectionFormModal from './DirectionForm/DirectionFormModal';
  */
 export default function DirectionsModals({
   modals,
-  handlers
+  handlers,
+  showToast
 }) {
   return (
     <>
@@ -29,6 +30,7 @@ export default function DirectionsModals({
         onSubmit={handlers.handleSubmit}
         initialData={modals.form.editingItem}
         isSubmitting={modals.form.isSubmitting}
+        showToast={showToast}
       />
     </>
   );

@@ -133,11 +133,6 @@ export default function ServiceFormModal({
         form="service-form"
         variant="primary"
         disabled={!isFormValid() || isSubmitting}
-        className={
-          isFormValid() && !isSubmitting
-            ? "p-3 rounded-xl font-medium transition-colors flex items-center justify-center color-bg-accent hover:bg-lime-200 cursor-pointer text-black font-semibold"
-            : "p-3 rounded-xl font-medium transition-colors flex items-center justify-center color-bg-mini-card cursor-not-allowed text-gray-400"
-        }
       >
         {isSubmitting ? 'Сохранение...' : (initialData ? 'Сохранить' : 'Создать')}
       </Button>

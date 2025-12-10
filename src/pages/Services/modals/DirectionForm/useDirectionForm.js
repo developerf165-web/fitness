@@ -1,64 +1,101 @@
-// src/pages/Services/components/DirectionForm/useDirectionForm.js
+import { useState, useMemo } from 'react';
+import { useFormValidation } from '../../../../hooks/useFormValidation';
+import { isRequired, maxLength } from '../../../../utils/validation';
+import { FORM_LIMITS, VALIDATION_MESSAGES } from '../../constants/formLimits';
 
-import { useState, useEffect } from 'react';
-
-const DEFAULT_COLOR = 'bg-lime-500';
 
 /**
  * Hook барои идораи формаи Direction
+ * Истифодаи хуки универсалии useFormValidation
  */
-export function useDirectionForm(initialData, isOpen) {
-  const [formData, setFormData] = useState({
+export default function useDirectionForm({ initialData, isOpen, onSuccess, showToast }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { TITLE_MAX, DESCRIPTION_MAX } = FORM_LIMITS.DIRECTION;
+
+  // Схемаи валидатсия барои Direction
+  const validationSchema = {
+    title: [
+      {
+        validator: isRequired,
+        message: VALIDATION_MESSAGES.REQUIRED.TITLE,
+      },
+      {
+        validator: (value) => maxLength(value, TITLE_MAX),
+        message: VALIDATION_MESSAGES.MAX_LENGTH(TITLE_MAX),
+      },
+    ],
+    description: [
+      {
+        validator: isRequired,
+        message: VALIDATION_MESSAGES.REQUIRED.DESCRIPTION,
+      },
+      {
+        validator: (value) => maxLength(value, DESCRIPTION_MAX),
+        message: VALIDATION_MESSAGES.MAX_LENGTH(DESCRIPTION_MAX),
+      },
+    ],
+    // iconUrl ихтиёрӣ аст
+  };
+
+  // Қимматҳои ибтидоӣ
+  const initialValues = {
     title: '',
     description: '',
     iconUrl: '',
-    color: DEFAULT_COLOR,
+  };
+
+  // Memoize initialData transformation to prevent infinite loop
+  const transformedInitialData = useMemo(() => {
+    if (!initialData) return null;
+    return {
+      title: initialData.title || '',
+      description: initialData.description || '',
+      iconUrl: initialData.iconUrl || '',
+    };
+  }, [initialData]);
+
+  // Истифодаи хуки универсалӣ
+  const {
+    formData,
+    errors,
+    isFormValid,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+    validate: validateForm,
+  } = useFormValidation({
+    initialValues,
+    validationSchema,
+    isOpen,
+    initialData: transformedInitialData,
+    validateOnBlur: true,
+    onValidationError: (firstError) => {
+      if (showToast) {
+        showToast('error', 'Ошибка валидации', firstError);
+      } else {
+        alert(firstError);
+      }
+    }
   });
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        title: initialData.title || '',
-        description: initialData.description || '',
-        iconUrl: initialData.iconUrl || '',
-        color: initialData.color || DEFAULT_COLOR,
-      });
-    } else {
-      setFormData({
-        title: '',
-        description: '',
-        iconUrl: '',
-        color: DEFAULT_COLOR,
-      });
-    }
-  }, [initialData, isOpen]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleColorSelect = (color) => {
-    setFormData(prev => ({ ...prev, color }));
-  };
-
+  // Handler барои бор кардани иконка
   const handleIconUpload = (url) => {
-    setFormData(prev => ({ ...prev, iconUrl: url }));
+    setFieldValue('iconUrl', url);
   };
 
+  // Валидатсия бо намоиши паёми хатогӣ
   const validate = () => {
-    if (!formData.title.trim()) {
-      alert('Лутфан номи направлениеро пур кунед');
-      return false;
-    }
-    return true;
+    return validateForm();
   };
 
   return {
     formData,
+    errors,
     handleChange,
-    handleColorSelect,
+    handleBlur,
     handleIconUpload,
     validate,
+    isFormValid,
   };
 }

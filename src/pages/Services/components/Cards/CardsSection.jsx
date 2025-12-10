@@ -8,6 +8,7 @@ const CardsSection = React.memo(({
   onEdit,
   onDelete,
   isLoading, // <-- 2. 'isLoading'-ро ҳамчун prop қабул мекунем
+  error,
   skeletonCount = 8, // Шумораи скелетонҳое, ки нишон дода мешаванд
   emptyMessage = "На данный момент услуги не найдены..."
 }) => {
@@ -15,14 +16,23 @@ const CardsSection = React.memo(({
 
   const renderContent = () => {
     // 3. Агар 'isLoading' true бошад, скелетонҳоро нишон медиҳем
-    if (isLoading) {
+    // Агар 'isLoading' true бошад ё хатогӣ бошад, скелетонҳоро нишон медиҳем
+    if (isLoading || error) {
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {/* Массив месозем, то 'skeletonCount' миқдор скелетонро render кунем */}
-          {Array.from({ length: skeletonCount }).map((_, index) => (
-            <CardSkeleton key={index} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {/* Массив месозем, то 'skeletonCount' миқдор скелетонро render кунем */}
+            {Array.from({ length: skeletonCount }).map((_, index) => (
+              <CardSkeleton key={index} />
+            ))}
+          </div>
+          {/* Агар хатогӣ бошад, дар поён нишон медиҳем */}
+          {error && (
+            <div className="text-center py-6 text-red-500 mt-4">
+              Ошибка при загрузке услуг: {error}
+            </div>
+          )}
+        </>
       );
     }
 
@@ -62,6 +72,7 @@ CardsSection.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired, // <-- 6. 'isLoading'-ро ба propTypes илова мекунем
+  error: PropTypes.string,
   skeletonCount: PropTypes.number,
   emptyMessage: PropTypes.string,
 };

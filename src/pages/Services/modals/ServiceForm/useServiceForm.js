@@ -1,90 +1,123 @@
 // src/pages/Services/forms/ServiceForm/useServiceForm.js
 
-import { useState, useEffect } from 'react';
-import { VALIDATION_MESSAGES } from '../../constants';
-import { validateServiceForm, validateField as validateSingleField } from '../../utils/validators';
+import { useFormValidation } from '../../../../hooks/useFormValidation';
+import { isRequired, isPositive, isNonNegative, inRange, maxLength } from '../../../../utils/validation';
+import { FORM_LIMITS, VALIDATION_MESSAGES } from '../../constants/formLimits';
 
 const IS_LOGGING_ENABLED = import.meta.env.VITE_API_LOGGING_ENABLED === 'true';
 
 /**
  * Hook барои идораи формаи Service
+ * Истифодаи хуки универсалии useFormValidation
  */
 export function useServiceForm(initialData, isOpen, showToast) {
-  const [formData, setFormData] = useState({
+  // Қимматҳои ибтидоӣ
+  const initialValues = {
     title: '',
     description: '',
     price: '',
-    price: '',
     discount: '0',
     visit_count: '',
-    visit_count: '',
     imageUrl: '',
-    imageFile: null, // File object барои API
+    imageFile: null,
     status: 1,
+  };
+
+  const { TITLE_MAX, DESCRIPTION_MAX } = FORM_LIMITS.SERVICE;
+
+  // Схемаи валидатсия барои Service
+  const validationSchema = {
+    title: [
+      {
+        validator: isRequired,
+        message: VALIDATION_MESSAGES.REQUIRED.TITLE
+      },
+      {
+        validator: (value) => maxLength(value, TITLE_MAX),
+        message: VALIDATION_MESSAGES.MAX_LENGTH(TITLE_MAX)
+      }
+    ],
+    description: [
+      {
+        validator: isRequired,
+        message: VALIDATION_MESSAGES.REQUIRED.DESCRIPTION
+      },
+      {
+        validator: (value) => maxLength(value, DESCRIPTION_MAX),
+        message: VALIDATION_MESSAGES.MAX_LENGTH(DESCRIPTION_MAX)
+      }
+    ],
+    price: [
+      {
+        validator: isRequired,
+        message: 'Пожалуйста, введите цену'
+      },
+      {
+        validator: isPositive,
+        message: 'Цена должна быть больше 0'
+      }
+    ],
+    discount: [
+      {
+        validator: isNonNegative,
+        message: 'Скидка не может быть отрицательной'
+      },
+      {
+        validator: (value) => inRange(value, 0, 100),
+        message: 'Скидка должна быть от 0 до 100'
+      }
+    ],
+    visit_count: [
+      {
+        validator: isNonNegative,
+        message: 'Количество посещений не может быть отрицательным'
+      }
+    ],
+    // imageFile санҷида мешавад дар isFormValid (танҳо барои формаи нав)
+  };
+
+  // Истифодаи хуки универсалӣ
+  const {
+    formData,
+    errors,
+    isFormValid: baseIsFormValid,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+    validate: validateForm,
+    setFormData,
+  } = useFormValidation({
+    initialValues,
+    validationSchema,
+    isOpen,
+    initialData: initialData ? {
+      title: initialData.name || initialData.title || '',
+      description: initialData.description || '',
+      price: initialData.price || initialData.tjs || '',
+      discount: initialData.discount !== undefined ? String(initialData.discount) : '0',
+      visit_count: initialData.visit_count !== undefined ? String(initialData.visit_count) : '0',
+      imageUrl: initialData.imageUrl || '',
+      imageFile: null,
+      status: initialData.status !== undefined ? initialData.status : 1,
+    } : null,
+    validateOnBlur: true,
+    onValidationError: (firstError) => {
+      if (showToast) {
+        showToast('error', 'Ошибка валидации', firstError);
+      } else {
+        alert(firstError);
+      }
+    }
   });
 
-  const [errors, setErrors] = useState({});
-
-  // Пур кардани форма
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        title: initialData.name || initialData.title || '',
-        description: initialData.description || '',
-        price: initialData.price || initialData.tjs || '',
-        discount: initialData.discount !== undefined ? String(initialData.discount) : '0',
-        visit_count: initialData.visit_count !== undefined ? String(initialData.visit_count) : '0',
-        imageUrl: initialData.imageUrl || '',
-        imageFile: null,
-        status: initialData.status !== undefined ? initialData.status : 1,
-      });
-      setErrors({});
-    } else {
-      // Reset барои форма нав
-      setFormData({
-        title: '',
-        description: '',
-        price: '',
-        price: '',
-        discount: '0',
-        visit_count: '',
-        visit_count: '',
-        imageUrl: '',
-        imageFile: null,
-        status: 1,
-      });
-      setErrors({});
-    }
-  }, [initialData, isOpen]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-
-    // Clear error on change
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
-  };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    const error = validateSingleField(name, value, !!initialData);
-    setErrors(prev => ({ ...prev, [name]: error }));
-  };
-
+  // Handler барои бор кардани файл
   const handleFileUpload = (file) => {
     if (file) {
-      // Нигоҳ доштани File object барои API
       setFormData(prev => ({
         ...prev,
         imageFile: file,
         imageUrl: file // FileUploader бо File object кор мекунад
       }));
-      // Clear image error
-      if (errors.image) {
-        setErrors(prev => ({ ...prev, image: undefined }));
-      }
     } else {
       setFormData(prev => ({
         ...prev,
@@ -94,6 +127,7 @@ export function useServiceForm(initialData, isOpen, showToast) {
     }
   };
 
+  // Валидатсияи пурра бо санҷиши расм
   const validate = () => {
     if (IS_LOGGING_ENABLED) {
       console.log('\n🔍 [VALIDATOR] Starting validation...');
@@ -108,38 +142,58 @@ export function useServiceForm(initialData, isOpen, showToast) {
       });
     }
 
-    const { isValid, errors: validationErrors } = validateServiceForm(formData, !!initialData);
+    // Санҷиши майдонҳои асосӣ
+    const isValid = validateForm();
 
-    if (IS_LOGGING_ENABLED) {
-      console.log('Validation result:', { isValid, errors: validationErrors });
-    }
-
-    if (!isValid) {
-      setErrors(validationErrors);
-
-      // Намоиши аввалин хатогӣ бо Toast
-      const firstError = Object.values(validationErrors)[0];
+    // Санҷиши расм (танҳо барои формаи нав)
+    if (!initialData && !formData.imageFile) {
+      if (showToast) {
+        showToast('error', 'Ошибка валидации', 'Пожалуйста, загрузите изображение');
+      } else {
+        alert('Лутфан расмро бор кунед');
+      }
 
       if (IS_LOGGING_ENABLED) {
-        console.log('❌ [VALIDATOR] Validation failed!');
-        console.log('First error:', firstError);
-        console.log('All errors:', validationErrors);
+        console.log('❌ [VALIDATOR] Image validation failed!');
       }
 
-      if (showToast) {
-        showToast('error', 'Ошибка валидации', firstError);
-      } else {
-        // Fallback агар showToast нест
-        alert(firstError);
-      }
       return false;
     }
 
     if (IS_LOGGING_ENABLED) {
-      console.log('✅ [VALIDATOR] All validations passed!');
+      if (isValid) {
+        console.log('✅ [VALIDATOR] All validations passed!');
+      } else {
+        console.log('❌ [VALIDATOR] Validation failed!');
+        console.log('Errors:', errors);
+      }
     }
 
-    return true;
+    return isValid;
+  };
+
+  // Санҷиши валидии форма (бо расм)
+  const isFormValid = () => {
+    const fieldsValid = baseIsFormValid;
+    const imageValid = !!initialData || !!formData.imageFile;
+
+    const result = fieldsValid && imageValid;
+
+    if (IS_LOGGING_ENABLED) {
+      console.log('🔍 Checking form validity:', result);
+      console.log('State:', {
+        fieldsValid,
+        imageValid,
+        title: !!formData.title?.trim(),
+        description: !!formData.description?.trim(),
+        price: formData.price && parseFloat(formData.price) > 0,
+        discount: formData.discount !== '' && parseFloat(formData.discount) >= 0,
+        visit_count: formData.visit_count !== '' && parseInt(formData.visit_count) >= 0,
+        image: imageValid
+      });
+    }
+
+    return result;
   };
 
   return {
@@ -149,5 +203,6 @@ export function useServiceForm(initialData, isOpen, showToast) {
     handleBlur,
     handleFileUpload,
     validate,
+    isFormValid,
   };
 }

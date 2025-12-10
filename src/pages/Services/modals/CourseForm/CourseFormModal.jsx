@@ -1,5 +1,5 @@
 // fileName: CourseFormModal.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 // Компонентҳои асосӣ
 import Modal from '/src/components/ui/Modal';
@@ -10,27 +10,27 @@ import { FormFooter } from './components';
 import CourseFormLayout from './CourseFormLayout';
 
 // Маълумот (Options)
-import { 
-    courseOptions, 
-    goalOptions, 
-    clientOptions, 
-    defaultTrainerOptions, 
-    freeTrainerOptions 
+import {
+  courseOptions,
+  goalOptions,
+  clientOptions,
+  defaultTrainerOptions,
+  freeTrainerOptions
 } from './CourseFormData';
 
 // Ёрии умумӣ
 const getClientDisplayValue = (clients) => {
-   if (clients.length === 0) return '';
-   if (clients.length <= 2) return clients.join(', ');
-   return `${clients[0]}, ${clients[1]} и еще ${clients.length - 2}`;
+  if (clients.length === 0) return '';
+  if (clients.length <= 2) return clients.join(', ');
+  return `${clients[0]}, ${clients[1]} и еще ${clients.length - 2}`;
 };
 
-export default function CourseFormModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  initialData = null, 
-  isSubmitting = false 
+export default function CourseFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialData = null,
+  isSubmitting = false
 }) {
   // --- State ---
   const [formData, setFormData] = useState({
@@ -40,14 +40,14 @@ export default function CourseFormModal({
     scheduleType: 'MWF',
     selectedFullDate: new Date(new Date().getFullYear(), new Date().getMonth(), 7),
     selectedTime: null,
-    trainer: '', 
+    trainer: '',
   });
 
-  const [activeField, setActiveField] = useState(null); 
+  const [activeField, setActiveField] = useState(null);
   const [currentTrainerOptions, setCurrentTrainerOptions] = useState([]);
-  
+
   // Ref ва State барои ҷойгиркунии SelectWithOptions
-  const timeSelectorRef = useRef(null); 
+  const timeSelectorRef = useRef(null);
   const [trainerDropdownStyle, setTrainerDropdownStyle] = useState({});
 
   // --- Effects ---
@@ -71,39 +71,51 @@ export default function CourseFormModal({
   };
 
   const closeActiveDropdown = () => {
-      setActiveField(null);
+    setActiveField(null);
   }
 
   const handleSelectChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setActiveField(null); // Пӯшидани ҳама чиз пас аз интихоб
-    
+
     // Агар Тренер интихоб шуда бошад, рӯйхатро ба ҳолати аслӣ (default) бармегардонем
     if (field === 'trainer') {
-        setCurrentTrainerOptions(defaultTrainerOptions);
+      setCurrentTrainerOptions(defaultTrainerOptions);
     }
   };
-  
+
   // --- LOGIC: Кушодани "Свободные тренеры" ---
   const handleFreeTrainersClick = () => {
-      // 1. Маълумоти "Свободные тренеры"-ро бор мекунем
-      setCurrentTrainerOptions(freeTrainerOptions);
-      
-      // 2. Фаъол мекунем
-      setActiveField('trainer'); 
-      
-      // 3. Ҳисоб кардани мавқеъ (Position)
-      if (timeSelectorRef.current) {
-          setTrainerDropdownStyle({
-              top: timeSelectorRef.current.offsetTop + timeSelectorRef.current.offsetHeight + 10, // 10px поёнтар аз TimeSelector
-              width: timeSelectorRef.current.offsetWidth, // Паҳнӣ баробари TimeSelector
-              left: 0 // Аз тарафи чап баробар
-          });
-      }
+    // 1. Маълумоти "Свободные тренеры"-ро бор мекунем
+    setCurrentTrainerOptions(freeTrainerOptions);
 
-      // 4. Тренери пешинаро тоза мекунем (то ки интихоби нав кунад)
-      setFormData(prev => ({ ...prev, trainer: '' })); 
+    // 2. Фаъол мекунем
+    setActiveField('trainer');
+
+    // 3. Ҳисоб кардани мавқеъ (Position)
+    if (timeSelectorRef.current) {
+      setTrainerDropdownStyle({
+        top: timeSelectorRef.current.offsetTop + timeSelectorRef.current.offsetHeight + 10, // 10px поёнтар аз TimeSelector
+        width: timeSelectorRef.current.offsetWidth, // Паҳнӣ баробари TimeSelector
+        left: 0 // Аз тарафи чап баробар
+      });
+    }
+
+    // 4. Тренери пешинаро тоза мекунем (то ки интихоби нав кунад)
+    setFormData(prev => ({ ...prev, trainer: '' }));
   };
+
+  // --- Валидатсияи форма ---
+  // Санҷиши пуркунии ҳамаи майдонҳои зарурӣ
+  const isFormValid = useMemo(() => {
+    return (
+      formData.course.trim() !== '' &&
+      formData.goal.trim() !== '' &&
+      formData.clients.length > 0 &&
+      formData.selectedTime !== null &&
+      formData.trainer.trim() !== ''
+    );
+  }, [formData.course, formData.goal, formData.clients, formData.selectedTime, formData.trainer]);
 
   // --- Content Render ---
   const formContent = (
@@ -133,10 +145,11 @@ export default function CourseFormModal({
         title="НАБОР НА КУРСЫ"
         content={formContent}
         footer={
-          <FormFooter 
-            onClose={onClose} 
-            onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }} 
-            isSubmitting={isSubmitting} 
+          <FormFooter
+            onClose={onClose}
+            onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }}
+            isSubmitting={isSubmitting}
+            isFormValid={isFormValid}
           />
         }
       />

@@ -16,6 +16,22 @@ const logError = (context, error) => {
   }
 };
 
+// Helper to translate common errors to Russian
+const translateError = (error) => {
+  const errorMessage = error.message || String(error);
+
+  // Network errors
+  if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+    return 'Ошибка сети. Проверьте подключение к интернету.';
+  }
+  if (errorMessage.includes('Network request failed')) {
+    return 'Ошибка сети. Проверьте подключение к интернету.';
+  }
+
+  // Return original message if already in Russian or unknown
+  return errorMessage;
+};
+
 // Helper for detailed FormData logging
 const logFormData = (formData, requestName) => {
   if (IS_LOGGING_ENABLED) {
@@ -31,40 +47,44 @@ const logFormData = (formData, requestName) => {
 };
 
 export const fetchServices = async () => {
-  const token = localStorage.getItem("authToken");
-  if (!token) throw new Error("Токен не найден. Пожалуйста, войдите в систему.");
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("Токен не найден. Пожалуйста, войдите в систему.");
 
-  if (IS_LOGGING_ENABLED) {
-    console.log('📤 [SERVICES API] GET /services/get/all');
-  }
-
-  const response = await fetch(`${API_BASE_URL}/services/get/all`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`
+    if (IS_LOGGING_ENABLED) {
+      console.log('📤 [SERVICES API] GET /services/get/all');
     }
-  });
 
-  if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error('Ошибка аутентификации. Проверьте токен.');
+    const response = await fetch(`${API_BASE_URL}/services/get/all`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Ошибка аутентификации. Проверьте токен.');
+      }
+      const errorData = await response.json().catch(() => ({}));
+      const error = new Error('Ошибка при получении данных с сервера');
+      error.status = response.status;
+      error.data = errorData;
+      logError('fetchServices', error);
+      throw error;
     }
-    const errorData = await response.json().catch(() => ({}));
-    const error = new Error('Ошибка при получении данных с сервера');
-    error.status = response.status;
-    error.data = errorData;
-    logError('fetchServices', error);
-    throw error;
-  }
-  const data = await response.json();
+    const data = await response.json();
 
-  if (IS_LOGGING_ENABLED) {
-    console.log(`📥 [SERVICES API] fetchServices Success. Count: ${data.services?.length}`);
-  }
+    if (IS_LOGGING_ENABLED) {
+      console.log(`📥 [SERVICES API] fetchServices Success. Count: ${data.services?.length}`);
+    }
 
-  return data.services;
+    return data.services;
+  } catch (error) {
+    throw new Error(translateError(error));
+  }
 };
 
 export const deleteService = async (id) => {
@@ -100,62 +120,73 @@ export const deleteService = async (id) => {
 };
 
 export const createService = async (formData) => {
-  const token = localStorage.getItem("authToken");
-  if (!token) throw new Error("Токен не найден. Пожалуйста, войдите в систему.");
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("Токен не найден. Пожалуйста, войдите в систему.");
 
-  const data = new FormData();
-  data.append('name', formData.title);
-  data.append('description', formData.description);
-  data.append('price', parseFloat(formData.price));
-  data.append('discount', parseFloat(formData.discount));
+    const data = new FormData();
+    data.append('name', formData.title);
+    data.append('description', formData.description);
 
-  const visitCount = parseInt(formData.visit_count);
-  data.append('visit_count', isNaN(visitCount) ? 0 : visitCount);
+    const price = parseFloat(formData.price);
+    const visitCount = parseInt(formData.visit_count) || 0;
+    const discount = parseFloat(formData.discount);
 
-  if (formData.imageFile) {
-    data.append('img', formData.imageFile);
+    data.append('price', price);
+    data.append('discount', discount);
+    data.append('visit_count', visitCount);
+
+    // Ҳисоб кардани price_visit (price * visit_count)
+    const priceVisit = price * visitCount;
+    data.append('price_visit', priceVisit);
+
+    if (formData.imageFile) {
+      data.append('img', formData.imageFile);
+    }
+
+    logFormData(data, 'createService');
+
+    const response = await fetch(`${API_BASE_URL}/services/create`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: data
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      let errorMessage = 'Ошибка при создании услуги';
+      if (response.status === 401) errorMessage = 'Ошибка аутентификации.';
+      if (response.status === 422) errorMessage = errorData.message || 'Ошибка валидации данных';
+
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.data = errorData;
+      logError('createService', error);
+      throw error;
+    }
+
+    const result = await response.json();
+
+    if (IS_LOGGING_ENABLED) {
+      console.log('✅ [SERVICES API] createService Success:', result);
+    }
+
+    // Smart unwrapping: check if service/data is a valid object (and not just a message string)
+    const candidate = result.service || result.data;
+    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) {
+      if (IS_LOGGING_ENABLED) console.log('   -> Extracted object keys:', Object.keys(candidate));
+      return candidate;
+    }
+
+    // If no valid nested object found, return the root result
+    if (IS_LOGGING_ENABLED) console.log('   -> Returning root result keys:', Object.keys(result));
+    return result;
+  } catch (error) {
+    throw new Error(translateError(error));
   }
-
-  logFormData(data, 'createService');
-
-  const response = await fetch(`${API_BASE_URL}/services/create`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: data
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    let errorMessage = 'Ошибка при создании услуги';
-    if (response.status === 401) errorMessage = 'Ошибка аутентификации.';
-    if (response.status === 422) errorMessage = errorData.message || 'Ошибка валидации данных';
-
-    const error = new Error(errorMessage);
-    error.status = response.status;
-    error.data = errorData;
-    logError('createService', error);
-    throw error;
-  }
-
-  const result = await response.json();
-
-  if (IS_LOGGING_ENABLED) {
-    console.log('✅ [SERVICES API] createService Success:', result);
-  }
-
-  // Smart unwrapping: check if service/data is a valid object (and not just a message string)
-  const candidate = result.service || result.data;
-  if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) {
-    if (IS_LOGGING_ENABLED) console.log('   -> Extracted object keys:', Object.keys(candidate));
-    return candidate;
-  }
-
-  // If no valid nested object found, return the root result
-  if (IS_LOGGING_ENABLED) console.log('   -> Returning root result keys:', Object.keys(result));
-  return result;
 };
 
 export const updateService = async (id, formData) => {
@@ -166,14 +197,26 @@ export const updateService = async (id, formData) => {
 
   if (formData.title) data.append('name', formData.title);
   if (formData.description) data.append('description', formData.description);
-  if (formData.price) data.append('price', parseFloat(formData.price));
+
+  const price = formData.price ? parseFloat(formData.price) : null;
+  const visitCount = (formData.visit_count !== undefined && formData.visit_count !== '')
+    ? parseInt(formData.visit_count)
+    : null;
+
+  if (price !== null) data.append('price', price);
   if (formData.discount !== undefined && formData.discount !== '') {
     data.append('discount', parseFloat(formData.discount));
   }
-  if (formData.visit_count !== undefined && formData.visit_count !== '') {
-    const visitCount = parseInt(formData.visit_count);
+  if (visitCount !== null) {
     data.append('visit_count', isNaN(visitCount) ? 0 : visitCount);
   }
+
+  // Ҳисоб кардани price_visit агар ҳарду қимат дода шуда бошанд
+  if (price !== null && visitCount !== null) {
+    const priceVisit = price * visitCount;
+    data.append('price_visit', priceVisit);
+  }
+
   if (formData.status !== undefined) {
     data.append('status', parseInt(formData.status));
   }

@@ -1,11 +1,11 @@
-// src/pages/Services/forms/ServiceForm/ServiceFormFields.jsx
-
 import React from 'react';
 import InputField from '/src/components/ui/InputField';
 import TextArea from '/src/components/ui/TextArea';
 import FileUploader from '/src/components/ui/FileUploader';
 import SelectField from '/src/components/ui/SelectField';
+import CharacterCounter from '/src/components/ui/CharacterCounter';
 import { FORM_LABELS, FORM_PLACEHOLDERS, STATUS_OPTIONS } from '../../constants';
+import { FORM_LIMITS } from '../../constants/formLimits';
 
 /**
  * Формаи Service - Fields
@@ -18,6 +18,10 @@ export default function ServiceFormFields({
   errors = {}, // Илова барои error display
   onBlur = () => { }, // Илова барои validation
 }) {
+  const { TITLE_MAX, DESCRIPTION_MAX } = FORM_LIMITS.SERVICE;
+
+  const titleLength = formData.title?.length || 0;
+
   return (
     <>
       {/* Номи хидмат */}
@@ -28,9 +32,11 @@ export default function ServiceFormFields({
         onChange={onChange}
         onBlur={onBlur}
         placeholder={FORM_PLACEHOLDERS.TITLE}
+        maxLength={TITLE_MAX}
         error={errors.title}
         required
       />
+      <CharacterCounter current={titleLength} max={TITLE_MAX} />
 
       {/* Тавсиф */}
       <TextArea
@@ -40,6 +46,7 @@ export default function ServiceFormFields({
         onChange={onChange}
         onBlur={onBlur}
         placeholder={FORM_PLACEHOLDERS.DESCRIPTION}
+        maxLength={DESCRIPTION_MAX}
         error={errors.description}
         required
       />
