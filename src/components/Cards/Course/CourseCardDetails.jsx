@@ -1,9 +1,10 @@
 import React from 'react';
 import { MoreVertical } from 'lucide-react';
 import DropdownMenu from '@components/ui/DropdownMenu';
-import { UsersIcon, TicketIcon } from '../Icons';
+// Importing icons from the original source location to avoid breaking dependencies
+import { UsersIcon, TicketIcon } from '/src/pages/Services/components/Icons';
 
-export default function CardDetails({ item, menuItems }) {
+export default function CourseCardDetails({ item, menuItems }) {
     return (
         <div className="flex flex-col justify-between color-bg-card flex-grow rounded-xl p-3">
 
@@ -17,7 +18,7 @@ export default function CardDetails({ item, menuItems }) {
             <div className="flex items-center justify-between text-xs pr-6 text-white mt-2 relative">
                 <div className="flex items-center gap-2">
                     <UsersIcon />
-                    <span className="text-white font-semibold text-sm">{item.price}</span>
+                    <span className="text-white font-semibold text-sm">{item.user_max || 0}</span>
                 </div>
                 <div className="flex items-center gap-1">
                     <TicketIcon />

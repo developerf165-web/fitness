@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '@components/ui/Modal';
 import ScrollableModalContentWrapper from '@/components/Shared/ScrollableModalContentWrapper';
-import InputField from '@components/ui/InputField';
+import DropdownField from '@components/ui/DropdownField';
 import Button from '@components/ui/Button';
 
 export default function PaymentModal({
@@ -12,54 +12,54 @@ export default function PaymentModal({
     userBalance = 500,
     userBonuses = 20,
     discount = 0,
-    userCards = [] // New prop for cards
+    userCards = [],
+    isProcessing = false // Add default false to avoid errors if prop missing
 }) {
-    const [cashAmount, setCashAmount] = useState('');
-    const [bonusAmount, setBonusAmount] = useState('');
     const [selectedCardId, setSelectedCardId] = useState(null);
+    const [isCardDropdownOpen, setIsCardDropdownOpen] = useState(false);
 
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen) {
-            setCashAmount(totalAmount.toString());
-            setBonusAmount('');
             // Select first card by default if exists
             if (userCards && userCards.length > 0) {
                 setSelectedCardId(userCards[0].id);
             }
+            setIsCardDropdownOpen(false);
         }
-    }, [isOpen, totalAmount, userCards]);
+    }, [isOpen, userCards]);
 
-    const handleCashChange = (e) => {
-        setCashAmount(e.target.value);
+    const finalTotal = totalAmount; // No bonus split logic anymore
+    const earnedBonuses = (finalTotal * 0.05).toFixed(2);
+
+    // Helper to format card label
+    const formatCardLabel = (card) => {
+        return `${card.name || 'Карта'} (${card.card_number || '****'}) - ${card.balance} TJS`;
     };
 
-    const handleBonusChange = (e) => {
-        const val = e.target.value;
-        // Validate bonus amount (cannot exceed user bonuses)
-        if (val === '' || (parseFloat(val) >= 0 && parseFloat(val) <= userBonuses)) {
-            setBonusAmount(val);
+    const selectedCardLabel = selectedCardId
+        ? formatCardLabel(userCards.find(c => c.id === selectedCardId) || {})
+        : '';
+
+    const handleCardSelect = (label) => {
+        const card = userCards.find(c => formatCardLabel(c) === label);
+        if (card) {
+            setSelectedCardId(card.id);
         }
+        setIsCardDropdownOpen(false);
     };
-
-    const parsedCash = parseFloat(cashAmount) || 0;
-    const parsedBonus = parseFloat(bonusAmount) || 0;
-    const finalTotal = Math.max(0, totalAmount - parsedBonus);
-
-    // Earned bonuses (e.g., 5% of cash payment)
-    const earnedBonuses = (parsedCash * 0.05).toFixed(2);
 
     const content = (
         <div className="space-y-6">
-            {/* Balance Cards */}
-            <div className="grid grid-cols-2 gap-4">
-                <div className="color-bg-mini-card p-4 rounded-xl">
-                    <div className="text-sm text-gray-400 mb-1">НАЛИЧНЫЕ</div>
-                    <div className="text-xl font-bold text-white">{Number(userBalance).toFixed(2)} TJS</div>
+            {/* Balance Info */}
+            <div className="flex flex-col gap-3 pb-4 border-b border-[rgba(255,255,255,0.1)]">
+                <div className="flex justify-between items-center">
+                    <span className="text-gray-400 font-medium tracking-wide">НАЛИЧНЫЕ</span>
+                    <span className="text-xl font-bold color-accent tracking-wider">{Number(userBalance).toFixed(2)} TJS</span>
                 </div>
-                <div className="color-bg-mini-card p-4 rounded-xl">
-                    <div className="text-sm text-gray-400 mb-1">БОНУСЫ</div>
-                    <div className="text-xl font-bold color-accent">{Number(userBonuses).toFixed(2)}</div>
+                <div className="flex justify-between items-center">
+                    <span className="text-gray-400 font-medium tracking-wide">БОНУСЫ</span>
+                    <span className="text-xl font-bold color-accent tracking-wider">{Number(userBonuses).toFixed(2)}</span>
                 </div>
             </div>
 
@@ -67,53 +67,30 @@ export default function PaymentModal({
             <div className="space-y-4">
                 {/* Card Selection */}
                 {userCards.length > 0 ? (
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">Выберите карту</label>
-                        <select
-                            value={selectedCardId || ''}
-                            onChange={(e) => setSelectedCardId(Number(e.target.value))}
-                            className="w-full bg-[#1A1A1A] text-white border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-[var(--color-accent)] transition-colors"
-                        >
-                            {userCards.map(card => (
-                                <option key={card.id} value={card.id}>
-                                    {card.name || 'Карта'} ({card.card_number || '****'}) - {card.balance} TJS
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <DropdownField
+                        label="Выберите карту"
+                        displayValue={selectedCardLabel}
+                        placeholder="Выберите карту..."
+                        isActive={isCardDropdownOpen}
+                        onToggle={() => setIsCardDropdownOpen(!isCardDropdownOpen)}
+                        onClose={() => setIsCardDropdownOpen(false)}
+                        selectedValue={selectedCardLabel}
+                        onSelectChange={handleCardSelect}
+                        optionsData={[{
+                            title: 'Мои карты',
+                            items: userCards.map(formatCardLabel)
+                        }]}
+                    />
                 ) : (
                     <div className="text-red-500 text-sm">У пользователя нет карт. Оплата невозможна.</div>
                 )}
-
-                <InputField
-                    label="Оплата наличными"
-                    placeholder="Наличные"
-                    type="number"
-                    value={cashAmount}
-                    onChange={handleCashChange}
-                />
-                <InputField
-                    label="Оплата бонусами"
-                    placeholder="Бонусы"
-                    type="number"
-                    value={bonusAmount}
-                    onChange={handleBonusChange}
-                />
             </div>
 
             {/* Summary */}
             <div className="space-y-3 pt-2 border-t border-[rgba(255,255,255,0.1)]">
                 <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Сумма без скидки</span>
-                    <span className="text-white">{totalAmount.toFixed(2)} TJS</span>
-                </div>
-                <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Сумма скидки</span>
                     <span className="text-white">{discount.toFixed(2)} TJS</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Оплата бонусами</span>
-                    <span className="text-red-400">-{parsedBonus.toFixed(2)} TJS</span>
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Получение бонусов</span>
@@ -121,7 +98,7 @@ export default function PaymentModal({
                 </div>
 
                 <div className="flex justify-between items-center pt-3 border-t border-[rgba(255,255,255,0.1)]">
-                    <span className="font-bold text-white">ИТОГО</span>
+                    <span className="font-bold text-white">ИТОГО К ОПЛАТЕ</span>
                     <span className="text-xl font-bold color-accent">={finalTotal.toFixed(2)} TJS</span>
                 </div>
             </div>
@@ -134,16 +111,17 @@ export default function PaymentModal({
                 type="button"
                 variant="default"
                 onClick={onClose}
+                disabled={isProcessing}
             >
                 Отмена
             </Button>
             <Button
                 type="button"
                 variant="primary"
-                disabled={!selectedCardId} // Disable if no card selected
+                disabled={!selectedCardId || isProcessing} // Disable if no card selected or processing
                 onClick={() => onConfirm(finalTotal, selectedCardId)}
             >
-                Оплатить
+                {isProcessing ? 'Сохранение...' : 'Оплатить'}
             </Button>
         </div >
     );

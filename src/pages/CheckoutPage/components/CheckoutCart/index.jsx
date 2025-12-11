@@ -3,15 +3,14 @@ import CartHeader from './CartHeader';
 import CartItem from './CartItem';
 import CartFooter from './CartFooter';
 import CartEmpty from './CartEmpty';
+import { calculateItemTotal } from '../../utils/cartUtils';
 
 export default function CheckoutCart({ items, updateQuantity, removeItem, onCheckout }) {
+    // Total is calculated in parent hook (useCheckoutCart) and passed usually, but here we recalculate for display or verify props.
+    // Actually, CheckoutCart receives `items` but calculateItemTotal logic was inside.
 
-    const calculateItemTotal = (item) => {
-        const subtotal = item.price * item.qty;
-        const discountAmount = (subtotal * item.discount) / 100;
-        return subtotal - discountAmount;
-    };
-
+    // totalAmount is passed to CartFooter. Let's calculate it or accept it as prop?
+    // The previous code calculated it inside.
     const totalAmount = items.reduce((sum, item) => sum + calculateItemTotal(item), 0);
 
     return (
@@ -36,7 +35,13 @@ export default function CheckoutCart({ items, updateQuantity, removeItem, onChec
             </div>
 
             {/* Footer (Fixed) */}
-            <CartFooter totalAmount={totalAmount} onCheckout={onCheckout} />
+            <div className="mt-auto">
+                <CartFooter
+                    totalAmount={totalAmount}
+                    onCheckout={onCheckout}
+                    isEmpty={items.length === 0}
+                />
+            </div>
         </div>
     );
 }

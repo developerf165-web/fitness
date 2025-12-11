@@ -2,8 +2,8 @@ import React from 'react';
 import MiniProductSlider from './MiniProductSlider';
 import MiniServiceSlider from './MiniServiceSlider';
 import MiniCourseSlider from './MiniCourseSlider';
-import FilterChips from '../../../components/common/FilterChips';
 import useProductFilter from '../../../hooks/useProductFilter';
+import FilteredSection from './FilteredSection';
 import { PRODUCT_CATEGORIES, SERVICE_CATEGORIES, COURSE_CATEGORIES } from '../constants/filterCategories';
 
 /**
@@ -13,7 +13,11 @@ import { PRODUCT_CATEGORIES, SERVICE_CATEGORIES, COURSE_CATEGORIES } from '../co
 export default function RightSidebar({
     products,
     services,
+    isLoadingServices,
+    servicesError,
     courses,
+    isLoadingCourses,
+    coursesError,
     onProductClick
 }) {
     // Филтр барои продуктҳо
@@ -66,7 +70,8 @@ export default function RightSidebar({
             />
 
             {/* Услуги бо филтр */}
-            {services && services.length > 0 && (
+            {/* Show if loading, error, OR has services */}
+            {(services && services.length > 0 || isLoadingServices || servicesError) && (
                 <FilteredSection
                     title="Услуги"
                     categories={SERVICE_CATEGORIES}
@@ -75,11 +80,14 @@ export default function RightSidebar({
                     filteredItems={filteredServices}
                     SliderComponent={MiniServiceSlider}
                     onItemClick={onProductClick}
+                    isLoading={isLoadingServices}
+                    error={servicesError}
                 />
             )}
 
             {/* Курсы бо филтр */}
-            {courses && courses.length > 0 && (
+            {/* Show if loading, error or has courses */}
+            {(courses && courses.length > 0 || isLoadingCourses || coursesError) && (
                 <FilteredSection
                     title="Курсы"
                     categories={COURSE_CATEGORIES}
@@ -88,44 +96,10 @@ export default function RightSidebar({
                     filteredItems={filteredCourses}
                     SliderComponent={MiniCourseSlider}
                     onItemClick={onProductClick}
+                    isLoading={isLoadingCourses}
+                    error={coursesError}
                 />
             )}
-        </div>
-    );
-}
-
-/**
- * Компоненти FilteredSection - бахши филтр бо слайдер
- * Компоненти дохилӣ барои содда кардани код
- */
-function FilteredSection({
-    title,
-    categories,
-    activeFilter,
-    onFilterChange,
-    filteredItems,
-    SliderComponent,
-    onItemClick
-}) {
-    return (
-        <div className="mb-6">
-            {/* Сарлавҳа */}
-            <h3 className="text-lg font-semibold mb-2">{title}</h3>
-
-            {/* Филтрҳо бо scroll */}
-            <FilterChips
-                filters={categories}
-                activeFilter={activeFilter}
-                onFilterChange={onFilterChange}
-                showAddButton={false}
-            />
-
-            {/* Слайдер бо номи филтр */}
-            <SliderComponent
-                title={activeFilter}
-                items={filteredItems}
-                onItemClick={onItemClick}
-            />
         </div>
     );
 }

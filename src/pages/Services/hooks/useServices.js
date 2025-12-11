@@ -19,6 +19,7 @@ export function useServices() {
         title: item.name,
         imageUrl: item.img,
         tjs: item.price,
+        price: item.price, // Added for calculation compatibility
         pos: 'услуга',
         description: item.description || '',
         // Add other fields if needed for full state

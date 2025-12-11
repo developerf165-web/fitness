@@ -10,7 +10,7 @@ import useCrudLogic from '@hooks/useCrudLogic';
  * State ва Handlers барои Courses
  */
 export default function useCourseState(showToast) {
-  const { courses, setCourses } = useCourses();
+  const { courses, setCourses, isLoading, error } = useCourses();
   const courseFormModal = useModalState();
   const courseDeleteModal = useDeleteModal();
   const courseCancelModal = useDeleteModal(); // Барои бекоркунӣ
@@ -57,5 +57,7 @@ export default function useCourseState(showToast) {
       cardio: courseCardioModal,
     },
     courseHandlers,
+    isLoading,
+    error
   };
 }

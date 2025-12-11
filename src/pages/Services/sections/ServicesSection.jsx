@@ -1,8 +1,6 @@
-// src/pages/Services/sections/ServicesSection.jsx
-
 import React from 'react';
 import SectionHeader from '/src/components/ui/SectionHeader';
-import CardsSection from '../components/Cards/CardsSection';
+import { ServiceGrid } from '/src/components/Cards/Service';
 
 /**
  * Қисми "Услуги"
@@ -23,7 +21,7 @@ export default function ServicesSection({
         actionLabel="Создать"
         onAction={onAddNew}
       />
-      <CardsSection
+      <ServiceGrid
         items={items}
         onEdit={onEdit}
         onDelete={onDelete}

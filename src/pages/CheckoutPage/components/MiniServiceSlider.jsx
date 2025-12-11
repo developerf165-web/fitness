@@ -1,75 +1,47 @@
 import React from 'react';
-import ScrollButton from '../../../components/common/ScrollButton';
-import useHorizontalScroll from '../../../hooks/useHorizontalScroll';
 import Cards from '@components/Cards/ItemCard';
+import MiniItemSlider from './MiniItemSlider';
 
-export default function MiniServiceSlider({ title, services, items, onServiceClick, onItemClick }) {
-    // 🎯 Истифодаи custom hook бо вобастагӣ ба services
+export default function MiniServiceSlider({ title, services, items, onServiceClick, onItemClick, isLoading, error }) {
     const actualServices = items || services;
     const actualOnClick = onItemClick || onServiceClick;
 
-    const { scrollRef, showLeftScroll, showRightScroll, scrollMenu, checkScroll } = useHorizontalScroll({
-        scrollAmount: 200,
-        dependencies: [actualServices]
-    });
-
-    // Handler барои клик
     const handleClick = (service) => {
         if (actualOnClick) {
             actualOnClick({ ...service, name: service.title || service.name });
         }
     };
 
-    return (
-        <div className="mb-6">
-            {/* Сарлавҳа бо ранги accent ва андозаи хурд */}
-            <h3 className="text-sm font-medium color-accent mb-3 px-2.5">{title}</h3>
+    const renderService = (service) => (
+        <div
+            key={service.id}
+            onClick={() => handleClick(service)}
+            className="shrink-0 w-48 relative"
+        >
+            <Cards
+                item={service}
+                onEdit={() => { }}
+                onDelete={() => { }}
+                isMini={true}
+            />
 
-            {/* Слайдер */}
-            <div className="relative">
-                {/* Тугмаи чап - дар миёнаи cards */}
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
-                    <ScrollButton
-                        direction="left"
-                        onClick={() => scrollMenu('left')}
-                        isVisible={showLeftScroll}
-                    />
+            {/* Discount Badge (Top Right) */}
+            {service.discount > 0 && (
+                <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded z-20 shadow-md">
+                    -{service.discount}%
                 </div>
-
-                {/* Контейнери scroll танҳо барои услуги */}
-                <div
-                    ref={scrollRef}
-                    onScroll={checkScroll}
-                    className="overflow-x-auto scrollbar-hide scroll-smooth pl-2.5 pr-8"
-                >
-                    {/* Рӯйхати услуги */}
-                    <div className="flex gap-3">
-                        {actualServices.map((service) => (
-                            <div
-                                key={service.id}
-                                onClick={() => handleClick(service)}
-                                className="shrink-0 w-48"
-                            >
-                                <Cards
-                                    item={service}
-                                    onEdit={() => { }}
-                                    onDelete={() => { }}
-                                    isMini={true}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Тугмаи рост - дар миёнаи cards */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
-                    <ScrollButton
-                        direction="right"
-                        onClick={() => scrollMenu('right')}
-                        isVisible={showRightScroll}
-                    />
-                </div>
-            </div>
+            )}
         </div>
+    );
+
+    return (
+        <MiniItemSlider
+            title={title}
+            items={actualServices}
+            renderItem={renderService}
+            isLoading={isLoading}
+            error={error}
+            skeletonClass="w-48 aspect-[16/9]"
+        />
     );
 }

@@ -7,7 +7,7 @@ import Button from '@components/ui/Button';
  * Footer компоненти барои Cart бо тугмаҳои Отмена ва Оплатить
  * Footer component for Cart with Cancel and Pay buttons
  */
-export default function CartFooter({ totalAmount, onCheckout, onCancel }) {
+export default function CartFooter({ totalAmount, onCheckout, onCancel, isEmpty }) {
     return (
         <div className="px-6 py-4 border-t border-[rgba(255,255,255,0.05)] color-bg-card backdrop-blur-sm">
             <div className="flex items-center justify-between gap-4">
@@ -22,6 +22,7 @@ export default function CartFooter({ totalAmount, onCheckout, onCancel }) {
                 <Button
                     type="button"
                     variant="primary"
+                    disabled={isEmpty}
                     onClick={() => onCheckout && onCheckout(totalAmount)}
                 >
                     Оплатить

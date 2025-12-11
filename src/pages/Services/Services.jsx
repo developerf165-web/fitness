@@ -40,6 +40,8 @@ export default function Services() {
     error,
     services,
     courses,
+    coursesLoading,
+    coursesError,
     directions,
     directionsLoading,
     directionsError,
@@ -68,7 +70,8 @@ export default function Services() {
       {/* 1. Готово к запуску */}
       <ReadyToLaunchSection
         courses={courses}
-        isLoading={false}
+        isLoading={coursesLoading}
+        error={coursesError}
         onStart={handleLaunchClick}
         onCancel={handleCancelClick}
       />
@@ -76,7 +79,8 @@ export default function Services() {
       {/* 2. Набор на курсы */}
       <RecruitmentSection
         courses={courses}
-        isLoading={false}
+        isLoading={coursesLoading}
+        error={coursesError}
         onStart={handleLaunchClick}
         onCancel={handleCancelClick}
         onAddNew={courseModals.form.openCreate}

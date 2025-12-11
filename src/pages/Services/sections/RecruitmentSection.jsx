@@ -1,32 +1,32 @@
-// src/pages/Services/sections/RecruitmentSection.jsx
-
 import React from 'react';
 import SectionHeader from '/src/components/ui/SectionHeader';
-import CoursesSection from '../components/Courses/CoursesSection';
+import { CourseGrid } from '/src/components/Cards/Course';
 
 /**
  * Қисми "Набор на курсы"
  * Курсҳои ҷорӣ барои қабул
  */
-export default function RecruitmentSection({ 
-  courses, 
+export default function RecruitmentSection({
+  courses,
   isLoading,
-  onStart, 
+  error,
+  onStart,
   onCancel,
-  onAddNew 
+  onAddNew
 }) {
   return (
     <div className="mb-10">
-      <SectionHeader 
-        title="Набор на курсы" 
-        actionLabel="Добавить" 
+      <SectionHeader
+        title="Набор на курсы"
+        actionLabel="Добавить"
         onAction={onAddNew}
       />
-      <CoursesSection 
+      <CourseGrid
         items={courses.slice(0, 2)}
         variant="recruit"
         isLoading={isLoading}
-        onStart={onStart} 
+        error={error}
+        onStart={onStart}
         onCancel={onCancel}
       />
     </div>
