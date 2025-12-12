@@ -66,7 +66,7 @@ export const useCheckoutSearch = (addToCart) => {
                     price: item.discount_price ? parseFloat(item.discount_price) : parseFloat(item.price),
                     tjs: item.discount_price ? parseFloat(item.discount_price) : parseFloat(item.price),
                     oldPrice: item.discount > 0 ? parseFloat(item.price) : null,
-                    discount: item.discount && item.price > 0 ? Math.round((parseFloat(item.discount) / parseFloat(item.price)) * 100) : 0,
+                    discount: item.discount ? parseFloat(item.discount) : 0,
                     user_max: item.user_max || 0,
                     visit_count: 0,
                     type: 'course',
