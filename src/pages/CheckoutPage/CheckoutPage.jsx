@@ -10,7 +10,7 @@ import { useToast } from '../components/Toast/ToastContext';
 import { useCheckoutCart } from './hooks/useCheckoutCart';
 import { useCheckoutSearch } from './hooks/useCheckoutSearch';
 import { useCheckoutPayment } from './hooks/useCheckoutPayment';
-import { mockSliderProducts } from './data/checkoutMockData';
+
 import useClickOutside from '../../hooks/useClickOutside';
 
 export default function CheckoutPage() {
@@ -50,6 +50,9 @@ export default function CheckoutPage() {
         allCourses,
         isLoadingCourses,
         coursesError,
+        allProducts,
+        isLoadingProducts,
+        productsError,
         filteredCourses,
         handleSelectUser,
         handleSelectProduct,
@@ -142,7 +145,9 @@ export default function CheckoutPage() {
                 {/* ҚИСМИ РОСТ - Слайдерҳои хурд */}
                 <div className="h-full">
                     <RightSidebar
-                        products={mockSliderProducts}
+                        products={allProducts}
+                        isLoadingProducts={isLoadingProducts}
+                        productsError={productsError}
                         services={allServices}
                         isLoadingServices={isLoadingServices}
                         servicesError={servicesError}

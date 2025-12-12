@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { searchUsers } from '../api/checkoutApi';
 import { fetchServices } from '../../Services/api/servicesApi';
 import { fetchCourses } from '../../Services/api/coursesApi';
-import { mockSliderProducts } from '../data/checkoutMockData';
+import { productsService } from '../../../features/products/services/productsService';
+
 
 export const useCheckoutSearch = (addToCart) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -19,7 +20,11 @@ export const useCheckoutSearch = (addToCart) => {
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
     const [coursesError, setCoursesError] = useState(null);
 
-    // Fetch Services and Courses on mount
+    const [products, setProducts] = useState([]);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+    const [productsError, setProductsError] = useState(null);
+
+    // Fetch All Data on mount
     useEffect(() => {
         const loadServices = async () => {
             setIsLoadingServices(true);
@@ -77,8 +82,29 @@ export const useCheckoutSearch = (addToCart) => {
             }
         };
 
+        const loadProducts = async () => {
+            setIsLoadingProducts(true);
+            setProductsError(null);
+            try {
+                const data = await productsService.getAll();
+                // productsService.getAll() already maps structure, but we might need to add type for search
+                const mappedProducts = data.map(item => ({
+                    ...item,
+                    type: 'product' // Ensure distinct type for search logic
+                }));
+                setProducts(mappedProducts);
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+                setProductsError("Не удалось загрузить продукты.");
+                setProducts([]);
+            } finally {
+                setIsLoadingProducts(false);
+            }
+        };
+
         loadServices();
         loadCourses();
+        loadProducts();
     }, []);
 
     // API Search with Debounce
@@ -123,11 +149,12 @@ export const useCheckoutSearch = (addToCart) => {
 
     // Filtering logic
     const filteredProducts = useMemo(() => {
-        if (!searchQuery) return mockSliderProducts;
-        return mockSliderProducts.filter(item =>
+        const sourceData = products;
+        if (!searchQuery) return sourceData;
+        return sourceData.filter(item =>
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
-    }, [searchQuery]);
+    }, [searchQuery, products, isLoadingProducts]);
 
     const filteredServices = useMemo(() => {
         if (!searchQuery) return services;
@@ -191,7 +218,6 @@ export const useCheckoutSearch = (addToCart) => {
         foundUsers,
         activeIndex,
         filteredProducts,
-        filteredProducts,
         filteredServices,
         allServices: services,
         isLoadingServices,
@@ -199,7 +225,9 @@ export const useCheckoutSearch = (addToCart) => {
         allCourses: courses,
         isLoadingCourses,
         coursesError,
-        filteredCourses,
+        allProducts: products,
+        isLoadingProducts,
+        productsError,
         filteredCourses,
         handleSelectUser,
         handleSelectProduct,

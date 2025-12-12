@@ -22,7 +22,7 @@ export default function CheckoutCart({ items, updateQuantity, removeItem, onChec
             <div className="flex-1 overflow-y-auto custom-scrollbar p-2 min-h-[645px] max-h-[650px]">
                 {items.map((item, index) => (
                     <CartItem
-                        key={item.id}
+                        key={item.cartId || item.id} // Use cartId if available, fallback for safety
                         item={item}
                         index={index}
                         updateQuantity={updateQuantity}

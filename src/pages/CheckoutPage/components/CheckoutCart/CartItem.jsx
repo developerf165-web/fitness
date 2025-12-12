@@ -4,7 +4,8 @@ import QuantityInput from './QuantityInput';
 
 export default function CartItem({ item, index, updateQuantity, removeItem, calculateItemTotal }) {
     const handleQuantityChange = (newQty) => {
-        updateQuantity(item.id, newQty);
+        // Use cartId if available
+        updateQuantity(item.cartId || item.id, newQty);
     };
 
     return (
@@ -47,7 +48,7 @@ export default function CartItem({ item, index, updateQuantity, removeItem, calc
             {/* Тугмаи нест кардан */}
             <div className="flex justify-end">
                 <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(item.cartId || item.id)}
                     className="p-1.5 color-text-muted hover:text-red-500 hover:bg-[rgba(255,59,48,0.1)] rounded-lg transition-colors"
                     aria-label="Нест кардани маҳсулот"
                 >
@@ -57,4 +58,3 @@ export default function CartItem({ item, index, updateQuantity, removeItem, calc
         </div>
     );
 }
-

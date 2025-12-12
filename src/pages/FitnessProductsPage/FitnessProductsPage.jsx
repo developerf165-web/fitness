@@ -14,6 +14,7 @@ import AddButton from "../../components/ui/AddButton";
 import useProductFilter from "../../hooks/useProductFilter";
 import { useProducts } from "../../features/products/hooks/useProducts";
 import { useCategories } from "../../features/products/hooks/useCategories";
+import { useToast } from "../components/Toast/ToastContext";
 
 export default function FitnessProductsPage() {
   // --- 1. HOOKS & STATE ---
@@ -27,6 +28,7 @@ export default function FitnessProductsPage() {
   } = useProducts();
 
   const { categories, addCategory } = useCategories();
+  const { showToast } = useToast();
 
   // Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -78,8 +80,10 @@ export default function FitnessProductsPage() {
     setIsSaving(false);
     if (result.success) {
       setIsProductModalOpen(false);
+      showToast('success', 'Успешно', 'Продукт успешно добавлен!');
     } else {
       console.error(result.error);
+      showToast('error', 'Ошибка', 'Ошибка при добавлении продукта');
     }
   };
 
@@ -89,8 +93,9 @@ export default function FitnessProductsPage() {
     setIsSaving(false);
     if (result.success) {
       setIsCategoryModalOpen(false);
+      showToast('success', 'Успешно', 'Категория успешно добавлена!');
     } else {
-      alert("Ошибка при добавлении категории: " + result.error);
+      showToast('error', 'Ошибка', 'Ошибка при добавлении категории: ' + result.error);
     }
   };
 
@@ -121,8 +126,10 @@ export default function FitnessProductsPage() {
     if (result.success) {
       setIsEditModalOpen(false);
       setSelectedProduct(null);
+      showToast('success', 'Успешно', 'Продукт успешно обновлен!');
     } else {
       console.error(result.error);
+      showToast('error', 'Ошибка', 'Ошибка при обновлении продукта');
     }
   };
 
@@ -134,8 +141,10 @@ export default function FitnessProductsPage() {
     if (result.success) {
       setIsDeleteModalOpen(false);
       setSelectedProduct(null);
+      showToast('success', 'Успешно', 'Продукт успешно удален!');
     } else {
       console.error(result.error);
+      showToast('error', 'Ошибка', 'Ошибка при удалении продукта');
     }
   };
 
@@ -162,8 +171,8 @@ export default function FitnessProductsPage() {
 
       <h2 className="text-2xl font-bold my-4">{activeFilter}</h2>
 
-      {/* Loading State: Skeletons */}
-      {isProductsLoading && (
+      {/* Loading State or Error State: Show Skeletons */}
+      {(isProductsLoading || error) && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {Array.from({ length: 10 }).map((_, index) => (
             <ProductCardSkeleton key={index} />
@@ -171,15 +180,15 @@ export default function FitnessProductsPage() {
         </div>
       )}
 
-      {/* Error State */}
-      {!isProductsLoading && error && (
+      {/* Error Message (Shown below skeleton if error exists) */}
+      {error && !isProductsLoading && (
         <div className="text-center py-10 text-red-500">
           <p>Ошибка при загрузке продуктов. Пожалуйста, попробуйте позже.</p>
-          <p className="text-sm text-gray-400 mt-2">{error.message || "Неизвестная ошибка"}</p>
+          <p className="text-sm text-gray-400 mt-2">{error.message || ""}</p>
         </div>
       )}
 
-      {/* Product Grid */}
+      {/* Product Grid (Only if loaded and no error) */}
       {!isProductsLoading && !error && (
         <>
           {filteredProducts.length > 0 ? (
