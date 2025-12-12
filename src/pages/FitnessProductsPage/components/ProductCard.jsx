@@ -1,6 +1,7 @@
 import React from "react";
 import { HiOutlineDotsVertical, HiPencil, HiTrash } from "react-icons/hi";
 import DropdownMenu from "/src/components/ui/DropdownMenu.jsx";
+import ShimmerImage from "/src/components/ui/ShimmerImage";
 
 const ProductCard = ({ product, onEdit, onDelete }) => {
   const handleEdit = () => {
@@ -16,28 +17,29 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
       label: "Редактировать",
       icon: <HiPencil className="w-5 h-5" />,
       action: handleEdit,
-      className: "default", 
+      className: "default",
     },
     {
       label: "Удалить",
       icon: <HiTrash className="w-5 h-5" />,
       action: handleDelete,
-      className: "danger", 
+      className: "danger",
     },
   ];
 
   return (
-    <div className="bg-[#1C1C1C] rounded-xl overflow-hidden relative text-white h-64 flex flex-col">
-      
+    <div className="bg-[#1C1C1C] rounded-xl relative text-white h-64 flex flex-col hover:z-30 transition-all">
+
       {/* Сурат - пураи карт */}
-      <div className="absolute inset-0 w-full h-full">
-        <img
+      <div className="absolute inset-0 w-full h-full overflow-hidden rounded-xl">
+        <ShimmerImage
           src={product.imageUrl}
           alt={product.name}
           className="w-full h-full object-cover"
+          errorIconSize={32}
         />
         {/* Gradient overlay аз поён то боло */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none"></div>
       </div>
 
       {/* Тахфиф - дар боло, рост */}
@@ -51,7 +53,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
       <div className="relative z-10 mt-auto p-4 flex flex-col gap-2">
         {/* Ном */}
         <h3 className="text-base font-semibold line-clamp-2">{product.name}</h3>
-        
+
         {/* Қисми поён: Нархҳо ва меню */}
         <div className="flex items-center justify-between">
           {/* Нархҳо - баробар */}
@@ -63,14 +65,14 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
               </span>
             )}
           </div>
-          
+
           {/* DropdownMenu */}
           <DropdownMenu items={menuItems}>
             <button
-              className="text-gray-400 p-1 hover:text-white rounded-full transition-colors"
+              className="menu-dots-button"
               aria-label="Имконоти маҳсулот"
             >
-              <HiOutlineDotsVertical className="w-5 h-5 cursor-pointer" />
+              <HiOutlineDotsVertical className="w-5 h-5" />
             </button>
           </DropdownMenu>
         </div>

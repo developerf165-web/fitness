@@ -1,31 +1,44 @@
 import React, { useState } from "react";
 import ProfileHeader from "@/components/trainer/ProfileHeader";
 import SearchComponent from "@/Dashboard/components/SearchComponent";
-import AddProductModal from "@/components/Cards/ProductModal/AddProductModal";
-import AddCategoryModal from "@/components/Cards/ProductModal/AddCategoryModal";
-import EditProductModal from "@/components/Cards/ProductModal/EditProductModal";
-import DeleteConfirmationModal from "@/components/Cards/ProductModal/DeleteConfirmationModal";
-import { products as initialProducts, filters as initialFilters } from "./data/products";
+
+import AddProductModal from "./modals/AddProductModal";
+import AddCategoryModal from "./modals/AddCategoryModal";
+import EditProductModal from "./modals/EditProductModal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import ProductCard from "./components/ProductCard";
+import ProductCardSkeleton from "./components/ProductCardSkeleton"; // Import Skeleton
 import FilterChips from "../../components/common/FilterChips";
-import AddButton from "/src/components/ui/AddButton";
+import AddButton from "../../components/ui/AddButton";
+
 import useProductFilter from "../../hooks/useProductFilter";
+import { useProducts } from "../../features/products/hooks/useProducts";
+import { useCategories } from "../../features/products/hooks/useCategories";
 
 export default function FitnessProductsPage() {
-  // --- 1. ҲОЛАТҲО (STATES) ---
-  const [productList, setProductList] = useState(initialProducts);
-  const [currentFilters, setCurrentFilters] = useState(initialFilters);
+  // --- 1. HOOKS & STATE ---
+  const {
+    products,
+    isLoading: isProductsLoading,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    error
+  } = useProducts();
 
+  const { categories, addCategory } = useCategories();
+
+  // Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // БАРОИ ТАҲРИР/НЕСТКУНӢ
+  // Edit/Delete States
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 🎯 ИСТИФОДАИ CUSTOM HOOK БАРОИ ФИЛТР
+  // Filter Hook
   const {
     searchQuery,
     activeFilter,
@@ -34,13 +47,14 @@ export default function FitnessProductsPage() {
     setFilter,
     hasResults
   } = useProductFilter({
-    items: productList,
-    filters: currentFilters,
+    items: products,
+    filters: categories,
     categoryKey: 'category',
     nameKey: 'name'
   });
 
-  // --- 2. ФУНКСИЯҲОИ КОРИИ МОДАЛҲОИ АСОСӢ ---
+  // --- 2. HANDLERS ---
+
   const handleAddProductClick = () => {
     setIsProductModalOpen(true);
   };
@@ -49,39 +63,37 @@ export default function FitnessProductsPage() {
     setIsCategoryModalOpen(true);
   };
 
-  const handleSaveProduct = (newProductData) => {
+  const handleSaveProduct = async (newProductData) => {
     setIsSaving(true);
-    setTimeout(() => {
-      const newId = productList.length + 1 + Math.random();
-      const newProduct = {
-        id: newId,
-        name: newProductData.title,
-        category: newProductData.category || "Нав",
-        price: parseFloat(newProductData.price) || 0,
-        oldPrice: newProductData.oldPrice ? parseFloat(newProductData.oldPrice) : null,
-        discount: newProductData.discount ? parseInt(newProductData.discount) : null,
-        imageUrl: newProductData.image
-          ? URL.createObjectURL(newProductData.image)
-          : 'https://via.placeholder.com/300x300.png?text=New+Item',
-      };
-      setProductList([newProduct, ...productList]);
-      setIsSaving(false);
+    const result = await addProduct({
+      name: newProductData.title,
+      category: newProductData.category || "Нав",
+      price: parseFloat(newProductData.price) || 0,
+      oldPrice: newProductData.oldPrice ? parseFloat(newProductData.oldPrice) : null,
+      discount: newProductData.discount ? parseInt(newProductData.discount) : null,
+      image: newProductData.image,
+      description: newProductData.description
+    });
+
+    setIsSaving(false);
+    if (result.success) {
       setIsProductModalOpen(false);
-    }, 1500);
+    } else {
+      console.error(result.error);
+    }
   };
 
-  const handleSaveCategory = (categoryName) => {
+  const handleSaveCategory = async (categoryName) => {
     setIsSaving(true);
-    setTimeout(() => {
-      if (!currentFilters.includes(categoryName)) {
-        setCurrentFilters([...currentFilters, categoryName]);
-      }
-      setIsSaving(false);
+    const result = await addCategory(categoryName);
+    setIsSaving(false);
+    if (result.success) {
       setIsCategoryModalOpen(false);
-    }, 1500);
+    } else {
+      alert("Ошибка при добавлении категории: " + result.error);
+    }
   };
 
-  // --- 3. ФУНКСИЯҲОИ БАРОИ ТАҲРИР (EDIT) ВА НЕСТКУНӢ ---
   const handleEditProductClick = (product) => {
     setSelectedProduct(product);
     setIsEditModalOpen(true);
@@ -92,39 +104,42 @@ export default function FitnessProductsPage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleEditProduct = (id, updatedData) => {
+  const handleEditProduct = async (id, updatedData) => {
     setIsSaving(true);
-    setTimeout(() => {
-      setProductList(productList.map(product =>
-        product.id === id
-          ? {
-            ...product,
-            name: updatedData.title,
-            category: updatedData.category,
-            price: parseFloat(updatedData.price),
-            oldPrice: updatedData.oldPrice ? parseFloat(updatedData.oldPrice) : null,
-            discount: updatedData.discount ? parseInt(updatedData.discount) : null,
-            imageUrl: updatedData.imageUrl,
-          }
-          : product
-      ));
-      setIsSaving(false);
+    const result = await updateProduct(id, {
+      name: updatedData.title,
+      category: updatedData.category,
+      price: parseFloat(updatedData.price),
+      oldPrice: updatedData.oldPrice ? parseFloat(updatedData.oldPrice) : null,
+      discount: updatedData.discount ? parseInt(updatedData.discount) : null,
+      imageUrl: updatedData.imageUrl,
+      image: updatedData.image,
+      description: updatedData.description || selectedProduct.description
+    });
+
+    setIsSaving(false);
+    if (result.success) {
       setIsEditModalOpen(false);
       setSelectedProduct(null);
-    }, 1500);
+    } else {
+      console.error(result.error);
+    }
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = async (id) => {
     setIsSaving(true);
-    setTimeout(() => {
-      setProductList(productList.filter(product => product.id !== id));
-      setIsSaving(false);
+    const result = await deleteProduct(id);
+    setIsSaving(false);
+
+    if (result.success) {
       setIsDeleteModalOpen(false);
       setSelectedProduct(null);
-    }, 1500);
+    } else {
+      console.error(result.error);
+    }
   };
 
-  // --- 4. UI (RENDER) ---
+  // --- 3. RENDER ---
   return (
     <div className="min-h-screen text-white pt-4">
 
@@ -138,7 +153,7 @@ export default function FitnessProductsPage() {
       </div>
 
       <FilterChips
-        filters={currentFilters}
+        filters={categories}
         activeFilter={activeFilter}
         onFilterChange={setFilter}
         onAddCategoryClick={handleAddCategoryClick}
@@ -147,21 +162,43 @@ export default function FitnessProductsPage() {
 
       <h2 className="text-2xl font-bold my-4">{activeFilter}</h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onEdit={handleEditProductClick}
-            onDelete={handleDeleteProductClick}
-          />
-        ))}
-      </div>
-
-      {!hasResults && (
-        <div className="text-center py-10 text-gray-400">
-          <p>Ничего не найдено</p>
+      {/* Loading State: Skeletons */}
+      {isProductsLoading && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
         </div>
+      )}
+
+      {/* Error State */}
+      {!isProductsLoading && error && (
+        <div className="text-center py-10 text-red-500">
+          <p>Ошибка при загрузке продуктов. Пожалуйста, попробуйте позже.</p>
+          <p className="text-sm text-gray-400 mt-2">{error.message || "Неизвестная ошибка"}</p>
+        </div>
+      )}
+
+      {/* Product Grid */}
+      {!isProductsLoading && !error && (
+        <>
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onEdit={handleEditProductClick}
+                  onDelete={handleDeleteProductClick}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 text-gray-400">
+              <p>Ничего не найдено</p>
+            </div>
+          )}
+        </>
       )}
 
       {/* Модалҳо */}
@@ -171,7 +208,7 @@ export default function FitnessProductsPage() {
         onSave={handleSaveProduct}
         isSaving={isSaving}
         onSaveCategory={handleSaveCategory}
-        categories={currentFilters}
+        categories={categories}
       />
 
       <AddCategoryModal
@@ -189,15 +226,16 @@ export default function FitnessProductsPage() {
             onSave={handleEditProduct}
             isSaving={isSaving}
             product={selectedProduct}
-            categories={currentFilters}
+            categories={categories}
           />
 
           <DeleteConfirmationModal
             isOpen={isDeleteModalOpen}
             onClose={() => { setIsDeleteModalOpen(false); setSelectedProduct(null); }}
             onConfirm={() => handleDeleteProduct(selectedProduct.id)}
-            isSaving={isSaving}
+            isDeleting={isSaving}
             itemName={selectedProduct.name}
+            customMessage="Вы действительно хотите удалить этот продукт?"
           />
         </>
       )}

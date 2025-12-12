@@ -1,10 +1,8 @@
-// src/components/modals/AddCategoryModal.jsx
-
 import React, { useState } from 'react';
-import Modal from '/src/components/ui/Modal';
-import Card from '/src/components/ui/Card';
-import InputField from '/src/components/ui/InputField';
-import Button from '/src/components/ui/Button';
+import Modal from '../../../components/ui/Modal';
+import Card from '../../../components/ui/Card';
+import InputField from '../../../components/ui/InputField';
+import Button from '../../../components/ui/Button';
 
 export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = false }) {
   const [categoryName, setCategoryName] = useState('');
@@ -15,7 +13,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = f
       return;
     }
     onSave(categoryName.trim());
-    setCategoryName(''); // Очистка поля ввода
+    setCategoryName('');
   };
 
   const handleClose = () => {
@@ -34,7 +32,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = f
           onChange={(e) => setCategoryName(e.target.value)}
         />
 
-        {/* Кнопки действий */}
+        {/* Action Buttons */}
         <div className="mt-6 flex justify-between space-x-5 gap-3">
           <Button
             onClick={handleClose}
@@ -46,7 +44,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = f
           <Button
             onClick={handleSave}
             variant="primary"
-            disabled={isSaving || categoryName.trim() === ''} // Тугмаро ғайрифаъол мекунем, агар холӣ бошад
+            disabled={isSaving || categoryName.trim() === ''}
           >
             {isSaving ? 'Сохранение...' : 'Сохранить'}
           </Button>
