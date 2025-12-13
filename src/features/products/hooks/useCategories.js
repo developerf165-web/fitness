@@ -43,8 +43,38 @@ export const useCategories = () => {
         try {
             const result = await categoriesService.create(categoryName);
             if (result.success) {
-                // Optimistically add to UI
-                setCategories(prev => [...prev, categoryName]);
+                // Re-fetch to get the new ID and ensure everything is synced
+                fetchCategories();
+                return { success: true };
+            } else {
+                return { success: false, error: result.error };
+            }
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: err.message };
+        }
+    };
+
+    const updateCategory = async (id, categoryName) => {
+        try {
+            const result = await categoriesService.update(id, categoryName);
+            if (result.success) {
+                fetchCategories();
+                return { success: true };
+            } else {
+                return { success: false, error: result.error };
+            }
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: err.message };
+        }
+    };
+
+    const deleteCategory = async (id) => {
+        try {
+            const result = await categoriesService.delete(id);
+            if (result.success) {
+                fetchCategories();
                 return { success: true };
             } else {
                 return { success: false, error: result.error };
@@ -61,6 +91,9 @@ export const useCategories = () => {
         isLoading,
         error,
         addCategory,
-        getCategoryNameById
+        updateCategory,
+        deleteCategory,
+        getCategoryNameById,
+        getCategoryIdByName
     };
 };

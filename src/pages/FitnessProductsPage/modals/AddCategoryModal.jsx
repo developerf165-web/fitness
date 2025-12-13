@@ -4,8 +4,14 @@ import Card from '../../../components/ui/Card';
 import InputField from '../../../components/ui/InputField';
 import Button from '../../../components/ui/Button';
 
-export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = false }) {
+export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = false, initialValue = '' }) {
   const [categoryName, setCategoryName] = useState('');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setCategoryName(initialValue || '');
+    }
+  }, [isOpen, initialValue]);
 
   const handleSave = () => {
     if (categoryName.trim() === '') {
@@ -23,7 +29,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSave, isSaving = f
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
-      <Card title="ДОБАВИТЬ КАТЕГОРИЮ" className="w-[380px]">
+      <Card title={initialValue ? "РЕДАКТИРОВАТЬ КАТЕГОРИЮ" : "ДОБАВИТЬ КАТЕГОРИЮ"} className="w-[380px]">
 
         <InputField
           label="Название категории*"

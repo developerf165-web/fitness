@@ -1,15 +1,13 @@
 import React, { useState, useMemo } from "react";
-import ProfileHeader from "@/components/trainer/ProfileHeader";
-import SearchComponent from "@/Dashboard/components/SearchComponent";
+
+import FitnessPageHeader from "./components/FitnessPageHeader";
+import FitnessCategoryBar from "./components/FitnessCategoryBar";
+import FitnessProductList from "./components/FitnessProductList";
 
 import AddProductModal from "./modals/AddProductModal";
 import AddCategoryModal from "./modals/AddCategoryModal";
 import EditProductModal from "./modals/EditProductModal";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
-import ProductCard from "./components/ProductCard";
-import ProductCardSkeleton from "./components/ProductCardSkeleton"; // Import Skeleton
-import FilterChips from "../../components/common/FilterChips";
-import AddButton from "../../components/ui/AddButton";
 
 import useProductFilter from "../../hooks/useProductFilter";
 import { useProducts } from "../../features/products/hooks/useProducts";
@@ -20,16 +18,21 @@ export default function FitnessProductsPage() {
   // --- 1. HOOKS & STATE ---
   const {
     products,
+    pagination,
+    currentPage,
     isLoading: isProductsLoading,
     addProduct,
     updateProduct,
     deleteProduct,
-    error
+    error,
+    handlePageChange
   } = useProducts();
 
   const {
     categories,
     addCategory,
+    updateCategory,
+    deleteCategory,
     error: catError,
     isLoading: catLoading,
     getCategoryNameById,
@@ -45,12 +48,12 @@ export default function FitnessProductsPage() {
   // Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Edit/Delete States
+  const [isCategoryDeleteModalOpen, setIsCategoryDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   // Map products to include proper category names (Backend sends ID, Frontend needs Name)
   const mappedProducts = useMemo(() => {
@@ -82,7 +85,18 @@ export default function FitnessProductsPage() {
   };
 
   const handleAddCategoryClick = () => {
+    setSelectedCategory(null);
     setIsCategoryModalOpen(true);
+  };
+
+  const handleEditCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setIsCategoryModalOpen(true);
+  };
+
+  const handleDeleteCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setIsCategoryDeleteModalOpen(true);
   };
 
   const handleSaveProduct = async (newProductData) => {
@@ -109,13 +123,67 @@ export default function FitnessProductsPage() {
 
   const handleSaveCategory = async (categoryName) => {
     setIsSaving(true);
-    const result = await addCategory(categoryName);
+
+    if (selectedCategory) {
+      // Edit Mode
+      const id = getCategoryIdByName(selectedCategory);
+      if (!id) {
+        setIsSaving(false);
+        showToast('error', 'Ошибка', 'Не удалось найти ID категории');
+        return;
+      }
+
+      console.log(`Updating category '${selectedCategory}' (ID: ${id}) to '${categoryName}'`);
+      const result = await updateCategory(id, categoryName);
+
+      setIsSaving(false);
+      if (result.success) {
+        setIsCategoryModalOpen(false);
+        setSelectedCategory(null);
+        showToast('success', 'Успешно', `Категория обновлена: ${categoryName}`);
+      } else {
+        showToast('error', 'Ошибка', 'Ошибка при обновлении категории: ' + result.error);
+      }
+    } else {
+      // Add Mode
+      const result = await addCategory(categoryName);
+      setIsSaving(false);
+      if (result.success) {
+        setIsCategoryModalOpen(false);
+        showToast('success', 'Успешно', 'Категория успешно добавлена!');
+      } else {
+        showToast('error', 'Ошибка', 'Ошибка при добавлении категории: ' + result.error);
+      }
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    setIsSaving(true);
+    // Delete Mode
+    const id = getCategoryIdByName(selectedCategory);
+    if (!id) {
+      setIsSaving(false);
+      showToast('error', 'Ошибка', 'Не удалось найти ID категории');
+      return;
+    }
+
+    console.log(`Deleting category '${selectedCategory}' (ID: ${id})`);
+    const result = await deleteCategory(id);
+
     setIsSaving(false);
     if (result.success) {
-      setIsCategoryModalOpen(false);
-      showToast('success', 'Успешно', 'Категория успешно добавлена!');
+      setIsCategoryDeleteModalOpen(false);
+      const catName = selectedCategory;
+      setSelectedCategory(null);
+
+      // If active filter was the deleted category, reset it
+      if (activeFilter === catName) {
+        setFilter("Все");
+      }
+
+      showToast('success', 'Успешно', `Категория удалена: ${catName}`);
     } else {
-      showToast('error', 'Ошибка', 'Ошибка при добавлении категории: ' + result.error);
+      showToast('error', 'Ошибка', 'Ошибка при удалении категории: ' + result.error);
     }
   };
 
@@ -172,71 +240,31 @@ export default function FitnessProductsPage() {
   return (
     <div className="min-h-screen text-white pt-4">
 
-      <ProfileHeader
-        title="Продукты"
-        rightContent={<AddButton onClick={handleAddProductClick} />}
+      <FitnessPageHeader
+        onAddProduct={handleAddProductClick}
+        searchQuery={searchQuery}
+        setSearch={setSearch}
       />
 
-      <div className="mb-4">
-        <SearchComponent query={searchQuery} setQuery={setSearch} />
-      </div>
-
-      <FilterChips
-        filters={categories}
+      <FitnessCategoryBar
+        categories={categories}
         activeFilter={activeFilter}
         onFilterChange={setFilter}
-        onAddCategoryClick={handleAddCategoryClick}
-        showAddButton={true}
-        onEdit={(cat) => {
-          console.log("Edit category:", cat);
-          showToast('info', 'Редактирование', `Редактирование категории: ${cat}`);
-        }}
-        onDelete={(cat) => {
-          console.log("Delete category:", cat);
-          showToast('info', 'Удаление', `Удаление категории: ${cat}`);
-        }}
+        onAddCategory={handleAddCategoryClick}
+        onEditCategory={handleEditCategoryClick}
+        onDeleteCategory={handleDeleteCategoryClick}
       />
 
-      <h2 className="text-2xl font-bold my-4">{activeFilter}</h2>
-
-      {/* Loading State or Error State: Show Skeletons */}
-      {(isProductsLoading || error) && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <ProductCardSkeleton key={index} />
-          ))}
-        </div>
-      )}
-
-      {/* Error Message (Shown below skeleton if error exists) */}
-      {error && !isProductsLoading && (
-        <div className="text-center py-10 text-red-500">
-          <p>Ошибка при загрузке продуктов. Пожалуйста, попробуйте позже.</p>
-          <p className="text-sm text-gray-400 mt-2">{error.message || ""}</p>
-        </div>
-      )}
-
-      {/* Product Grid (Only if loaded and no error) */}
-      {!isProductsLoading && !error && (
-        <>
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onEdit={handleEditProductClick}
-                  onDelete={handleDeleteProductClick}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-10 text-gray-400">
-              <p>Ничего не найдено</p>
-            </div>
-          )}
-        </>
-      )}
+      <FitnessProductList
+        isLoading={isProductsLoading}
+        error={error}
+        products={filteredProducts}
+        pagination={pagination}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        onEditProduct={handleEditProductClick}
+        onDeleteProduct={handleDeleteProductClick}
+      />
 
       {/* Модалҳо */}
       <AddProductModal
@@ -253,7 +281,39 @@ export default function FitnessProductsPage() {
         onClose={() => setIsCategoryModalOpen(false)}
         onSave={handleSaveCategory}
         isSaving={isSaving}
+        initialValue={selectedCategory}
       />
+
+      <DeleteConfirmationModal
+        isOpen={isCategoryDeleteModalOpen}
+        onClose={() => setIsCategoryDeleteModalOpen(false)}
+        onConfirm={handleDeleteCategory}
+        isDeleting={isSaving}
+        itemName={selectedCategory}
+        customMessage={`Вы действительно хотите удалить категорию "${selectedCategory}"?`}
+      />
+
+      {selectedProduct && (
+        <>
+          <EditProductModal
+            isOpen={isEditModalOpen}
+            onClose={() => { setIsEditModalOpen(false); setSelectedProduct(null); }}
+            onSave={handleEditProduct}
+            isSaving={isSaving}
+            product={selectedProduct}
+            categories={categories}
+          />
+
+          <DeleteConfirmationModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => { setIsDeleteModalOpen(false); setSelectedProduct(null); }}
+            onConfirm={() => handleDeleteProduct(selectedProduct.id)}
+            isDeleting={isSaving}
+            itemName={selectedProduct.name}
+            customMessage="Вы действительно хотите удалить этот продукт?"
+          />
+        </>
+      )}
 
       {selectedProduct && (
         <>

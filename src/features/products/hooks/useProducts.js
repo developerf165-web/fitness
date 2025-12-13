@@ -3,6 +3,8 @@ import { productsService } from '../services/productsService';
 
 export const useProducts = () => {
     const [products, setProducts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -11,25 +13,30 @@ export const useProducts = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const data = await productsService.getAll();
+            const { products: data, pagination: paging } = await productsService.getAll(currentPage);
             setProducts(data);
+            setPagination(paging);
         } catch (err) {
             setError(err.message || 'Failed to fetch products');
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [currentPage]);
 
-    // Fetch on mount
+    // Fetch on mount or page change
     useEffect(() => {
         fetchProducts();
     }, [fetchProducts]);
 
+    const handlePageChange = useCallback((page) => {
+        setCurrentPage(page);
+    }, []);
+
     const addProduct = async (productData) => {
         setIsLoading(true);
         try {
-            const newProduct = await productsService.create(productData);
-            setProducts(prev => [newProduct, ...prev]);
+            await productsService.create(productData);
+            await fetchProducts(); // Will fetch current page
             return { success: true };
         } catch (err) {
             setError(err.message || 'Failed to add product');
@@ -42,8 +49,8 @@ export const useProducts = () => {
     const updateProduct = async (id, productData) => {
         setIsLoading(true);
         try {
-            const updatedProduct = await productsService.update(id, productData);
-            setProducts(prev => prev.map(p => p.id === id ? updatedProduct : p));
+            await productsService.update(id, productData);
+            await fetchProducts();
             return { success: true };
         } catch (err) {
             setError(err.message || 'Failed to update product');
@@ -57,7 +64,12 @@ export const useProducts = () => {
         setIsLoading(true);
         try {
             await productsService.delete(id);
-            setProducts(prev => prev.filter(p => p.id !== id));
+            // Check if we need to go back a page if this was the last item
+            if (products.length === 1 && currentPage > 1) {
+                setCurrentPage(prev => prev - 1);
+            } else {
+                await fetchProducts();
+            }
             return { success: true };
         } catch (err) {
             setError(err.message || 'Failed to delete product');
@@ -69,11 +81,14 @@ export const useProducts = () => {
 
     return {
         products,
+        pagination,
+        currentPage,
         isLoading,
         error,
         addProduct,
         updateProduct,
         deleteProduct,
+        handlePageChange,
         refetch: fetchProducts
     };
 };

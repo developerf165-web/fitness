@@ -4,7 +4,7 @@ export const categoriesService = {
     // Get all categories form API
     getAll: async () => {
         try {
-            const response = await authApi.get('/category/get/all');
+            const response = await authApi.get(`/category/get/all?t=${Date.now()}`);
             // API returns array of objects: [{id: 1, name: "протеин", ...}]
             return response.data;
         } catch (error) {
@@ -15,10 +15,52 @@ export const categoriesService = {
 
     // Create a new category
     create: async (categoryName) => {
-        // Not implemented on backend yet or endpoint unknown from prompt, 
-        // keeping it as a placeholder or using a generic post if needed later.
-        // For now, based on prompt, we only focus on GET.
-        // Creating a mock success for now to prevent breaking existing "Add Category" UI flow until API is ready.
-        return { success: true, data: { name: categoryName } };
+        try {
+            const formData = new FormData();
+            formData.append('name', categoryName);
+
+            const response = await authApi.post('/category/create', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log("Category created response:", response.data);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error creating category:", error);
+            // Return error in a way the hook anticipates
+            return { success: false, error: error.response?.data?.message || error.message };
+        }
+    },
+
+    // Update a category
+    update: async (id, categoryName) => {
+        try {
+            const formData = new FormData();
+            formData.append('name', categoryName);
+            formData.append('_method', 'PATCH');
+
+            const response = await authApi.post(`/category/update/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log("Category updated response:", response.data);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error updating category:", error);
+            return { success: false, error: error.response?.data?.message || error.message };
+        }
+    },
+
+    // Delete a category
+    delete: async (id) => {
+        try {
+            const response = await authApi.delete(`/category/delete/${id}`);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error deleting category:", error);
+            return { success: false, error: error.response?.data?.message || error.message };
+        }
     },
 };

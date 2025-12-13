@@ -13,7 +13,8 @@ export default function FilteredSection({
     SliderComponent,
     onItemClick,
     isLoading,
-    error
+    error,
+    chipClassName // New Prop
 }) {
     return (
         <div className="mb-6">
@@ -26,6 +27,7 @@ export default function FilteredSection({
                 activeFilter={activeFilter}
                 onFilterChange={onFilterChange}
                 showAddButton={false}
+                inactiveClassName={chipClassName}
             />
 
             {/* Слайдер бо номи филтр */}

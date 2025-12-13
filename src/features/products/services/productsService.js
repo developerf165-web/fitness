@@ -2,21 +2,20 @@ import { authApi } from '../../../services/authAxios';
 
 export const productsService = {
     // Get all products
-    getAll: async () => {
+    // Get all products with pagination
+    getAll: async (page = 1) => {
         try {
-            const response = await authApi.get('/product/get/all');
+            const response = await authApi.get(`/product/get/all?page=${page}`);
+            const { data, ...pagination } = response.data;
+            const apiData = data || [];
 
-            const apiData = response.data.data || [];
-
-            return apiData.map(item => {
+            const products = apiData.map(item => {
                 const originalPrice = parseFloat(item.price) || 0;
                 const discount = parseFloat(item.discount) || 0;
 
                 let currentPrice = originalPrice;
                 let oldPrice = null;
 
-                // If there is a discount, calculate the new price (selling price)
-                // and set the original price as 'oldPrice' for display.
                 if (discount > 0) {
                     currentPrice = originalPrice - (originalPrice * discount / 100);
                     oldPrice = originalPrice;
@@ -33,6 +32,8 @@ export const productsService = {
                     description: item.description
                 };
             });
+
+            return { products, pagination };
         } catch (error) {
             console.error("Error fetching products:", error);
             throw error;
@@ -67,13 +68,8 @@ export const productsService = {
                 },
             });
 
-            return {
-                id: response.data.id || Date.now(), // Use real ID if returned, else mock
-                ...productData,
-                imageUrl: productData.image instanceof File
-                    ? URL.createObjectURL(productData.image)
-                    : 'https://via.placeholder.com/300x300.png?text=New+Item'
-            };
+            console.log("Product created (API Response):", response.data);
+            return response.data;
         } catch (error) {
             console.error("Error creating product:", error);
             throw error;
@@ -111,13 +107,8 @@ export const productsService = {
                 },
             });
 
-            return {
-                id,
-                ...productData,
-                imageUrl: productData.image instanceof File
-                    ? URL.createObjectURL(productData.image)
-                    : productData.imageUrl
-            };
+            console.log("Product updated (API Response):", response.data);
+            return response.data;
         } catch (error) {
             console.error("Error updating product:", error);
             throw error;

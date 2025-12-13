@@ -22,11 +22,13 @@ const FilterChips = ({
   onAddCategoryClick,
   showAddButton = false,
   onEdit,
-  onDelete
+  onDelete,
+  inactiveClassName
 }) => {
 
   const activeClass = "color-bg-accent text-black";
-  const inactiveClass = "color-bg-card text-white";
+  // Use prop or default
+  const effectiveInactiveClass = inactiveClassName || "color-bg-card text-white";
 
   // Истифодаи scroll hook
   const { scrollRef, showLeftScroll, showRightScroll, scrollMenu, checkScroll } = useHorizontalScroll({
@@ -73,12 +75,12 @@ const FilterChips = ({
           return (
             <div
               key={index}
-              className={`group relative flex items-center px-4 py-2 cursor-pointer rounded-full text-sm font-medium transition-colors flex-shrink-0 select-none ${isActive ? activeClass : inactiveClass}`}
+              className={`group relative flex items-center px-4 py-2 cursor-pointer rounded-full text-sm font-medium transition-colors flex-shrink-0 select-none ${isActive ? activeClass : effectiveInactiveClass}`}
               onClick={() => onFilterChange(filter)}
             >
               <span className={!isAll ? "mr-1" : ""}>{filter}</span>
 
-              {!isAll && (
+              {!isAll && (onEdit || onDelete) && (
                 <div
                   className="max-w-0 overflow-hidden transition-all duration-300 ease-in-out group-hover:max-w-[2.5rem] opacity-0 group-hover:opacity-100 flex items-center"
                   onClick={(e) => e.stopPropagation()}
