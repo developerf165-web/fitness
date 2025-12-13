@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import ProfileHeader from "@/components/trainer/ProfileHeader";
 import SearchComponent from "@/Dashboard/components/SearchComponent";
 
@@ -27,7 +27,19 @@ export default function FitnessProductsPage() {
     error
   } = useProducts();
 
-  const { categories, addCategory } = useCategories();
+  const {
+    categories,
+    addCategory,
+    error: catError,
+    isLoading: catLoading,
+    getCategoryNameById,
+    getCategoryIdByName
+  } = useCategories();
+
+  // Debug logging
+  console.log("Categories:", categories);
+  console.log("Cat Error:", catError);
+
   const { showToast } = useToast();
 
   // Modal States
@@ -40,6 +52,14 @@ export default function FitnessProductsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Map products to include proper category names (Backend sends ID, Frontend needs Name)
+  const mappedProducts = useMemo(() => {
+    return products.map(p => ({
+      ...p,
+      category: getCategoryNameById(p.category) || p.category
+    }));
+  }, [products, getCategoryNameById]);
+
   // Filter Hook
   const {
     searchQuery,
@@ -47,9 +67,9 @@ export default function FitnessProductsPage() {
     filteredItems: filteredProducts,
     setSearch,
     setFilter,
-    hasResults
+    resetFilters,
   } = useProductFilter({
-    items: products,
+    items: mappedProducts,
     filters: categories,
     categoryKey: 'category',
     nameKey: 'name'
@@ -69,7 +89,7 @@ export default function FitnessProductsPage() {
     setIsSaving(true);
     const result = await addProduct({
       name: newProductData.title,
-      category: newProductData.category || "Нав",
+      category: getCategoryIdByName(newProductData.category) || 1, // Fallback to 1 if not found
       price: parseFloat(newProductData.price) || 0,
       oldPrice: newProductData.oldPrice ? parseFloat(newProductData.oldPrice) : null,
       discount: newProductData.discount ? parseInt(newProductData.discount) : null,
@@ -113,7 +133,7 @@ export default function FitnessProductsPage() {
     setIsSaving(true);
     const result = await updateProduct(id, {
       name: updatedData.title,
-      category: updatedData.category,
+      category: getCategoryIdByName(updatedData.category), // Map name back to ID
       price: parseFloat(updatedData.price),
       oldPrice: updatedData.oldPrice ? parseFloat(updatedData.oldPrice) : null,
       discount: updatedData.discount ? parseInt(updatedData.discount) : null,
@@ -167,6 +187,14 @@ export default function FitnessProductsPage() {
         onFilterChange={setFilter}
         onAddCategoryClick={handleAddCategoryClick}
         showAddButton={true}
+        onEdit={(cat) => {
+          console.log("Edit category:", cat);
+          showToast('info', 'Редактирование', `Редактирование категории: ${cat}`);
+        }}
+        onDelete={(cat) => {
+          console.log("Delete category:", cat);
+          showToast('info', 'Удаление', `Удаление категории: ${cat}`);
+        }}
       />
 
       <h2 className="text-2xl font-bold my-4">{activeFilter}</h2>

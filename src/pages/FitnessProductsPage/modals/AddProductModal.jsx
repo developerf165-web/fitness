@@ -36,6 +36,23 @@ export default function AddProductModal({
   // --- Form Handling ---
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'discount') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, [name]: value }));
+        return;
+      }
+      const numValue = parseFloat(value);
+      if (numValue < 0) {
+        setFormData(prev => ({ ...prev, [name]: '0' }));
+        return;
+      }
+      if (numValue > 100) {
+        setFormData(prev => ({ ...prev, [name]: '100' }));
+        return;
+      }
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -140,8 +157,8 @@ export default function AddProductModal({
         multiple={false}
       />
 
-      <div className="flex gap-3 pt-2">
-        <div className="flex-1">
+      <div className="grid grid-cols-3 gap-2 pt-2 pb-1 px-1 overflow-hidden">
+        <div className="min-w-0 col-span-1">
           <InputField
             label="Цена за шт.*"
             name="price"
@@ -151,7 +168,7 @@ export default function AddProductModal({
             onChange={handleChange}
           />
         </div>
-        <div className="flex-1">
+        <div className="min-w-0 col-span-1">
           <InputField
             label="Скидка"
             name="discount"
@@ -161,7 +178,7 @@ export default function AddProductModal({
             onChange={handleChange}
           />
         </div>
-        <div className="flex-1">
+        <div className="min-w-0 col-span-1">
           <InputField
             label="Итого"
             name="total"

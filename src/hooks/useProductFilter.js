@@ -11,13 +11,13 @@ import { useState, useMemo } from 'react';
  * @param {string} nameKey - Калиди ном дар объект (пешфарз: 'name')
  * @returns {object} - Объект бо ҳолатҳо ва функсияҳо
  */
-const useProductFilter = ({ 
-  items = [], 
-  filters = ['Все'], 
+const useProductFilter = ({
+  items = [],
+  filters = ['Все'],
   categoryKey = 'category',
   nameKey = 'name'
 } = {}) => {
-  
+
   // Ҳолатҳо
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Все');
@@ -60,12 +60,12 @@ const useProductFilter = ({
     searchQuery,
     activeFilter,
     filteredItems,
-    
+
     // Функсияҳо
     setSearch,
     setFilter,
     resetFilters,
-    
+
     // Маълумоти иловагӣ
     totalItems: items.length,
     filteredCount: filteredItems.length,

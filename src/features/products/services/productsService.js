@@ -25,7 +25,7 @@ export const productsService = {
                 return {
                     id: item.id,
                     name: item.title,
-                    category: item.category_id ? `Категория ${item.category_id}` : "Общее",
+                    category: item.category_id,
                     price: parseFloat(currentPrice.toFixed(2)),
                     oldPrice: oldPrice ? parseFloat(oldPrice.toFixed(2)) : null,
                     discount: discount,
@@ -49,7 +49,7 @@ export const productsService = {
             formData.append('description', productData.description || 'Описание отсутствует');
             formData.append('price', productData.price);
             formData.append('discount', productData.discount || 0);
-            formData.append('category_id', 1); // Mock category ID
+            formData.append('category_id', productData.category);
 
             // Defaults
             formData.append('barcode', productData.barcode || Date.now().toString());
@@ -90,7 +90,7 @@ export const productsService = {
             formData.append('description', productData.description || 'Описание отсутствует');
             formData.append('price', productData.price);
             formData.append('discount', productData.discount || 0);
-            formData.append('category_id', 1); // Mock category ID for now
+            formData.append('category_id', productData.category);
 
             // Defaults
             formData.append('barcode', productData.barcode || Date.now().toString());
@@ -98,7 +98,7 @@ export const productsService = {
             formData.append('result', 0);
 
             // Method spoofing for Laravel/PHP
-            formData.append('_method', 'PUT');
+            formData.append('_method', 'PATCH');
 
             // Image handling
             if (productData.image instanceof File) {

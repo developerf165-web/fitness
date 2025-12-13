@@ -57,6 +57,23 @@ export default function EditProductModal({
   // ----- EVENTS -----
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'discount') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, [name]: value }));
+        return;
+      }
+      const numValue = parseFloat(value);
+      if (numValue < 0) {
+        setFormData(prev => ({ ...prev, [name]: '0' }));
+        return;
+      }
+      if (numValue > 100) {
+        setFormData(prev => ({ ...prev, [name]: '100' }));
+        return;
+      }
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 

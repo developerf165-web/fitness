@@ -36,9 +36,8 @@ const ScrollableModalContentWrapper = ({ title, content, footer }) => {
 
         {/* Footer */}
         <div
-          className={`flex justify-between mt-auto p-6 pt-4 flex-shrink-0 transition-all duration-150 ${
-            showTopBorder ? "border-t color-border-mini-card" : "border-t-transparent"
-          }`}
+          className={`flex justify-between mt-auto p-6 pt-4 flex-shrink-0 transition-all duration-150 ${showTopBorder ? "border-t color-border-mini-card" : "border-t-transparent"
+            }`}
         >
           {footer}
         </div>

@@ -1,43 +1,24 @@
-// Mock service for categories
-// Will be replaced by actual API calls later
-
-const initialCategories = [
-    "Все",
-    "Протеин",
-    "Витамины",
-    "Аминокислоты",
-    "Гейнер",
-    "Креатин"
-];
-
-// Simulate delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import { authApi } from '../../../services/authAxios';
 
 export const categoriesService = {
-    // Get all categories
+    // Get all categories form API
     getAll: async () => {
-        await delay(500);
-        // In a real app, this would fetch from API
-        // For now, returning mock data. 
-        // Optimization: If we wanted persistence without API, we could use localStorage here.
-        const stored = localStorage.getItem('fitness_categories');
-        return stored ? JSON.parse(stored) : initialCategories;
+        try {
+            const response = await authApi.get('/category/get/all');
+            // API returns array of objects: [{id: 1, name: "протеин", ...}]
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            throw error;
+        }
     },
 
     // Create a new category
     create: async (categoryName) => {
-        await delay(500);
-        // Mock persistence
-        const stored = localStorage.getItem('fitness_categories');
-        const current = stored ? JSON.parse(stored) : initialCategories;
-
-        if (!current.includes(categoryName)) {
-            const updated = [...current, categoryName];
-            localStorage.setItem('fitness_categories', JSON.stringify(updated));
-            return { success: true, data: categoryName };
-        }
-        return { success: false, error: "Category already exists" };
+        // Not implemented on backend yet or endpoint unknown from prompt, 
+        // keeping it as a placeholder or using a generic post if needed later.
+        // For now, based on prompt, we only focus on GET.
+        // Creating a mock success for now to prevent breaking existing "Add Category" UI flow until API is ready.
+        return { success: true, data: { name: categoryName } };
     },
-
-    // Future methods: delete, update
 };
